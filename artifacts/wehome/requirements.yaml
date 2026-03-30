@@ -1,0 +1,17 @@
+packages:
+  "framer-motion": "For premium page transitions and scroll-triggered animations"
+  "clsx": "For merging tailwind classes conditionally"
+  "tailwind-merge": "For merging tailwind classes conditionally"
+
+images:
+  - path: "artifacts/wehome/public/images/hero-bg.png"
+    description: "Abstract architectural background with soft light leaks and deep blue (#1B4D7A) and warm gold accents, highly professional, clean, minimal 3D shapes"
+    aspect_ratio: "16:9"
+  - path: "artifacts/wehome/public/images/pepite.png"
+    description: "Stunning modern luxury home interior, bright, airy, professional real estate photography style, lots of natural light"
+    aspect_ratio: "4:3"
+
+notes:
+  - Pure frontend landing page implementation
+  - Using framer-motion for high-end feel
+  - Using mocked data since no backend is required
