@@ -1,20 +1,16 @@
 import { Link } from "wouter";
 import { Facebook, Instagram, Linkedin, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import { Logo } from "./Logo";
 
 export function Footer() {
   return (
-    <footer className="bg-foreground text-foreground-foreground py-16 lg:py-24 border-t border-white/10">
+    <footer className="bg-foreground py-16 lg:py-24 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           
           <div className="space-y-6">
-            <Link href="/" className="flex items-center gap-1">
-              <span className="font-display font-bold text-3xl tracking-tight text-white">
-                We
-              </span>
-              <span className="font-display font-bold text-3xl tracking-tight text-primary">
-                Home
-              </span>
+            <Link href="/">
+              <Logo height={36} className="brightness-0 invert opacity-90" />
             </Link>
             <p className="text-white/60 text-sm leading-relaxed max-w-sm">
               Nous ne sommes pas une simple agence immobiliere. Nous sommes un ecosysteme hybride combinant Immobilier, Marketing, Generation de leads et Media.

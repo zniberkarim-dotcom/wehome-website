@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { Logo } from "./Logo";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,7 +21,7 @@ export function Navbar() {
     { name: "Acheter", href: "/acheter" },
     { name: "Louer", href: "/louer" },
     { name: "Vendre", href: "/vendre" },
-    { name: "À Propos", href: "/a-propos" },
+    { name: "A Propos", href: "/a-propos" },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -29,19 +30,14 @@ export function Navbar() {
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300 border-b",
         isScrolled
-          ? "bg-white/90 backdrop-blur-md border-border/50 shadow-sm py-4"
-          : "bg-transparent border-transparent py-6"
+          ? "bg-white/90 backdrop-blur-md border-border/50 shadow-sm py-3"
+          : "bg-transparent border-transparent py-5"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-1 group z-50 relative">
-            <span className="font-display font-bold text-3xl tracking-tight text-foreground transition-colors group-hover:text-primary/80">
-              We
-            </span>
-            <span className="font-display font-bold text-3xl tracking-tight text-primary transition-colors group-hover:text-primary/80">
-              Home
-            </span>
+          <Link href="/" className="z-50 relative">
+            <Logo height={36} />
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">

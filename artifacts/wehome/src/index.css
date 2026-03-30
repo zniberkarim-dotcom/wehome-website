@@ -32,68 +32,68 @@
 }
 
 :root {
-  /* Clean White & Professional Blue Palette (#1B4D7A ≈ 209 64% 29%) */
-  --background: 210 20% 99%; /* Very subtle cool gray/blue tint */
-  --foreground: 222 47% 11%;
+  /* WeHome Brand: Burgundy #8B1A3A ≈ HSL(345, 68%, 33%) + Charcoal #3C4555 ≈ HSL(220, 18%, 28%) */
+  --background: 0 0% 99%;
+  --foreground: 220 18% 28%;
   
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
+  --card-foreground: 220 18% 28%;
   
   --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
+  --popover-foreground: 220 18% 28%;
   
-  /* #1B4D7A -> HSL(209, 64%, 29%) */
-  --primary: 209 64% 29%;
-  --primary-foreground: 210 40% 98%;
+  /* Primary = Burgundy from logo */
+  --primary: 345 68% 33%;
+  --primary-foreground: 0 0% 100%;
   
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222 47% 11%;
+  --secondary: 345 15% 95%;
+  --secondary-foreground: 220 18% 28%;
   
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 10% 46%;
   
-  /* Warm gold/champagne accent for premium feel */
-  --accent: 46 65% 52%;
-  --accent-foreground: 210 40% 98%;
+  /* Accent = warm gold for premium feel */
+  --accent: 38 60% 50%;
+  --accent-foreground: 0 0% 100%;
   
   --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive-foreground: 0 0% 100%;
   
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --ring: 209 64% 29%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 345 68% 33%;
   
   --radius: 1rem;
 }
 
 .dark {
-  --background: 222 47% 11%;
-  --foreground: 210 40% 98%;
+  --background: 220 18% 10%;
+  --foreground: 0 0% 95%;
   
-  --card: 222 47% 11%;
-  --card-foreground: 210 40% 98%;
+  --card: 220 18% 13%;
+  --card-foreground: 0 0% 95%;
   
-  --popover: 222 47% 11%;
-  --popover-foreground: 210 40% 98%;
+  --popover: 220 18% 13%;
+  --popover-foreground: 0 0% 95%;
   
-  --primary: 209 64% 45%;
-  --primary-foreground: 210 40% 98%;
+  --primary: 345 60% 45%;
+  --primary-foreground: 0 0% 100%;
   
-  --secondary: 217 32% 17%;
-  --secondary-foreground: 210 40% 98%;
+  --secondary: 220 15% 18%;
+  --secondary-foreground: 0 0% 95%;
   
-  --muted: 217 32% 17%;
-  --muted-foreground: 215 20.2% 65.1%;
+  --muted: 220 15% 18%;
+  --muted-foreground: 220 10% 60%;
   
-  --accent: 46 65% 52%;
-  --accent-foreground: 210 40% 98%;
+  --accent: 38 60% 50%;
+  --accent-foreground: 0 0% 100%;
   
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: 0 62% 30%;
+  --destructive-foreground: 0 0% 100%;
   
-  --border: 217 32% 17%;
-  --input: 217 32% 17%;
-  --ring: 209 64% 45%;
+  --border: 220 15% 18%;
+  --input: 220 15% 18%;
+  --ring: 345 60% 45%;
 }
 
 @layer base {
@@ -109,10 +109,10 @@
   }
 }
 
-/* Custom Gradients for Property Placeholders */
-.mesh-gradient-1 { background: radial-gradient(at 0% 0%, hsla(209,64%,29%,1) 0px, transparent 50%), radial-gradient(at 100% 100%, hsla(209,34%,59%,1) 0px, transparent 50%); background-color: #f0f4f8; }
-.mesh-gradient-2 { background: radial-gradient(at 100% 0%, hsla(46,65%,52%,0.8) 0px, transparent 50%), radial-gradient(at 0% 100%, hsla(209,64%,29%,0.8) 0px, transparent 50%); background-color: #faf7f0; }
-.mesh-gradient-3 { background: radial-gradient(at 50% 0%, hsla(215,64%,49%,1) 0px, transparent 50%), radial-gradient(at 50% 100%, hsla(180,44%,79%,1) 0px, transparent 50%); background-color: #e0f2fe; }
-.mesh-gradient-4 { background: radial-gradient(at 0% 50%, hsla(210,50%,30%,1) 0px, transparent 50%), radial-gradient(at 100% 50%, hsla(230,40%,80%,1) 0px, transparent 50%); background-color: #f1f5f9; }
-.mesh-gradient-5 { background: radial-gradient(at 100% 100%, hsla(209,64%,29%,1) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(210,100%,90%,1) 0px, transparent 50%); background-color: #e2e8f0; }
-.mesh-gradient-6 { background: radial-gradient(at 50% 50%, hsla(46,65%,52%,0.6) 0px, transparent 50%), radial-gradient(at 0% 100%, hsla(209,64%,29%,0.9) 0px, transparent 50%); background-color: #f8fafc; }
+/* Custom Gradients for Property Placeholders - using brand burgundy + charcoal */
+.mesh-gradient-1 { background: radial-gradient(at 0% 0%, hsla(345,68%,33%,0.7) 0px, transparent 50%), radial-gradient(at 100% 100%, hsla(220,18%,45%,0.6) 0px, transparent 50%); background-color: #f8f4f5; }
+.mesh-gradient-2 { background: radial-gradient(at 100% 0%, hsla(38,60%,50%,0.7) 0px, transparent 50%), radial-gradient(at 0% 100%, hsla(345,68%,33%,0.6) 0px, transparent 50%); background-color: #faf6f0; }
+.mesh-gradient-3 { background: radial-gradient(at 50% 0%, hsla(220,18%,28%,0.8) 0px, transparent 50%), radial-gradient(at 50% 100%, hsla(345,40%,60%,0.5) 0px, transparent 50%); background-color: #f0ecee; }
+.mesh-gradient-4 { background: radial-gradient(at 0% 50%, hsla(345,68%,33%,0.8) 0px, transparent 50%), radial-gradient(at 100% 50%, hsla(220,20%,70%,0.6) 0px, transparent 50%); background-color: #f5f1f2; }
+.mesh-gradient-5 { background: radial-gradient(at 100% 100%, hsla(220,18%,28%,0.7) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(345,30%,80%,0.8) 0px, transparent 50%); background-color: #eee9eb; }
+.mesh-gradient-6 { background: radial-gradient(at 50% 50%, hsla(38,60%,50%,0.5) 0px, transparent 50%), radial-gradient(at 0% 100%, hsla(345,68%,33%,0.7) 0px, transparent 50%); background-color: #faf8f5; }
