@@ -10,7 +10,7 @@ export function Footer() {
           
           <div className="space-y-6">
             <Link href="/">
-              <Logo height={36} className="brightness-0 invert opacity-90" />
+              <Logo height={36} className="brightness-0 invert" />
             </Link>
             <p className="text-white/60 text-sm leading-relaxed max-w-sm">
               Nous ne sommes pas une simple agence immobiliere. Nous sommes un ecosysteme hybride combinant Immobilier, Marketing, Generation de leads et Media.
