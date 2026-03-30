@@ -5,24 +5,23 @@ export function Services() {
   const services = [
     {
       icon: <Sparkles size={32} />,
-      title: "Smart Marketing",
-      description: "We transform properties into highly attractive products through professional staging, exceptional visual content, and targeted distribution channels."
+      title: "Marketing Intelligent",
+      description: "Nous transformons les biens en produits hautement attractifs grace a la mise en scene professionnelle, un contenu visuel exceptionnel et une diffusion ciblee."
     },
     {
       icon: <LineChart size={32} />,
-      title: "Data-Driven Strategy",
-      description: "We don't just guess; we test different communication angles, analyze performance metrics, and optimize to capture the most qualified leads."
+      title: "Strategie Data-Driven",
+      description: "Nous testons differents angles de communication, analysons les performances et optimisons pour capter les leads les plus qualifies."
     },
     {
       icon: <Video size={32} />,
-      title: "Media & Content",
-      description: "As a media company, we produce high-value content including market analysis, neighborhood guides, and investment strategies to build trust."
+      title: "Media & Contenu",
+      description: "En tant que media immobilier, nous produisons du contenu a forte valeur ajoutee : analyses de marche, guides d'achat et strategies d'investissement."
     }
   ];
 
   return (
     <section className="py-24 bg-secondary/50 relative overflow-hidden">
-      {/* Decorative background element */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -33,7 +32,7 @@ export function Services() {
             viewport={{ once: true }}
             className="text-3xl md:text-4xl font-display font-bold text-foreground mb-6"
           >
-            Not your classic real estate agency.
+            Pas une agence immobiliere classique.
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -42,7 +41,7 @@ export function Services() {
             transition={{ delay: 0.1 }}
             className="text-muted-foreground text-lg"
           >
-            We are a hybrid ecosystem combining Real Estate, Marketing, Lead Generation, and Media. Here is how we redefine the experience.
+            Nous sommes un ecosysteme hybride combinant Immobilier, Marketing, Generation de leads et Media. Voici comment nous reinventons l'experience.
           </motion.p>
         </div>
 

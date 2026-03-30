@@ -17,10 +17,10 @@ export function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Buy", href: "/buy" },
-    { name: "Rent", href: "/rent" },
-    { name: "Sell", href: "/sell" },
-    { name: "About Us", href: "/about" },
+    { name: "Acheter", href: "/acheter" },
+    { name: "Louer", href: "/louer" },
+    { name: "Vendre", href: "/vendre" },
+    { name: "À Propos", href: "/a-propos" },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -35,7 +35,6 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-1 group z-50 relative">
             <span className="font-display font-bold text-3xl tracking-tight text-foreground transition-colors group-hover:text-primary/80">
               We
@@ -45,7 +44,6 @@ export function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
             <div className="flex items-center gap-6">
               {navLinks.map((link) => (
@@ -60,25 +58,23 @@ export function Navbar() {
             </div>
             
             <Link
-              href="/list-property"
+              href="/publier-bien"
               className="px-6 py-2.5 rounded-full font-semibold text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
             >
-              List Your Property
+              Publier votre bien
             </Link>
           </nav>
 
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden p-2 text-foreground z-50 relative"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label="Ouvrir le menu"
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -99,11 +95,11 @@ export function Navbar() {
               </Link>
             ))}
             <Link
-              href="/list-property"
+              href="/publier-bien"
               className="mt-6 px-6 py-4 rounded-xl font-bold text-center bg-primary text-primary-foreground shadow-lg"
               onClick={() => setMobileMenuOpen(false)}
             >
-              List Your Property
+              Publier votre bien
             </Link>
           </motion.div>
         )}

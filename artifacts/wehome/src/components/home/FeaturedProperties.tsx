@@ -17,10 +17,10 @@ export function FeaturedProperties() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
-              Featured Properties
+              Biens en vedette
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-              Discover our handpicked selection of premium real estate, marketed with our signature data-driven approach.
+              Decouvrez notre selection de biens immobiliers premium, commercialises avec notre approche data-driven unique.
             </p>
           </motion.div>
           
@@ -30,8 +30,8 @@ export function FeaturedProperties() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <Link href="/buy" className="inline-flex items-center gap-2 text-primary font-bold hover:text-primary/80 transition-colors group">
-              View all listings 
+            <Link href="/acheter" className="inline-flex items-center gap-2 text-primary font-bold hover:text-primary/80 transition-colors group">
+              Voir toutes les annonces 
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>

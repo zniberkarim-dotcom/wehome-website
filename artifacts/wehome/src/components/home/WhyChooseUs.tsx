@@ -5,29 +5,28 @@ export function WhyChooseUs() {
   const features = [
     {
       icon: <Eye size={28} />,
-      title: "Visibility Creation",
-      description: "We don't just list your property; we actively create visibility across multiple platforms to ensure maximum exposure."
+      title: "Creation de Visibilite",
+      description: "Nous ne listons pas simplement votre bien ; nous creons activement de la visibilite sur plusieurs plateformes pour une exposition maximale."
     },
     {
       icon: <Target size={28} />,
-      title: "Demand Generation",
-      description: "Using advanced marketing funnels, we generate targeted demand rather than waiting for buyers to find you."
+      title: "Generation de Demande",
+      description: "Grace a des funnels marketing avances, nous generons une demande ciblee plutot que d'attendre que les acheteurs vous trouvent."
     },
     {
       icon: <ArrowUpCircle size={28} />,
-      title: "Perceived Value",
-      description: "Our high-end media production and staging elevate the perceived value of your property, securing higher offers."
+      title: "Valeur Percue",
+      description: "Notre production media haut de gamme et notre mise en scene elevent la valeur percue de votre bien, garantissant de meilleures offres."
     },
     {
       icon: <Users size={28} />,
-      title: "Qualified Leads",
-      description: "Our data-driven approach filters out window shoppers, connecting you only with serious, qualified buyers."
+      title: "Leads Qualifies",
+      description: "Notre approche data-driven filtre les curieux et vous connecte uniquement avec des acheteurs serieux et qualifies."
     }
   ];
 
   return (
     <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
-      {/* Abstract background graphics */}
       <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[600px] h-[600px] rounded-full border-[60px] border-white/5 opacity-50" />
       <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-[400px] h-[400px] rounded-full border-[40px] border-white/5 opacity-50" />
 
@@ -42,13 +41,13 @@ export function WhyChooseUs() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-              Why Choose WeHome?
+              Pourquoi choisir WeHome ?
             </h2>
             <p className="text-primary-foreground/80 text-lg leading-relaxed mb-8">
-              We leverage modern tools to reinvent how real estate is bought and sold. Experience the power of an agency built for today's market.
+              Nous utilisons des outils modernes pour reinventer l'immobilier. Decouvrez la puissance d'une agence construite pour le marche d'aujourd'hui.
             </p>
             <button className="px-8 py-4 bg-white text-primary font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-              Learn about our method
+              Decouvrir notre methode
             </button>
           </motion.div>
 

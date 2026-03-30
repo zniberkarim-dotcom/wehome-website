@@ -5,10 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCAD(amount: number) {
-  return new Intl.NumberFormat('en-CA', {
+export function formatMAD(amount: number) {
+  return new Intl.NumberFormat('fr-MA', {
     style: 'currency',
-    currency: 'CAD',
+    currency: 'MAD',
     maximumFractionDigits: 0,
   }).format(amount);
 }
