@@ -16,7 +16,7 @@ export function Footer() {
               Nous ne sommes pas une simple agence immobiliere. Nous sommes un ecosysteme hybride combinant Immobilier, Marketing, Generation de leads et Media.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:bg-primary hover:text-white transition-colors">
+              <a href="https://www.instagram.com/wehomeagency?igsh=ZDF5MTZ6ZzM3YXly" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:bg-primary hover:text-white transition-colors">
                 <Instagram size={20} />
               </a>
               <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:bg-primary hover:text-white transition-colors">
@@ -25,11 +25,8 @@ export function Footer() {
               <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:bg-primary hover:text-white transition-colors">
                 <Facebook size={20} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:bg-primary hover:text-white transition-colors">
-                <Twitter size={20} />
-              </a>
             </div>
-            <p className="text-white/40 text-sm font-medium">@wehomeagency</p>
+            <a href="https://www.instagram.com/wehomeagency?igsh=ZDF5MTZ6ZzM3YXly" target="_blank" rel="noopener noreferrer" className="text-white/40 text-sm font-medium hover:text-primary transition-colors">@wehomeagency</a>
           </div>
 
           <div>
