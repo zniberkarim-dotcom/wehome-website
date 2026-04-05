@@ -53,12 +53,14 @@ export function Navbar() {
               ))}
             </div>
             
-            <Link
-              href="/publier-bien"
+            <a
+              href={`https://wa.me/212653535156?text=${encodeURIComponent("Bonjour WeHome,\n\nJe souhaite vendre mon bien immobilier.\n\nPouvez-vous me contacter pour en discuter ?\n\nMerci !")}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-6 py-2.5 rounded-full font-semibold text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
             >
               Publier votre bien
-            </Link>
+            </a>
           </nav>
 
           <button
