@@ -91,6 +91,19 @@ Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`). Used b
 
 Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`).
 
+### `artifacts/wehome` (`@workspace/wehome`)
+
+React + Vite landing page for WeHome, a Moroccan real estate agency. French UI, MAD currency, burgundy (#8B1A3A) + charcoal (#3C4555) brand colors.
+
+- Pages: `src/pages/home.tsx` (landing), `src/pages/biens.tsx` (all listings with filters)
+- Data: `src/lib/data.ts` — 43 real property listings from client Excel sheet (villas, apartments, penthouses, studios, duplexes, bureaux, terrains, etc.)
+- Components: `src/components/home/` (Hero, FeaturedProperties, PropertyCard, PepiteDuMois, Services, WhyChooseUs, CtaSection)
+- Layout: `src/components/layout/` (Navbar, Footer, Logo)
+- Router: wouter with routes /, /biens, /acheter, /louer
+- Logo: PNG at `public/images/wehome-logo.png`
+- Favicon + OG tags configured in `index.html`
+- Google Search Console: `public/google1f811b8017509b91.html`
+
 ### `scripts` (`@workspace/scripts`)
 
 Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.

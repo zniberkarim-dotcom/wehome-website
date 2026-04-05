@@ -2,18 +2,10 @@ import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Award, MapPin, Bed, Bath, Square, ArrowRight } from "lucide-react";
 import { formatMAD } from "@/lib/utils";
+import { PEPITE_DU_MOIS } from "@/lib/data";
 
 export function PepiteDuMois() {
-  const pepite = {
-    id: 100,
-    title: "Villa d'Exception avec Vue Atlas",
-    address: "Palmeraie, Marrakech",
-    price: 12500000,
-    description: "Une villa d'exception nichee au coeur de la Palmeraie de Marrakech. Cette residence de prestige offre des vues imprenables sur les montagnes de l'Atlas, une piscine a debordement, des jardins paysagers et des finitions haut de gamme. Un veritable havre de paix alliant luxe et authenticite marocaine.",
-    beds: 6,
-    baths: 5,
-    sqft: 800,
-  };
+  const pepite = PEPITE_DU_MOIS;
 
   return (
     <section className="py-24 bg-background">
@@ -52,13 +44,16 @@ export function PepiteDuMois() {
               transition={{ duration: 0.6 }}
             >
               <div className="mb-6">
-                <span className="text-primary font-bold tracking-wider uppercase text-sm mb-2 block">Annonce Exclusive</span>
+                <div className="flex gap-2 mb-2">
+                  <span className="text-primary font-bold tracking-wider uppercase text-sm">Annonce Exclusive</span>
+                  <span className="px-2 py-0.5 bg-primary/10 text-primary text-xs font-bold rounded-md">{pepite.transaction}</span>
+                </div>
                 <h3 className="text-3xl lg:text-4xl font-display font-bold text-foreground mb-4">
                   {pepite.title}
                 </h3>
                 <div className="flex items-start gap-2 text-muted-foreground mb-6">
                   <MapPin size={20} className="shrink-0 mt-1" />
-                  <span className="text-lg">{pepite.address}</span>
+                  <span className="text-lg">{pepite.location}</span>
                 </div>
                 <div className="text-4xl font-display font-bold text-primary mb-6">
                   {formatMAD(pepite.price)}
@@ -70,23 +65,27 @@ export function PepiteDuMois() {
               </p>
 
               <div className="grid grid-cols-3 gap-4 py-6 border-y border-border/80 mb-8">
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
-                    <Bed size={20} />
+                {pepite.beds && (
+                  <div className="flex flex-col items-center justify-center gap-2">
+                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
+                      <Bed size={20} />
+                    </div>
+                    <span className="font-semibold">{pepite.beds} Ch.</span>
                   </div>
-                  <span className="font-semibold">{pepite.beds} Ch.</span>
-                </div>
-                <div className="flex flex-col items-center justify-center gap-2 border-x border-border/80">
-                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
-                    <Bath size={20} />
+                )}
+                {pepite.baths && (
+                  <div className="flex flex-col items-center justify-center gap-2 border-x border-border/80">
+                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
+                      <Bath size={20} />
+                    </div>
+                    <span className="font-semibold">{pepite.baths} SdB</span>
                   </div>
-                  <span className="font-semibold">{pepite.baths} SdB</span>
-                </div>
+                )}
                 <div className="flex flex-col items-center justify-center gap-2">
                   <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
                     <Square size={20} />
                   </div>
-                  <span className="font-semibold">{pepite.sqft} m²</span>
+                  <span className="font-semibold">{pepite.surface} m²</span>
                 </div>
               </div>
 

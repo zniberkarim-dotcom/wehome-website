@@ -30,7 +30,7 @@ export function FeaturedProperties() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <Link href="/acheter" className="inline-flex items-center gap-2 text-primary font-bold hover:text-primary/80 transition-colors group">
+            <Link href="/biens" className="inline-flex items-center gap-2 text-primary font-bold hover:text-primary/80 transition-colors group">
               Voir toutes les annonces 
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Link>
