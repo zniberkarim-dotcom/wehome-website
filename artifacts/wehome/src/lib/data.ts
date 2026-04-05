@@ -19,6 +19,10 @@ export interface Property {
   photoUrl?: string;
 }
 
+export function getPropertyImageUrl(id: string): string {
+  return `${import.meta.env.BASE_URL}images/properties/${id}.jpg`;
+}
+
 const GRADIENTS = [
   "mesh-gradient-1",
   "mesh-gradient-2",
