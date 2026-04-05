@@ -1,72 +1,67 @@
-import { MapPin, Bed, Bath, Square, Heart, ArrowRight, Sofa, Camera } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Heart, ArrowRight, Sofa } from "lucide-react";
 import { Link } from "wouter";
 import { formatMAD } from "@/lib/utils";
 import { useState } from "react";
 import type { Property } from "@/lib/data";
+import { getPropertyImageUrl } from "@/lib/data";
 
 interface PropertyCardProps {
   property: Property;
 }
 
 export function PropertyCard({ property }: PropertyCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   const showBeds = property.beds !== undefined && property.beds > 0;
   const showBaths = property.baths !== undefined && property.baths > 0;
   const showSalons = property.salons !== undefined && property.salons > 0;
   const isTerrain = ["Terrain", "Bâtiment industriel", "Commerce", "Ferme"].includes(property.type);
   const hasPrice = property.price > 0;
+  const hasImage = property.photoUrl && !imgError;
 
   const statCount = [showBeds, showBaths, showSalons, true].filter(Boolean).length;
 
   return (
-    <div 
-      className="group bg-card rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col hover:-translate-y-1"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className={`relative h-64 w-full ${property.gradientClass} overflow-hidden`}>
-        <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
-          <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg shadow-sm">
-            {property.type}
-          </span>
-          <span className={`px-3 py-1 text-white text-xs font-bold rounded-lg shadow-sm ${
-            property.transaction === "Location" ? "bg-foreground" : "bg-primary"
-          }`}>
-            {property.transaction}
-          </span>
-          {property.furnished && (
-            <span className="px-3 py-1 bg-primary/80 text-white text-xs font-bold rounded-lg shadow-sm">
-              Meuble
-            </span>
+    <div className="group bg-card rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col hover:-translate-y-1">
+      <Link href={`/bien/${property.id}`} className="block">
+        <div className={`relative h-64 w-full overflow-hidden ${!hasImage ? property.gradientClass : ''}`}>
+          {hasImage && (
+            <img
+              src={getPropertyImageUrl(property.id)}
+              alt={property.title}
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              onError={() => setImgError(true)}
+              loading="lazy"
+            />
           )}
-        </div>
-        
-        <button 
-          onClick={(e) => { e.preventDefault(); setIsLiked(!isLiked); }}
-          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-foreground hover:text-destructive hover:scale-110 transition-all shadow-sm z-10"
-        >
-          <Heart size={20} className={isLiked ? "fill-destructive text-destructive" : ""} />
-        </button>
 
-        {property.photoUrl && (
-          <a
-            href={property.photoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className={`absolute inset-0 z-[5] flex items-center justify-center bg-black/10 transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+          <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+            <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg shadow-sm">
+              {property.type}
+            </span>
+            <span className={`px-3 py-1 text-white text-xs font-bold rounded-lg shadow-sm ${
+              property.transaction === "Location" ? "bg-foreground" : "bg-primary"
+            }`}>
+              {property.transaction}
+            </span>
+            {property.furnished && (
+              <span className="px-3 py-1 bg-primary/80 text-white text-xs font-bold rounded-lg shadow-sm">
+                Meublé
+              </span>
+            )}
+          </div>
+          
+          <button 
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsLiked(!isLiked); }}
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-foreground hover:text-destructive hover:scale-110 transition-all shadow-sm z-10"
           >
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
-              <Camera size={18} className="text-primary" />
-              <span className="font-semibold text-foreground text-sm">Voir photos</span>
-            </div>
-          </a>
-        )}
+            <Heart size={20} className={isLiked ? "fill-destructive text-destructive" : ""} />
+          </button>
 
-        <div className={`absolute inset-0 bg-black/20 transition-opacity duration-300 ${isHovered && !property.photoUrl ? 'opacity-100' : 'opacity-0'}`} />
-      </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </div>
+      </Link>
 
       <div className="p-6 flex flex-col flex-grow">
         <div className="mb-4">
@@ -125,7 +120,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
 
         <div className="pt-4 mt-2">
           <Link href={`/bien/${property.id}`} className="w-full py-3 rounded-xl bg-secondary hover:bg-primary hover:text-white text-secondary-foreground font-semibold flex items-center justify-center gap-2 transition-all duration-300 group/btn">
-            Voir les details
+            Voir les détails
             <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
           </Link>
         </div>
