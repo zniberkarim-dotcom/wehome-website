@@ -1,9 +1,9 @@
-import { MapPin, Bed, Bath, Square, Heart, ArrowRight, Sofa, Camera } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Heart, ArrowRight, Sofa, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { formatMAD } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import type { Property } from "@/lib/data";
-import { getPropertyImageUrl } from "@/lib/data";
+import { getPropertyImageUrls } from "@/lib/data";
 
 interface PropertyCardProps {
   property: Property;
@@ -11,17 +11,38 @@ interface PropertyCardProps {
 
 export function PropertyCard({ property }: PropertyCardProps) {
   const [isLiked, setIsLiked] = useState(false);
-  const [imgError, setImgError] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [failedIndexes, setFailedIndexes] = useState<Set<number>>(new Set());
   const [, navigate] = useLocation();
+
+  const imageUrls = getPropertyImageUrls(property);
+  const hasImages = imageUrls.length > 0;
+  const hasMultiple = imageUrls.length > 1;
 
   const showBeds = property.beds !== undefined && property.beds > 0;
   const showBaths = property.baths !== undefined && property.baths > 0;
   const showSalons = property.salons !== undefined && property.salons > 0;
   const isTerrain = ["Terrain", "Bâtiment industriel", "Commerce", "Ferme"].includes(property.type);
   const hasPrice = property.price > 0;
-  const hasImage = property.photoUrl && !imgError;
 
   const statCount = [showBeds, showBaths, showSalons, true].filter(Boolean).length;
+
+  const goNext = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
+  }, [imageUrls.length]);
+
+  const goPrev = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+  }, [imageUrls.length]);
+
+  const handleImgError = useCallback((index: number) => {
+    setFailedIndexes((prev) => new Set(prev).add(index));
+  }, []);
+
+  const currentImageFailed = failedIndexes.has(currentIndex);
+  const showImage = hasImages && !currentImageFailed;
 
   return (
     <div className="group bg-card rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col hover:-translate-y-1">
@@ -30,17 +51,18 @@ export function PropertyCard({ property }: PropertyCardProps) {
         tabIndex={0}
         onClick={() => navigate(`/bien/${property.id}`)}
         onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/bien/${property.id}`); }}
-        className={`relative h-64 w-full overflow-hidden cursor-pointer ${!hasImage ? property.gradientClass : ''}`}
+        className={`relative aspect-[4/5] w-full overflow-hidden cursor-pointer ${!showImage ? property.gradientClass : ''}`}
       >
-        {hasImage && (
+        {hasImages && imageUrls.map((url, i) => (
           <img
-            src={getPropertyImageUrl(property.id)}
-            alt={property.title}
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-            onError={() => setImgError(true)}
-            loading="lazy"
+            key={i}
+            src={url}
+            alt={`${property.title} - Photo ${i + 1}`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${i === currentIndex ? 'opacity-100' : 'opacity-0'}`}
+            onError={() => handleImgError(i)}
+            loading={i === 0 ? "eager" : "lazy"}
           />
-        )}
+        ))}
 
         <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
           <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg shadow-sm">
@@ -65,20 +87,36 @@ export function PropertyCard({ property }: PropertyCardProps) {
           <Heart size={20} className={isLiked ? "fill-destructive text-destructive" : ""} />
         </button>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        {hasMultiple && (
+          <>
+            <button
+              onClick={goPrev}
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-md z-10"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              onClick={goNext}
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-md z-10"
+            >
+              <ChevronRight size={20} />
+            </button>
 
-        {property.photoUrl && (
-          <a
-            href={property.photoUrl.replace(/\/(edit|watch)$/, '/view')}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="absolute bottom-4 right-4 flex items-center gap-1.5 px-3 py-1.5 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-white shadow-sm z-10"
-          >
-            <Camera size={14} />
-            Galerie
-          </a>
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+              {imageUrls.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={(e) => { e.stopPropagation(); setCurrentIndex(i); }}
+                  className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                    i === currentIndex ? 'bg-white w-4' : 'bg-white/60 hover:bg-white/80'
+                  }`}
+                />
+              ))}
+            </div>
+          </>
         )}
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
       </div>
 
       <div className="p-6 flex flex-col flex-grow">

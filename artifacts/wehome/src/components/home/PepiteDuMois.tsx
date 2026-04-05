@@ -1,14 +1,34 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
-import { Award, MapPin, Bed, Bath, Square, ArrowRight } from "lucide-react";
+import { Award, MapPin, Bed, Bath, Square, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { formatMAD } from "@/lib/utils";
-import { PEPITE_DU_MOIS, getPropertyImageUrl } from "@/lib/data";
-import { useState } from "react";
+import { PEPITE_DU_MOIS, getPropertyImageUrls } from "@/lib/data";
+import { useState, useCallback } from "react";
 
 export function PepiteDuMois() {
   const pepite = PEPITE_DU_MOIS;
-  const [imgError, setImgError] = useState(false);
-  const hasImage = pepite.photoUrl && !imgError;
+  const [failedIndexes, setFailedIndexes] = useState<Set<number>>(new Set());
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const imageUrls = getPropertyImageUrls(pepite);
+  const hasImages = imageUrls.length > 0 && !failedIndexes.has(0);
+  const hasMultiple = imageUrls.length > 1;
+
+  const goNext = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
+  }, [imageUrls.length]);
+
+  const goPrev = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+  }, [imageUrls.length]);
+
+  const handleImgError = useCallback((index: number) => {
+    setFailedIndexes((prev) => new Set(prev).add(index));
+  }, []);
 
   return (
     <section className="py-24 bg-background">
@@ -25,14 +45,35 @@ export function PepiteDuMois() {
 
         <div className="bg-card rounded-[2.5rem] overflow-hidden border border-border shadow-2xl flex flex-col lg:flex-row">
           
-          <div className={`w-full lg:w-3/5 relative min-h-[400px] lg:min-h-[600px] ${!hasImage ? 'bg-slate-100' : ''}`}>
-            {hasImage ? (
-              <img
-                src={getPropertyImageUrl(pepite.id)}
-                alt={pepite.title}
-                className="absolute inset-0 w-full h-full object-cover"
-                onError={() => setImgError(true)}
-              />
+          <div className={`group w-full lg:w-3/5 relative min-h-[400px] lg:min-h-[600px] ${!hasImages ? 'bg-slate-100' : ''}`}>
+            {hasImages ? (
+              <>
+                {imageUrls.map((url, i) => (
+                  <img
+                    key={i}
+                    src={url}
+                    alt={`${pepite.title} - Photo ${i + 1}`}
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${i === currentIndex ? 'opacity-100' : 'opacity-0'}`}
+                    onError={() => handleImgError(i)}
+                    loading={i === 0 ? "eager" : "lazy"}
+                  />
+                ))}
+                {hasMultiple && (
+                  <>
+                    <button onClick={goPrev} className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-lg z-10">
+                      <ChevronLeft size={22} />
+                    </button>
+                    <button onClick={goNext} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-lg z-10">
+                      <ChevronRight size={22} />
+                    </button>
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                      {imageUrls.map((_, i) => (
+                        <button key={i} onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentIndex(i); }} className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${i === currentIndex ? 'bg-white w-5 shadow-md' : 'bg-white/60 hover:bg-white/80'}`} />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </>
             ) : (
               <img 
                 src={`${import.meta.env.BASE_URL}images/pepite.png`}
@@ -40,9 +81,9 @@ export function PepiteDuMois() {
                 className="absolute inset-0 w-full h-full object-cover"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent lg:hidden" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent lg:hidden pointer-events-none" />
             
-            <div className="absolute top-6 left-6 px-4 py-2 bg-accent text-accent-foreground font-bold rounded-xl shadow-lg backdrop-blur-md flex items-center gap-2">
+            <div className="absolute top-6 left-6 px-4 py-2 bg-accent text-accent-foreground font-bold rounded-xl shadow-lg backdrop-blur-md flex items-center gap-2 z-10">
               <Award size={18} />
               <span>Pépite du Mois</span>
             </div>

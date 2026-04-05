@@ -1,19 +1,20 @@
 import { useParams, Link } from "wouter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { ALL_PROPERTIES, getPropertyImageUrl } from "@/lib/data";
+import { ALL_PROPERTIES, getPropertyImageUrls } from "@/lib/data";
 import { formatMAD } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   MapPin, Bed, Bath, Square, Sofa, ArrowLeft,
-  Building2, Layers, CheckCircle2, Phone, Mail, Camera
+  Building2, Layers, CheckCircle2, Phone, Mail, ChevronLeft, ChevronRight
 } from "lucide-react";
 
 export default function BienPage() {
   const params = useParams<{ id: string }>();
   const property = ALL_PROPERTIES.find((p) => p.id === params.id);
-  const [imgError, setImgError] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [failedIndexes, setFailedIndexes] = useState<Set<number>>(new Set());
 
   if (!property) {
     return (
@@ -34,11 +35,14 @@ export default function BienPage() {
     );
   }
 
+  const imageUrls = getPropertyImageUrls(property);
+  const hasImages = imageUrls.length > 0 && !failedIndexes.has(0);
+  const hasMultiple = imageUrls.length > 1;
+
   const hasPrice = property.price > 0;
   const showBeds = property.beds !== undefined && property.beds > 0;
   const showBaths = property.baths !== undefined && property.baths > 0;
   const showSalons = property.salons !== undefined && property.salons > 0;
-  const hasImage = property.photoUrl && !imgError;
 
   const specs = [
     showBeds && { icon: Bed, label: `${property.beds} Chambre${(property.beds ?? 0) > 1 ? "s" : ""}`, key: "beds" },
@@ -49,6 +53,18 @@ export default function BienPage() {
     { icon: Building2, label: property.type, key: "type" },
     property.furnished && { icon: CheckCircle2, label: "Meublé", key: "furnished" },
   ].filter(Boolean) as { icon: typeof Bed; label: string; key: string }[];
+
+  const goNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
+  }, [imageUrls.length]);
+
+  const goPrev = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+  }, [imageUrls.length]);
+
+  const handleImgError = useCallback((index: number) => {
+    setFailedIndexes((prev) => new Set(prev).add(index));
+  }, []);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -61,14 +77,53 @@ export default function BienPage() {
               Retour aux biens
             </Link>
 
-            <div className={`relative w-full h-[300px] md:h-[450px] rounded-3xl overflow-hidden mb-8 ${!hasImage ? property.gradientClass : ''}`}>
-              {hasImage && (
-                <img
-                  src={getPropertyImageUrl(property.id)}
-                  alt={property.title}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  onError={() => setImgError(true)}
-                />
+            <div className={`group relative w-full rounded-3xl overflow-hidden mb-8 ${!hasImages ? property.gradientClass + ' aspect-video' : ''}`}>
+              {hasImages && (
+                <div className="relative aspect-[4/5] md:aspect-[3/2] w-full">
+                  {imageUrls.map((url, i) => (
+                    <img
+                      key={i}
+                      src={url}
+                      alt={`${property.title} - Photo ${i + 1}`}
+                      className={`absolute inset-0 w-full h-full object-contain bg-gray-50 transition-opacity duration-300 ${i === currentIndex ? 'opacity-100' : 'opacity-0'}`}
+                      onError={() => handleImgError(i)}
+                      loading={i === 0 ? "eager" : "lazy"}
+                    />
+                  ))}
+
+                  {hasMultiple && (
+                    <>
+                      <button
+                        onClick={goPrev}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-lg z-10"
+                      >
+                        <ChevronLeft size={24} />
+                      </button>
+                      <button
+                        onClick={goNext}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-lg z-10"
+                      >
+                        <ChevronRight size={24} />
+                      </button>
+
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                        {imageUrls.map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={() => setCurrentIndex(i)}
+                            className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                              i === currentIndex ? 'bg-white w-6 shadow-md' : 'bg-white/60 hover:bg-white/80'
+                            }`}
+                          />
+                        ))}
+                      </div>
+
+                      <div className="absolute top-4 right-4 px-3 py-1.5 bg-black/50 backdrop-blur-sm text-white text-sm font-medium rounded-lg z-10">
+                        {currentIndex + 1} / {imageUrls.length}
+                      </div>
+                    </>
+                  )}
+                </div>
               )}
 
               <div className="absolute top-6 left-6 flex flex-col gap-2 z-20">
@@ -84,21 +139,6 @@ export default function BienPage() {
                   <span className="px-4 py-1.5 bg-primary/80 text-white text-sm font-bold rounded-lg shadow-sm">
                     Meublé
                   </span>
-                )}
-              </div>
-
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-8 z-20 flex items-end justify-between">
-                <p className="text-white/80 text-sm font-medium">{property.id}</p>
-                {property.photoUrl && (
-                  <a
-                    href={property.photoUrl.replace(/\/(edit|watch)$/, '/view')}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm text-foreground text-sm font-bold rounded-xl hover:bg-white transition-colors shadow-lg"
-                  >
-                    <Camera size={16} />
-                    Voir la galerie
-                  </a>
                 )}
               </div>
             </div>
