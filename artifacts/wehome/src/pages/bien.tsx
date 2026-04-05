@@ -9,6 +9,7 @@ import {
   MapPin, Bed, Bath, Square, Sofa, ArrowLeft,
   Building2, Layers, CheckCircle2, Phone, Mail, ChevronLeft, ChevronRight
 } from "lucide-react";
+import { useSwipe } from "@/hooks/useSwipe";
 
 export default function BienPage() {
   const params = useParams<{ id: string }>();
@@ -63,6 +64,8 @@ export default function BienPage() {
     setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
   }, [imageUrls.length]);
 
+  const { onTouchStart, onTouchEnd } = useSwipe(goNext, goPrev);
+
   const handleImgError = useCallback((index: number) => {
     setFailedIndexes((prev) => new Set(prev).add(index));
   }, []);
@@ -80,7 +83,11 @@ export default function BienPage() {
 
             <div className={`group relative w-full rounded-3xl overflow-hidden mb-8 ${!hasImages ? property.gradientClass + ' aspect-video' : ''}`}>
               {hasImages && (
-                <div className="relative aspect-[4/5] md:aspect-[3/2] w-full">
+                <div
+                  className="relative aspect-[4/5] md:aspect-[3/2] w-full"
+                  onTouchStart={hasMultiple ? onTouchStart : undefined}
+                  onTouchEnd={hasMultiple ? onTouchEnd : undefined}
+                >
                   {imageUrls.map((url, i) => (
                     <img
                       key={i}

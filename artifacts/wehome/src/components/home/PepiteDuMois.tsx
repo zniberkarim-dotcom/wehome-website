@@ -4,6 +4,7 @@ import { Award, MapPin, Bed, Bath, Square, ArrowRight, ChevronLeft, ChevronRight
 import { formatMAD } from "@/lib/utils";
 import { PEPITE_DU_MOIS, getPropertyImageUrls } from "@/lib/data";
 import { useState, useCallback } from "react";
+import { useSwipe } from "@/hooks/useSwipe";
 
 export function PepiteDuMois() {
   const pepite = PEPITE_DU_MOIS;
@@ -15,17 +16,27 @@ export function PepiteDuMois() {
   const hasImages = validCount > 0;
   const hasMultiple = validCount > 1;
 
+  const goNextIndex = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
+  }, [imageUrls.length]);
+
+  const goPrevIndex = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+  }, [imageUrls.length]);
+
   const goNext = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
-  }, [imageUrls.length]);
+    goNextIndex();
+  }, [goNextIndex]);
 
   const goPrev = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
-  }, [imageUrls.length]);
+    goPrevIndex();
+  }, [goPrevIndex]);
+
+  const { onTouchStart, onTouchEnd } = useSwipe(goNextIndex, goPrevIndex);
 
   const handleImgError = useCallback((index: number) => {
     setFailedIndexes((prev) => new Set(prev).add(index));
@@ -46,7 +57,11 @@ export function PepiteDuMois() {
 
         <div className="bg-card rounded-[2.5rem] overflow-hidden border border-border shadow-2xl flex flex-col lg:flex-row">
           
-          <div className={`group w-full lg:w-3/5 relative min-h-[400px] lg:min-h-[600px] ${!hasImages ? 'bg-slate-100' : ''}`}>
+          <div
+            className={`group w-full lg:w-3/5 relative min-h-[400px] lg:min-h-[600px] ${!hasImages ? 'bg-slate-100' : ''}`}
+            onTouchStart={hasMultiple ? onTouchStart : undefined}
+            onTouchEnd={hasMultiple ? onTouchEnd : undefined}
+          >
             {hasImages ? (
               <>
                 {imageUrls.map((url, i) => (

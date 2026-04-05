@@ -4,6 +4,7 @@ import { formatMAD } from "@/lib/utils";
 import { useState, useCallback } from "react";
 import type { Property } from "@/lib/data";
 import { getPropertyImageUrls } from "@/lib/data";
+import { useSwipe } from "@/hooks/useSwipe";
 
 interface PropertyCardProps {
   property: Property;
@@ -27,15 +28,25 @@ export function PropertyCard({ property }: PropertyCardProps) {
 
   const statCount = [showBeds, showBaths, showSalons, true].filter(Boolean).length;
 
-  const goNext = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
+  const goNextIndex = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
   }, [imageUrls.length]);
 
-  const goPrev = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
+  const goPrevIndex = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
   }, [imageUrls.length]);
+
+  const goNext = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    goNextIndex();
+  }, [goNextIndex]);
+
+  const goPrev = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    goPrevIndex();
+  }, [goPrevIndex]);
+
+  const { onTouchStart, onTouchEnd, didSwipe } = useSwipe(goNextIndex, goPrevIndex);
 
   const handleImgError = useCallback((index: number) => {
     setFailedIndexes((prev) => new Set(prev).add(index));
@@ -49,8 +60,10 @@ export function PropertyCard({ property }: PropertyCardProps) {
       <div
         role="link"
         tabIndex={0}
-        onClick={() => navigate(`/bien/${property.id}`)}
+        onClick={() => { if (!didSwipe.current) navigate(`/bien/${property.id}`); }}
         onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/bien/${property.id}`); }}
+        onTouchStart={hasMultiple ? onTouchStart : undefined}
+        onTouchEnd={hasMultiple ? onTouchEnd : undefined}
         className={`relative aspect-[4/5] w-full overflow-hidden cursor-pointer ${!showImage ? property.gradientClass : ''}`}
       >
         {hasImages && imageUrls.map((url, i) => (
