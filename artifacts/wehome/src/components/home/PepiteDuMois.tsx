@@ -11,8 +11,9 @@ export function PepiteDuMois() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const imageUrls = getPropertyImageUrls(pepite);
-  const hasImages = imageUrls.length > 0 && !failedIndexes.has(0);
-  const hasMultiple = imageUrls.length > 1;
+  const validCount = imageUrls.length - failedIndexes.size;
+  const hasImages = validCount > 0;
+  const hasMultiple = validCount > 1;
 
   const goNext = useCallback((e: React.MouseEvent) => {
     e.preventDefault();

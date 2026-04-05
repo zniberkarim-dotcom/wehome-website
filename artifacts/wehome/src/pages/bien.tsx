@@ -36,8 +36,9 @@ export default function BienPage() {
   }
 
   const imageUrls = getPropertyImageUrls(property);
-  const hasImages = imageUrls.length > 0 && !failedIndexes.has(0);
-  const hasMultiple = imageUrls.length > 1;
+  const validCount = imageUrls.length - failedIndexes.size;
+  const hasImages = validCount > 0;
+  const hasMultiple = validCount > 1;
 
   const hasPrice = property.price > 0;
   const showBeds = property.beds !== undefined && property.beds > 0;
