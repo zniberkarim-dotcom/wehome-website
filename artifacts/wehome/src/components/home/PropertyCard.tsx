@@ -1,4 +1,4 @@
-import { MapPin, Bed, Bath, Square, Heart, ArrowRight, Sofa } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Heart, ArrowRight, Sofa, Camera } from "lucide-react";
 import { Link } from "wouter";
 import { formatMAD } from "@/lib/utils";
 import { useState } from "react";
@@ -60,6 +60,19 @@ export function PropertyCard({ property }: PropertyCardProps) {
           </button>
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+          {property.photoUrl && (
+            <a
+              href={property.photoUrl.replace(/\/(edit|watch)$/, '/view')}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="absolute bottom-4 right-4 flex items-center gap-1.5 px-3 py-1.5 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-white shadow-sm z-10"
+            >
+              <Camera size={14} />
+              Galerie
+            </a>
+          )}
         </div>
       </Link>
 

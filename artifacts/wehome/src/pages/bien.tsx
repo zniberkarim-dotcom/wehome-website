@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import {
   MapPin, Bed, Bath, Square, Sofa, ArrowLeft,
-  Building2, Layers, CheckCircle2, Phone, Mail
+  Building2, Layers, CheckCircle2, Phone, Mail, Camera
 } from "lucide-react";
 
 export default function BienPage() {
@@ -87,8 +87,19 @@ export default function BienPage() {
                 )}
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-8 z-20">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-8 z-20 flex items-end justify-between">
                 <p className="text-white/80 text-sm font-medium">{property.id}</p>
+                {property.photoUrl && (
+                  <a
+                    href={property.photoUrl.replace(/\/(edit|watch)$/, '/view')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm text-foreground text-sm font-bold rounded-xl hover:bg-white transition-colors shadow-lg"
+                  >
+                    <Camera size={16} />
+                    Voir la galerie
+                  </a>
+                )}
               </div>
             </div>
 
