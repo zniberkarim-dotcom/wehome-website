@@ -1,3 +1,14 @@
-<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="180" height="180" rx="36" fill="#FF3C00"/>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="512" height="512" rx="64" fill="white"/>
+<g transform="translate(30, 150)">
+  <path d="M20 160 L60 40 L100 120 L140 40 L180 160" stroke="#8B1A3A" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M195 100 A50 50 0 1 1 195 100.1" stroke="#8B1A3A" stroke-width="16" fill="none"/>
+  <rect x="290" y="10" width="16" height="160" rx="8" fill="#3C4555"/>
+  <path d="M290 85 Q290 55 320 55 L340 55" stroke="#3C4555" stroke-width="16" stroke-linecap="round" fill="none"/>
+  <circle cx="355" cy="70" r="40" stroke="#8B1A3A" stroke-width="16" fill="none"/>
+  <line x1="385" y1="100" x2="410" y2="135" stroke="#8B1A3A" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="355" cy="70" r="5" fill="#3C4555"/>
+  <path d="M415 55 Q415 160 415 160 Q415 160 460 160" stroke="#3C4555" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M415 105 L445 105" stroke="#3C4555" stroke-width="16" stroke-linecap="round"/>
+</g>
 </svg>
