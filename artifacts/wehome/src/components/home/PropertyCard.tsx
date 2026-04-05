@@ -1,5 +1,5 @@
 import { MapPin, Bed, Bath, Square, Heart, ArrowRight, Sofa, Camera } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { formatMAD } from "@/lib/utils";
 import { useState } from "react";
 import type { Property } from "@/lib/data";
@@ -12,6 +12,7 @@ interface PropertyCardProps {
 export function PropertyCard({ property }: PropertyCardProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [, navigate] = useLocation();
 
   const showBeds = property.beds !== undefined && property.beds > 0;
   const showBaths = property.baths !== undefined && property.baths > 0;
@@ -24,57 +25,61 @@ export function PropertyCard({ property }: PropertyCardProps) {
 
   return (
     <div className="group bg-card rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col hover:-translate-y-1">
-      <Link href={`/bien/${property.id}`} className="block">
-        <div className={`relative h-64 w-full overflow-hidden ${!hasImage ? property.gradientClass : ''}`}>
-          {hasImage && (
-            <img
-              src={getPropertyImageUrl(property.id)}
-              alt={property.title}
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              onError={() => setImgError(true)}
-              loading="lazy"
-            />
-          )}
+      <div
+        role="link"
+        tabIndex={0}
+        onClick={() => navigate(`/bien/${property.id}`)}
+        onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/bien/${property.id}`); }}
+        className={`relative h-64 w-full overflow-hidden cursor-pointer ${!hasImage ? property.gradientClass : ''}`}
+      >
+        {hasImage && (
+          <img
+            src={getPropertyImageUrl(property.id)}
+            alt={property.title}
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            onError={() => setImgError(true)}
+            loading="lazy"
+          />
+        )}
 
-          <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
-            <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg shadow-sm">
-              {property.type}
+        <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+          <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg shadow-sm">
+            {property.type}
+          </span>
+          <span className={`px-3 py-1 text-white text-xs font-bold rounded-lg shadow-sm ${
+            property.transaction === "Location" ? "bg-foreground" : "bg-primary"
+          }`}>
+            {property.transaction}
+          </span>
+          {property.furnished && (
+            <span className="px-3 py-1 bg-primary/80 text-white text-xs font-bold rounded-lg shadow-sm">
+              Meublé
             </span>
-            <span className={`px-3 py-1 text-white text-xs font-bold rounded-lg shadow-sm ${
-              property.transaction === "Location" ? "bg-foreground" : "bg-primary"
-            }`}>
-              {property.transaction}
-            </span>
-            {property.furnished && (
-              <span className="px-3 py-1 bg-primary/80 text-white text-xs font-bold rounded-lg shadow-sm">
-                Meublé
-              </span>
-            )}
-          </div>
-          
-          <button 
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsLiked(!isLiked); }}
-            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-foreground hover:text-destructive hover:scale-110 transition-all shadow-sm z-10"
-          >
-            <Heart size={20} className={isLiked ? "fill-destructive text-destructive" : ""} />
-          </button>
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-          {property.photoUrl && (
-            <a
-              href={property.photoUrl.replace(/\/(edit|watch)$/, '/view')}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="absolute bottom-4 right-4 flex items-center gap-1.5 px-3 py-1.5 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-white shadow-sm z-10"
-            >
-              <Camera size={14} />
-              Galerie
-            </a>
           )}
         </div>
-      </Link>
+        
+        <button 
+          onClick={(e) => { e.stopPropagation(); setIsLiked(!isLiked); }}
+          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-foreground hover:text-destructive hover:scale-110 transition-all shadow-sm z-10"
+        >
+          <Heart size={20} className={isLiked ? "fill-destructive text-destructive" : ""} />
+        </button>
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+        {property.photoUrl && (
+          <a
+            href={property.photoUrl.replace(/\/(edit|watch)$/, '/view')}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="absolute bottom-4 right-4 flex items-center gap-1.5 px-3 py-1.5 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-white shadow-sm z-10"
+          >
+            <Camera size={14} />
+            Galerie
+          </a>
+        )}
+      </div>
 
       <div className="p-6 flex flex-col flex-grow">
         <div className="mb-4">
