@@ -1,4 +1,4 @@
-import { MapPin, Bed, Bath, Square, Heart, ArrowRight } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Heart, ArrowRight, Sofa } from "lucide-react";
 import { Link } from "wouter";
 import { formatMAD } from "@/lib/utils";
 import { useState } from "react";
@@ -14,7 +14,11 @@ export function PropertyCard({ property }: PropertyCardProps) {
 
   const showBeds = property.beds !== undefined && property.beds > 0;
   const showBaths = property.baths !== undefined && property.baths > 0;
+  const showSalons = property.salons !== undefined && property.salons > 0;
   const isTerrain = ["Terrain", "Bâtiment industriel", "Commerce", "Ferme"].includes(property.type);
+  const hasPrice = property.price > 0;
+
+  const statCount = [showBeds, showBaths, showSalons, true].filter(Boolean).length;
 
   return (
     <div 
@@ -52,9 +56,15 @@ export function PropertyCard({ property }: PropertyCardProps) {
       <div className="p-6 flex flex-col flex-grow">
         <div className="mb-4">
           <h3 className="text-2xl font-display font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
-            {formatMAD(property.price)}{property.isRental ? <span className="text-base font-medium text-muted-foreground">/mois</span> : ""}
+            {hasPrice ? (
+              <>
+                {formatMAD(property.price)}{property.isRental ? <span className="text-base font-medium text-muted-foreground">/mois</span> : ""}
+              </>
+            ) : (
+              <span className="text-lg">{property.priceLabel || "Prix sur demande"}</span>
+            )}
           </h3>
-          {property.priceLabel && (
+          {hasPrice && property.priceLabel && (
             <p className="text-xs text-muted-foreground">{property.priceLabel}</p>
           )}
           <p className="font-semibold text-foreground/90 line-clamp-1">{property.title}</p>
@@ -70,22 +80,30 @@ export function PropertyCard({ property }: PropertyCardProps) {
             <span className="text-sm font-medium">{property.surfaceLabel || `${property.surface.toLocaleString("fr-FR")} m²`}</span>
           </div>
         ) : (
-          <div className={`grid gap-4 py-4 border-y border-border/60 mt-auto ${showBeds && showBaths ? 'grid-cols-3' : 'grid-cols-2'}`}>
+          <div className={`grid gap-4 py-4 border-y border-border/60 mt-auto ${
+            statCount === 4 ? 'grid-cols-4' : statCount === 3 ? 'grid-cols-3' : statCount === 2 ? 'grid-cols-2' : 'grid-cols-1'
+          }`}>
             {showBeds && (
               <div className="flex flex-col items-center justify-center gap-1">
                 <Bed size={20} className="text-primary/70" />
                 <span className="text-sm font-medium">{property.beds} Ch.</span>
               </div>
             )}
+            {showSalons && (
+              <div className="flex flex-col items-center justify-center gap-1 border-l border-border/60">
+                <Sofa size={20} className="text-primary/70" />
+                <span className="text-sm font-medium">{property.salons} Sal.</span>
+              </div>
+            )}
             {showBaths && (
-              <div className={`flex flex-col items-center justify-center gap-1 ${showBeds ? 'border-x border-border/60' : ''}`}>
+              <div className="flex flex-col items-center justify-center gap-1 border-l border-border/60">
                 <Bath size={20} className="text-primary/70" />
                 <span className="text-sm font-medium">{property.baths} SdB</span>
               </div>
             )}
-            <div className="flex flex-col items-center justify-center gap-1">
+            <div className={`flex flex-col items-center justify-center gap-1 ${(showBeds || showBaths || showSalons) ? 'border-l border-border/60' : ''}`}>
               <Square size={20} className="text-primary/70" />
-              <span className="text-sm font-medium">{property.surface} m²</span>
+              <span className="text-sm font-medium">{property.surface > 0 ? `${property.surface} m²` : "—"}</span>
             </div>
           </div>
         )}

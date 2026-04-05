@@ -96,7 +96,7 @@ Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHea
 React + Vite landing page for WeHome, a Moroccan real estate agency. French UI, MAD currency, burgundy (#8B1A3A) + charcoal (#3C4555) brand colors.
 
 - Pages: `src/pages/home.tsx` (landing), `src/pages/biens.tsx` (all listings with filters)
-- Data: `src/lib/data.ts` — 43 real property listings from client Excel sheet (villas, apartments, penthouses, studios, duplexes, bureaux, terrains, etc.)
+- Data: `src/lib/data.ts` — 46 real property listings from client Excel sheet (villas, apartments, penthouses, studios, duplexes, bureaux, terrains, etc.)
 - Components: `src/components/home/` (Hero, FeaturedProperties, PropertyCard, PepiteDuMois, Services, WhyChooseUs, CtaSection)
 - Layout: `src/components/layout/` (Navbar, Footer, Logo)
 - Router: wouter with routes /, /biens, /acheter, /louer
