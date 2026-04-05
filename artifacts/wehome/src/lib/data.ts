@@ -16,6 +16,7 @@ export interface Property {
   floor?: string;
   description: string;
   gradientClass: string;
+  photoUrl?: string;
 }
 
 const GRADIENTS = [
@@ -48,6 +49,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "3 niveaux",
     description: "Villa de 649m² sur 3 niveaux avec triple salons, séjour, 4 chambres dont 2 suites, sous-sol avec cuisine et garage, piscine. Orientation Sud/Ouest.",
     gradientClass: g(0),
+    photoUrl: "https://www.canva.com/design/DAHD29evxUw/96CZYFLbo-F1mX34sSW6gg/view",
   },
   {
     id: "VV-002",
@@ -66,6 +68,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "3 niveaux",
     description: "Villa de 1145m² sur 3 niveaux avec hammam beldi, chauffage central, garage 5 voitures, suite parentale avec jacuzzi, 3 salons dont 1 beldi.",
     gradientClass: g(1),
+    photoUrl: "https://www.canva.com/design/DAHD7yS5FXU/8HB3_cpfMiv5IY74dHc7dw/watch",
   },
   {
     id: "VV-003",
@@ -83,6 +86,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "1 niveau",
     description: "Villa d'exception Front Golf, vue directe sur le golf, sans vis-à-vis. 8 suites, 3 salons lumineux, 2 cuisines. Idéale pour grande famille ou résidence de prestige.",
     gradientClass: g(2),
+    photoUrl: "https://www.canva.com/design/DAHD2_Qje4g/kH80i4SnOdadxUwvADW0FQ/view",
   },
   {
     id: "VV-004",
@@ -100,6 +104,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "2 niveaux",
     description: "Magnifique villa de luxe dans un quartier calme et sécurisé à Ain Diab, à quelques minutes du Morocco Mall. 4 chambres, 3 salons, jardin privé avec piscine. Finition haut standing.",
     gradientClass: g(3),
+    photoUrl: "https://www.canva.com/design/DAHD3CB3L88/jGcdfhxB09T1VnF-eN1jmg/view",
   },
   {
     id: "VV-005",
@@ -117,6 +122,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "R+1+SS",
     description: "Villa de 212m² avec sous-sol, RDC avec salon marocain, double salon européen, piscine privative et jardin. Étage avec suite parentale et dressing.",
     gradientClass: g(4),
+    photoUrl: "https://www.canva.com/design/DAHD3BRwQBg/ZJV-vBxF3zKoC2B9xRIsRw/view",
   },
   {
     id: "VV-006",
@@ -135,6 +141,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "3 niveaux",
     description: "Villa indépendante angle à 3 façades. 4 suites parentales, triple salon, piscine à débordement, chauffage central, climatisation réversible, double vitrage. À 2 pas de la mer.",
     gradientClass: g(5),
+    photoUrl: "https://www.canva.com/design/DAHD3GspOJI/O6LDqr64qa5dGuiBhQbPXQ/view",
   },
   {
     id: "VV-007",
@@ -151,6 +158,7 @@ export const ALL_PROPERTIES: Property[] = [
     baths: 3,
     description: "Villa de 490m² à Dar Bouazza avec 5 chambres, 2 salons et 3 salles de bain.",
     gradientClass: g(0),
+    photoUrl: "https://www.canva.com/design/DAHD3KafhUw/qSoDtlC3RAicflGBfXeS7w/view",
   },
   {
     id: "VV-008",
@@ -165,6 +173,7 @@ export const ALL_PROPERTIES: Property[] = [
     furnished: false,
     description: "Ferme d'1 hectare avec villa de 500m², piscine et puits. Idéal pour projet résidentiel ou agricole.",
     gradientClass: g(1),
+    photoUrl: "https://www.canva.com/design/DAHEG9SvAYg/bIl1UPjHFgtxoFg8DZbYVg/edit",
   },
   {
     id: "VL-001",
@@ -181,6 +190,7 @@ export const ALL_PROPERTIES: Property[] = [
     baths: 3,
     description: "Suite parentale avec terrasse, salle de bain avec baignoire et douche, dressing. Deux junior suites avec balcon et salle de bain.",
     gradientClass: g(2),
+    photoUrl: "https://www.canva.com/design/DAG_5xB-t1o/8CUvQN4R0gqeHXq2RYQPow/view",
   },
   {
     id: "PL-001",
@@ -197,6 +207,7 @@ export const ALL_PROPERTIES: Property[] = [
     baths: 2,
     description: "Penthouse meublé de 125m² avec 2 chambres, salon et 2 salles de bain à Ferme Bretonne.",
     gradientClass: g(3),
+    photoUrl: "https://www.canva.com/design/DAHD3J67KZw/kJ2TEERB00DLxTK0Z_rmWA/edit",
   },
   {
     id: "PL-002",
@@ -214,6 +225,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "Dernier étage",
     description: "Penthouse meublé de 450m² avec grande cuisine, 2 salons spacieux, suite parentale, grande terrasse double façade. Séjour et 3 suites avec dressing à l'étage.",
     gradientClass: g(4),
+    photoUrl: "https://www.canva.com/design/DAHD3LFWRqQ/AyoeG8dB6Jm_o9H7UYKsPg/edit",
   },
   {
     id: "AV-001",
@@ -231,6 +243,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "1er étage",
     description: "Appartement de standing en front de mer avec vue imprenable sur l'océan. 3 chambres dont suite parentale avec dressing, 2 salons, cuisine équipée. 2 places parking + box.",
     gradientClass: g(5),
+    photoUrl: "https://canva.link/71i0bm0jv9o64q7",
   },
   {
     id: "AV-002",
@@ -247,6 +260,7 @@ export const ALL_PROPERTIES: Property[] = [
     baths: 3,
     description: "Appartement de 129m², bien ensoleillé. Double salons, suite parentale avec dressing et balcon, chambre d'enfant. Place au garage. Immeuble sécurisé.",
     gradientClass: g(0),
+    photoUrl: "https://www.canva.com/design/DAHEHo95HHs/vG4hLeAPMSSnShBz7Y-fSQ/edit",
   },
   {
     id: "AV-003",
@@ -264,6 +278,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "3e étage",
     description: "Appartement 83m² avec place garage, 3e étage avec ascenseur, 2 chambres, salon, 2 salles de bain, 2 balcons. Résidence fermée et sécurisée.",
     gradientClass: g(1),
+    photoUrl: "https://www.canva.com/design/DAHD3LNOQ3M/2E3VVtAV7yX1ux4sJE1_MQ/edit",
   },
   {
     id: "AV-004",
@@ -278,6 +293,7 @@ export const ALL_PROPERTIES: Property[] = [
     furnished: false,
     description: "Appartement à vendre à Casablanca. Contactez-nous pour plus de détails.",
     gradientClass: g(2),
+    photoUrl: "https://www.canva.com/design/DAHEIfcz8S8/T8s40oWGQ7HJ0oVkmJYsUw/edit",
   },
   {
     id: "AV-005",
@@ -312,6 +328,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "6e étage",
     description: "Exclusivité Marina Casablanca. Appartement meublé de 220m² avec 3 chambres, 2 salons, 3 salles de bain. 6e étage avec vue.",
     gradientClass: g(3),
+    photoUrl: "https://canva.link/z2kw56n8ic1rxed",
   },
   {
     id: "AL-002",
@@ -329,6 +346,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "14e étage",
     description: "Appartement au CFC, 14e étage, jamais habité. 3 chambres, salon, 2 salles de bain. Meublé avec goût.",
     gradientClass: g(4),
+    photoUrl: "https://www.canva.com/design/DAG-ZyRzMes/L-xHV8hHoVa2uoh16bedaQ/view",
   },
   {
     id: "AL-003",
@@ -363,6 +381,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "RDJ",
     description: "Rez-de-jardin d'exception, volumes loft & grande terrasse. Résidence calme et familiale avec 2 piscines. 3 chambres dont suite parentale, 2 salons.",
     gradientClass: g(0),
+    photoUrl: "https://www.canva.com/design/DAG-Z-Yh56s/nV3vsEJTS6uEf-1UlY_DdQ/view",
   },
   {
     id: "AL-005",
@@ -380,6 +399,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "RDC",
     description: "2 chambres, 1 salon, 2 salles de bains, cuisine et terrasse au RDC. Immeuble avec centre commercial Marjane. Sécurité 24/24.",
     gradientClass: g(1),
+    photoUrl: "https://www.canva.com/design/DAHCbKoEXtg/eZSiUQx8iThYJMoEFkGhYA/view",
   },
   {
     id: "AL-006",
@@ -397,6 +417,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "RDC",
     description: "Appartement 115m² à Racine Extension, 2 chambres, salon, salle de bain. RDC, non meublé.",
     gradientClass: g(2),
+    photoUrl: "https://www.canva.com/design/DAG-ZhSZkLk/xV0drHTjLa1WAti8pkWmPw/view",
   },
   {
     id: "AL-007",
@@ -414,6 +435,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "1er étage",
     description: "Appartement meublé de 45m² à Abdelmoumen-Oasis, 1 chambre, salon, salle de bain. 1er étage.",
     gradientClass: g(3),
+    photoUrl: "https://www.canva.com/design/DAHD2MEHhh4/pOZKnAOrNjCfSNYJabRvPQ/view",
   },
   {
     id: "DV-001",
@@ -448,6 +470,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "Dernier étage",
     description: "Exceptionnel triplex de 368m² avec vue mer, dernier étage avec cheminée, 3 chambres, roof top aménagé avec jacuzzi. Résidence de prestige à Ain Diab.",
     gradientClass: g(5),
+    photoUrl: "https://www.canva.com/design/DAHD63sxPOo/SM6-mepYtAB851UFOqVfAQ/edit",
   },
   {
     id: "SV-001",
@@ -482,6 +505,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "4e étage",
     description: "Studio de 54m² à vendre à Casablanca. 4e étage.",
     gradientClass: g(1),
+    photoUrl: "https://www.canva.com/design/DAHD7kqkuGc/QYrudhYk3YXM08rqhkA3bA/edit",
   },
   {
     id: "SL-001",
@@ -499,6 +523,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "10e étage",
     description: "Studio meublé à la Marina Casablanca, 60m², 10e étage. Vue et prestations de qualité.",
     gradientClass: g(1),
+    photoUrl: "https://canva.link/biyj7wfkrjemw83",
   },
   {
     id: "SL-002",
@@ -516,6 +541,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "RDC surélevé",
     description: "Studio meublé de 50m² à Ferme Bretonne, RDC surélevé. Calme et fonctionnel.",
     gradientClass: g(2),
+    photoUrl: "https://www.canva.com/design/DAHBHLLibDM/q62iYe-obIWWboCajrqKnQ/view",
   },
   {
     id: "SL-003",
@@ -533,6 +559,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "RDC surélevé",
     description: "Studio meublé de 59m² à Ferme Bretonne, quartier calme et sécurisé, proche CFC. Entièrement rénové.",
     gradientClass: g(3),
+    photoUrl: "https://www.canva.com/design/DAG_sgbtWb4/OIRcNfIkmqMu0uucWkqjyA/view",
   },
   {
     id: "SL-004",
@@ -550,6 +577,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "11e étage",
     description: "Studio meublé de 65m² au 11e étage d'une résidence moderne au CFC. Vue panoramique et prestations haut de gamme.",
     gradientClass: g(4),
+    photoUrl: "https://canva.link/y5pkl9cvqtncsdd",
   },
   {
     id: "SL-005",
@@ -567,6 +595,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "1er étage",
     description: "Appartement meublé de 45m² à Abdelmoumen-Oasis, 1 chambre, salon, salle de bain.",
     gradientClass: g(5),
+    photoUrl: "https://www.canva.com/design/DAHD2MEHhh4/pOZKnAOrNjCfSNYJabRvPQ/view",
   },
   {
     id: "BV-001",
@@ -580,6 +609,7 @@ export const ALL_PROPERTIES: Property[] = [
     furnished: false,
     description: "Bureau de 91m² + 18m² parking, à 3 minutes du CFC. Idéal pour usage professionnel.",
     gradientClass: g(0),
+    photoUrl: "https://www.canva.com/design/DAHCaxhFb9c/en40prOmyy1-1G8F0BklwQ/view",
   },
   {
     id: "BL-001",
@@ -593,6 +623,7 @@ export const ALL_PROPERTIES: Property[] = [
     furnished: false,
     description: "Bureau moderne haut standing de 225m² sur Boulevard d'Anfa. Prestations haut de gamme, matériaux nobles. Idéal cabinet professionnel ou siège d'entreprise.",
     gradientClass: g(1),
+    photoUrl: "https://www.canva.com/design/DAHDES-w2xc/6z8NqE44Q_WsQCwvDH1OPw/view",
   },
   {
     id: "BL-002",
@@ -607,6 +638,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "4e étage",
     description: "Bureau de 72m² au CFC avec deux places parking. 4e étage.",
     gradientClass: g(2),
+    photoUrl: "https://www.canva.com/design/DAHCnQH5dCo/uyBXme8Ikti3fDccfJLvBQ/view",
   },
   {
     id: "BL-003",
@@ -622,6 +654,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "1er étage",
     description: "Bureau traversant de 131m² au 1er étage, 2 façades (boulevard + cour). Proche commerces, écoles, restaurants.",
     gradientClass: g(3),
+    photoUrl: "https://www.canva.com/design/DAHD1oGGkQg/B7HV_VWoziKLZlmDYuSmqg/view",
   },
   {
     id: "BL-004",
@@ -636,6 +669,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "1er étage",
     description: "Plateau bureau neuf de 74m², emplacement stratégique proche de l'Hôpital Cheikh Khalifa. Immeuble aux normes modernes.",
     gradientClass: g(4),
+    photoUrl: "https://www.canva.com/design/DAHCa_M7jW4/LNqQtRTm6qfQoUCxX_KcKQ/view",
   },
   {
     id: "BL-005",
@@ -650,6 +684,7 @@ export const ALL_PROPERTIES: Property[] = [
     floor: "2e étage",
     description: "Bureau de 120m² sur Boulevard Abdelmoumen, 2e étage. Garage de 17m² inclus.",
     gradientClass: g(5),
+    photoUrl: "https://www.canva.com/design/DAHCniljX7g/c75Q8KysdaHqpzvWp8s3qQ/view",
   },
   {
     id: "BL-006",
@@ -664,6 +699,7 @@ export const ALL_PROPERTIES: Property[] = [
     furnished: false,
     description: "Bureau à louer à Casablanca. Contactez-nous pour plus de détails.",
     gradientClass: g(0),
+    photoUrl: "https://www.canva.com/design/DAHE3BH-TXw/qL5MkAvOVgeTrp1XvI4dxQ/edit",
   },
   {
     id: "TV-001",
@@ -692,6 +728,7 @@ export const ALL_PROPERTIES: Property[] = [
     furnished: false,
     description: "Zone industriel Sapino R+3. Surface terrain 1300m², 1000m² par étage, total 4000m². Monte charge disponible.",
     gradientClass: g(1),
+    photoUrl: "https://www.canva.com/design/DAHAQggNGy0/cP1e82pW1E2-XsyBUkZvnw/view",
   },
   {
     id: "TV-003",

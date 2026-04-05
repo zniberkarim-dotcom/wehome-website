@@ -1,4 +1,4 @@
-import { MapPin, Bed, Bath, Square, Heart, ArrowRight, Sofa } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Heart, ArrowRight, Sofa, Camera } from "lucide-react";
 import { Link } from "wouter";
 import { formatMAD } from "@/lib/utils";
 import { useState } from "react";
@@ -27,30 +27,45 @@ export function PropertyCard({ property }: PropertyCardProps) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className={`relative h-64 w-full ${property.gradientClass} overflow-hidden`}>
-        <div className="absolute top-4 left-4 flex flex-col gap-2">
+        <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
           <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg shadow-sm">
             {property.type}
           </span>
           <span className={`px-3 py-1 text-white text-xs font-bold rounded-lg shadow-sm ${
-            property.transaction === "Location" ? "bg-blue-600" : "bg-primary"
+            property.transaction === "Location" ? "bg-foreground" : "bg-primary"
           }`}>
             {property.transaction}
           </span>
           {property.furnished && (
-            <span className="px-3 py-1 bg-emerald-600 text-white text-xs font-bold rounded-lg shadow-sm">
-              Meublé
+            <span className="px-3 py-1 bg-primary/80 text-white text-xs font-bold rounded-lg shadow-sm">
+              Meuble
             </span>
           )}
         </div>
         
         <button 
           onClick={(e) => { e.preventDefault(); setIsLiked(!isLiked); }}
-          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-foreground hover:text-destructive hover:scale-110 transition-all shadow-sm"
+          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-foreground hover:text-destructive hover:scale-110 transition-all shadow-sm z-10"
         >
           <Heart size={20} className={isLiked ? "fill-destructive text-destructive" : ""} />
         </button>
 
-        <div className={`absolute inset-0 bg-black/20 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
+        {property.photoUrl && (
+          <a
+            href={property.photoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className={`absolute inset-0 z-[5] flex items-center justify-center bg-black/10 transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+          >
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
+              <Camera size={18} className="text-primary" />
+              <span className="font-semibold text-foreground text-sm">Voir photos</span>
+            </div>
+          </a>
+        )}
+
+        <div className={`absolute inset-0 bg-black/20 transition-opacity duration-300 ${isHovered && !property.photoUrl ? 'opacity-100' : 'opacity-0'}`} />
       </div>
 
       <div className="p-6 flex flex-col flex-grow">
