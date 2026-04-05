@@ -769,7 +769,7 @@ export const FEATURED_PROPERTIES = ALL_PROPERTIES.filter(p =>
   ["VV-003", "VV-004", "DV-002", "AV-001", "PL-002", "AL-001"].includes(p.id)
 );
 
-export const PEPITE_DU_MOIS = ALL_PROPERTIES.find(p => p.id === "VV-003")!;
+export const PEPITE_DU_MOIS = ALL_PROPERTIES.find(p => p.id === "VV-003") ?? ALL_PROPERTIES[0];
 
 export const PROPERTY_TYPES = [
   "Villa",

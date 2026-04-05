@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useRoute } from "wouter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PropertyCard } from "@/components/home/PropertyCard";
@@ -6,10 +7,19 @@ import { ALL_PROPERTIES, PROPERTY_TYPES } from "@/lib/data";
 import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 
+function useInitialTransaction(): string {
+  const [isAcheter] = useRoute("/acheter");
+  const [isLouer] = useRoute("/louer");
+  if (isAcheter) return "Vente";
+  if (isLouer) return "Location";
+  return "";
+}
+
 export default function BiensPage() {
+  const initialTransaction = useInitialTransaction();
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState("");
-  const [selectedTransaction, setSelectedTransaction] = useState("");
+  const [selectedTransaction, setSelectedTransaction] = useState(initialTransaction);
   const [showFilters, setShowFilters] = useState(false);
 
   const filtered = useMemo(() => {
