@@ -23,7 +23,7 @@ export function Navbar() {
     { name: "Acheter", href: "/acheter" },
     { name: "Louer", href: "/louer" },
     { name: "Vendre", href: whatsappVendre, external: true },
-    { name: "A Propos", href: "/a-propos" },
+    { name: "À Propos", href: "/a-propos" },
     { name: "Contact", href: "/contact" },
   ];
 

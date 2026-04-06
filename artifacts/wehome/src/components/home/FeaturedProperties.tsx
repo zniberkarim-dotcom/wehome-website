@@ -20,7 +20,7 @@ export function FeaturedProperties() {
               Biens en vedette
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-              Decouvrez notre selection de biens immobiliers premium, commercialises avec notre approche data-driven unique.
+              Découvrez notre sélection de biens immobiliers premium, commercialisés avec notre approche data-driven unique.
             </p>
           </motion.div>
           

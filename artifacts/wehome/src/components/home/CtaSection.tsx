@@ -18,17 +18,17 @@ export function CtaSection() {
 
           <div className="relative z-10">
             <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-6">
-              Pret a passer a l'action ?
+              Prêt à passer à l'action ?
             </h2>
             <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
-              Que vous cherchiez votre futur chez-vous ou que vous souhaitiez vendre votre bien au meilleur prix, notre approche hybride garantit des resultats.
+              Que vous cherchiez votre futur chez-vous ou que vous souhaitiez vendre votre bien au meilleur prix, notre approche hybride garantit des résultats.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link href="/vendre" className="w-full sm:w-auto px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-lg flex items-center justify-center gap-3 shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+              <a href={`https://wa.me/212653535156?text=${encodeURIComponent("Bonjour WeHome,\n\nJe souhaite vendre mon bien immobilier.\n\nPouvez-vous me contacter pour en discuter ?\n\nMerci !")}`} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-lg flex items-center justify-center gap-3 shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                 <Key size={22} />
                 Vendre mon bien
-              </Link>
+              </a>
               
               <Link href="/acheter" className="w-full sm:w-auto px-8 py-4 bg-secondary text-secondary-foreground border border-border rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:bg-secondary/80 hover:-translate-y-1 transition-all duration-300">
                 <Home size={22} />

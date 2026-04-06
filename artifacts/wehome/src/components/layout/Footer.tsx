@@ -13,7 +13,7 @@ export function Footer() {
               <Logo height={36} className="brightness-0 invert" />
             </Link>
             <p className="text-white/60 text-sm leading-relaxed max-w-sm">
-              Nous ne sommes pas une simple agence immobiliere. Nous sommes un ecosysteme hybride combinant Immobilier, Marketing, Generation de leads et Media.
+              Nous ne sommes pas une simple agence immobilière. Nous sommes un écosystème hybride combinant Immobilier, Marketing, Génération de leads et Média.
             </p>
             <div className="flex gap-4">
               <a href="https://www.instagram.com/wehomeagency?igsh=ZDF5MTZ6ZzM3YXly" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:bg-primary hover:text-white transition-colors">
@@ -35,8 +35,8 @@ export function Footer() {
               <li><Link href="/acheter" className="hover:text-primary transition-colors">Acheter un bien</Link></li>
               <li><Link href="/louer" className="hover:text-primary transition-colors">Louer un bien</Link></li>
               <li><a href={`https://wa.me/212653535156?text=${encodeURIComponent("Bonjour WeHome,\n\nJe souhaite vendre mon bien immobilier.\n\nPouvez-vous me contacter pour en discuter ?\n\nMerci !")}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Vendre votre bien</a></li>
-              <li><Link href="/a-propos" className="hover:text-primary transition-colors">A Propos</Link></li>
-              <li><Link href="/media" className="hover:text-primary transition-colors">Media & Contenu</Link></li>
+              <li><Link href="/a-propos" className="hover:text-primary transition-colors">À Propos</Link></li>
+              <li><Link href="/media" className="hover:text-primary transition-colors">Média & Contenu</Link></li>
             </ul>
           </div>
 
@@ -44,9 +44,9 @@ export function Footer() {
             <h4 className="font-display font-semibold text-lg text-white mb-6">Informations</h4>
             <ul className="space-y-4 text-sm text-white/60">
               <li><a href="#" className="hover:text-white transition-colors">Conditions d'utilisation</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Politique de confidentialite</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Politique de confidentialité</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Politique des cookies</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Mentions legales</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Mentions légales</a></li>
             </ul>
           </div>
 
@@ -71,7 +71,7 @@ export function Footer() {
         </div>
         
         <div className="mt-16 pt-8 border-t border-white/10 text-center text-white/40 text-sm">
-          <p>&copy; {new Date().getFullYear()} WeHome Agency. Tous droits reserves.</p>
+          <p>&copy; {new Date().getFullYear()} WeHome Agency. Tous droits réservés.</p>
         </div>
       </div>
     </footer>

@@ -5,23 +5,23 @@ export function WhyChooseUs() {
   const features = [
     {
       icon: <Eye size={28} />,
-      title: "Creation de Visibilite",
-      description: "Nous ne listons pas simplement votre bien ; nous creons activement de la visibilite sur plusieurs plateformes pour une exposition maximale."
+      title: "Création de Visibilité",
+      description: "Nous ne listons pas simplement votre bien ; nous créons activement de la visibilité sur plusieurs plateformes pour une exposition maximale."
     },
     {
       icon: <Target size={28} />,
-      title: "Generation de Demande",
-      description: "Grace a des funnels marketing avances, nous generons une demande ciblee plutot que d'attendre que les acheteurs vous trouvent."
+      title: "Génération de Demande",
+      description: "Grâce à des funnels marketing avancés, nous générons une demande ciblée plutôt que d'attendre que les acheteurs vous trouvent."
     },
     {
       icon: <ArrowUpCircle size={28} />,
-      title: "Valeur Percue",
-      description: "Notre production media haut de gamme et notre mise en scene elevent la valeur percue de votre bien, garantissant de meilleures offres."
+      title: "Valeur Perçue",
+      description: "Notre production média haut de gamme et notre mise en scène élèvent la valeur perçue de votre bien, garantissant de meilleures offres."
     },
     {
       icon: <Users size={28} />,
-      title: "Leads Qualifies",
-      description: "Notre approche data-driven filtre les curieux et vous connecte uniquement avec des acheteurs serieux et qualifies."
+      title: "Leads Qualifiés",
+      description: "Notre approche data-driven filtre les curieux et vous connecte uniquement avec des acheteurs sérieux et qualifiés."
     }
   ];
 
@@ -44,10 +44,10 @@ export function WhyChooseUs() {
               Pourquoi choisir WeHome ?
             </h2>
             <p className="text-primary-foreground/80 text-lg leading-relaxed mb-8">
-              Nous utilisons des outils modernes pour reinventer l'immobilier. Decouvrez la puissance d'une agence construite pour le marche d'aujourd'hui.
+              Nous utilisons des outils modernes pour réinventer l'immobilier. Découvrez la puissance d'une agence construite pour le marché d'aujourd'hui.
             </p>
             <button className="px-8 py-4 bg-white text-primary font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-              Decouvrir notre methode
+              Découvrir notre méthode
             </button>
           </motion.div>
 

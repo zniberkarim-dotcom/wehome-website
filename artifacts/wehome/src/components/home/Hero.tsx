@@ -26,13 +26,13 @@ export function Hero() {
           className="text-center max-w-3xl mb-12"
         >
           <span className="inline-block py-1.5 px-4 rounded-full bg-primary/10 text-primary font-semibold text-sm mb-6 border border-primary/20 shadow-sm backdrop-blur-md">
-            L'Ecosysteme Immobilier Hybride
+            L'Écosystème Immobilier Hybride
           </span>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-foreground leading-[1.1] tracking-tight mb-6">
             Trouvez votre <br/>chez-vous.
           </h1>
           <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto font-medium">
-            Nous combinons expertise immobiliere, marketing intelligent et strategie data-driven pour vous aider a trouver ou vendre votre bien plus rapidement.
+            Nous combinons expertise immobilière, marketing intelligent et stratégie data-driven pour vous aider à trouver ou vendre votre bien plus rapidement.
           </p>
         </motion.div>
 

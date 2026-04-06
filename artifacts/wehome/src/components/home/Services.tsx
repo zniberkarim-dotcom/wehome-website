@@ -6,17 +6,17 @@ export function Services() {
     {
       icon: <Sparkles size={32} />,
       title: "Marketing Intelligent",
-      description: "Nous transformons les biens en produits hautement attractifs grace a la mise en scene professionnelle, un contenu visuel exceptionnel et une diffusion ciblee."
+      description: "Nous transformons les biens en produits hautement attractifs grâce à la mise en scène professionnelle, un contenu visuel exceptionnel et une diffusion ciblée."
     },
     {
       icon: <LineChart size={32} />,
-      title: "Strategie Data-Driven",
-      description: "Nous testons differents angles de communication, analysons les performances et optimisons pour capter les leads les plus qualifies."
+      title: "Stratégie Data-Driven",
+      description: "Nous testons différents angles de communication, analysons les performances et optimisons pour capter les leads les plus qualifiés."
     },
     {
       icon: <Video size={32} />,
-      title: "Media & Contenu",
-      description: "En tant que media immobilier, nous produisons du contenu a forte valeur ajoutee : analyses de marche, guides d'achat et strategies d'investissement."
+      title: "Média & Contenu",
+      description: "En tant que média immobilier, nous produisons du contenu à forte valeur ajoutée : analyses de marché, guides d'achat et stratégies d'investissement."
     }
   ];
 
@@ -32,7 +32,7 @@ export function Services() {
             viewport={{ once: true }}
             className="text-3xl md:text-4xl font-display font-bold text-foreground mb-6"
           >
-            Pas une agence immobiliere classique.
+            Pas une agence immobilière classique.
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -41,7 +41,7 @@ export function Services() {
             transition={{ delay: 0.1 }}
             className="text-muted-foreground text-lg"
           >
-            Nous sommes un ecosysteme hybride combinant Immobilier, Marketing, Generation de leads et Media. Voici comment nous reinventons l'experience.
+            Nous sommes un écosystème hybride combinant Immobilier, Marketing, Génération de leads et Média. Voici comment nous réinventons l'expérience.
           </motion.p>
         </div>
 

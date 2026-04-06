@@ -55,7 +55,7 @@ export default function BiensPage() {
               Nos Biens
             </h1>
             <p className="text-muted-foreground text-lg mb-8 max-w-2xl">
-              Explorez notre portefeuille complet de biens immobiliers a Casablanca et au Maroc.
+              Explorez notre portefeuille complet de biens immobiliers à Casablanca et au Maroc.
             </p>
           </motion.div>
 
@@ -137,17 +137,17 @@ export default function BiensPage() {
 
           <div className="flex items-center justify-between mb-6">
             <p className="text-muted-foreground font-medium">
-              {filtered.length} bien{filtered.length !== 1 ? "s" : ""} trouve{filtered.length !== 1 ? "s" : ""}
+              {filtered.length} bien{filtered.length !== 1 ? "s" : ""} trouvé{filtered.length !== 1 ? "s" : ""}
             </p>
           </div>
 
           {filtered.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-2xl font-display font-bold text-foreground mb-2">
-                Aucun bien trouve
+                Aucun bien trouvé
               </p>
               <p className="text-muted-foreground">
-                Essayez de modifier vos criteres de recherche.
+                Essayez de modifier vos critères de recherche.
               </p>
             </div>
           ) : (
