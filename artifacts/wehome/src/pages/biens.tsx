@@ -1,11 +1,12 @@
 import { useState, useMemo } from "react";
 import { useRoute } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PropertyCard } from "@/components/home/PropertyCard";
-import { ALL_PROPERTIES, PROPERTY_TYPES } from "@/lib/data";
+import { fetchProperties, PROPERTY_TYPES } from "@/lib/data";
 import { motion } from "framer-motion";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X, Loader2 } from "lucide-react";
 
 function useInitialTransaction(): string {
   const [isAcheter] = useRoute("/acheter");
@@ -22,22 +23,26 @@ export default function BiensPage() {
   const [selectedTransaction, setSelectedTransaction] = useState(initialTransaction);
   const [showFilters, setShowFilters] = useState(false);
 
+  const { data: properties = [], isLoading, isError } = useQuery({
+    queryKey: ["properties", selectedTransaction, selectedType],
+    queryFn: () =>
+      fetchProperties({
+        transaction: selectedTransaction || undefined,
+        type: selectedType || undefined,
+      }),
+  });
+
   const filtered = useMemo(() => {
-    return ALL_PROPERTIES.filter((p) => {
-      if (selectedType && p.type !== selectedType) return false;
-      if (selectedTransaction && p.transaction !== selectedTransaction) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        const match =
-          p.title.toLowerCase().includes(q) ||
-          p.location.toLowerCase().includes(q) ||
-          p.type.toLowerCase().includes(q) ||
-          p.id.toLowerCase().includes(q);
-        if (!match) return false;
-      }
-      return true;
-    });
-  }, [search, selectedType, selectedTransaction]);
+    if (!search) return properties;
+    const q = search.toLowerCase();
+    return properties.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.location.toLowerCase().includes(q) ||
+        p.type.toLowerCase().includes(q) ||
+        (p.reference ?? "").toLowerCase().includes(q)
+    );
+  }, [properties, search]);
 
   const activeFilters = [selectedType, selectedTransaction, search].filter(Boolean).length;
 
@@ -135,34 +140,51 @@ export default function BiensPage() {
             )}
           </div>
 
-          <div className="flex items-center justify-between mb-6">
-            <p className="text-muted-foreground font-medium">
-              {filtered.length} bien{filtered.length !== 1 ? "s" : ""} trouvé{filtered.length !== 1 ? "s" : ""}
-            </p>
-          </div>
-
-          {filtered.length === 0 ? (
+          {isLoading ? (
+            <div className="flex items-center justify-center py-24">
+              <Loader2 size={36} className="animate-spin text-primary" />
+            </div>
+          ) : isError ? (
             <div className="text-center py-20">
               <p className="text-2xl font-display font-bold text-foreground mb-2">
-                Aucun bien trouvé
+                Erreur de chargement
               </p>
               <p className="text-muted-foreground">
-                Essayez de modifier vos critères de recherche.
+                Impossible de charger les biens. Veuillez réessayer.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filtered.map((property, index) => (
-                <motion.div
-                  key={property.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.5) }}
-                >
-                  <PropertyCard property={property} />
-                </motion.div>
-              ))}
-            </div>
+            <>
+              <div className="flex items-center justify-between mb-6">
+                <p className="text-muted-foreground font-medium">
+                  {filtered.length} bien{filtered.length !== 1 ? "s" : ""} trouvé{filtered.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+
+              {filtered.length === 0 ? (
+                <div className="text-center py-20">
+                  <p className="text-2xl font-display font-bold text-foreground mb-2">
+                    Aucun bien trouvé
+                  </p>
+                  <p className="text-muted-foreground">
+                    Essayez de modifier vos critères de recherche.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filtered.map((property, index) => (
+                    <motion.div
+                      key={property.id}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.5) }}
+                    >
+                      <PropertyCard property={property} />
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </main>

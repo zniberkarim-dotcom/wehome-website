@@ -1,3 +1,5 @@
+// ── Website Property shape (used by all components) ──────────────────────────
+
 export interface Property {
   id: string;
   title: string;
@@ -13,18 +15,28 @@ export interface Property {
   beds?: number;
   salons?: number;
   baths?: number;
+  rooms?: number;      // total pieces (from Supabase)
   floor?: string;
   description: string;
   gradientClass: string;
   photoUrl?: string;
   imageCount?: number;
+  photos?: string[];   // direct URLs from Supabase Storage
+  reference?: string;  // CRM reference (e.g. WH-2026-001)
 }
+
+// ── Image helpers ─────────────────────────────────────────────────────────────
 
 export function getPropertyImageUrl(id: string, index: number = 1): string {
   return `${import.meta.env.BASE_URL}images/properties/${id}_${index}.jpg`;
 }
 
 export function getPropertyImageUrls(property: Property): string[] {
+  // Supabase properties: use the photos array directly
+  if (property.photos && property.photos.length > 0) {
+    return property.photos;
+  }
+  // Legacy local images
   const count = property.imageCount || 0;
   if (count === 0 && property.photoUrl) {
     return [`${import.meta.env.BASE_URL}images/properties/${property.id}.jpg`];
@@ -32,7 +44,9 @@ export function getPropertyImageUrls(property: Property): string[] {
   return Array.from({ length: count }, (_, i) => getPropertyImageUrl(property.id, i + 1));
 }
 
-const GRADIENTS = [
+// ── Gradient cycle ────────────────────────────────────────────────────────────
+
+export const GRADIENTS = [
   "mesh-gradient-1",
   "mesh-gradient-2",
   "mesh-gradient-3",
@@ -45,817 +59,135 @@ function g(i: number) {
   return GRADIENTS[i % GRADIENTS.length];
 }
 
-export const ALL_PROPERTIES: Property[] = [
-  {
-    id: "VV-001",
-    title: "Villa CIL",
-    type: "Villa",
-    transaction: "Vente",
-    location: "CIL, Casablanca",
-    price: 16500000,
-    isRental: false,
-    surface: 649,
-    furnished: false,
-    beds: 4,
-    salons: 3,
-    baths: 3,
-    floor: "3 niveaux",
-    description: "Villa de 649m² sur 3 niveaux avec triple salons, séjour, 4 chambres dont 2 suites, sous-sol avec cuisine et garage, piscine. Orientation Sud/Ouest.",
-    gradientClass: g(0),
-    photoUrl: "https://www.canva.com/design/DAHD29evxUw/96CZYFLbo-F1mX34sSW6gg/view",
-    imageCount: 6,
-  },
-  {
-    id: "VV-002",
-    title: "Villa Florida",
-    type: "Villa",
-    transaction: "Vente",
-    location: "Florida, Casablanca",
-    price: 13740000,
-    priceLabel: "12 000 dh/m²",
-    isRental: false,
-    surface: 1145,
-    furnished: false,
-    beds: 7,
-    salons: 3,
-    baths: 6,
-    floor: "3 niveaux",
-    description: "Villa de 1145m² sur 3 niveaux avec hammam beldi, chauffage central, garage 5 voitures, suite parentale avec jacuzzi, 3 salons dont 1 beldi.",
-    gradientClass: g(1),
-    photoUrl: "https://www.canva.com/design/DAHD7yS5FXU/8HB3_cpfMiv5IY74dHc7dw/watch",
-    imageCount: 6,
-  },
-  {
-    id: "VV-003",
-    title: "Villa d'Exception – CGI Bouskoura",
-    type: "Villa",
-    transaction: "Vente",
-    location: "CGI Bouskoura",
-    price: 16500000,
-    isRental: false,
-    surface: 1080,
-    furnished: false,
-    beds: 8,
-    salons: 3,
-    baths: 8,
-    floor: "1 niveau",
-    description: "Villa d'exception Front Golf, vue directe sur le golf, sans vis-à-vis. 8 suites, 3 salons lumineux, 2 cuisines. Idéale pour grande famille ou résidence de prestige.",
-    gradientClass: g(2),
-    photoUrl: "https://www.canva.com/design/DAHD2_Qje4g/kH80i4SnOdadxUwvADW0FQ/view",
-  imageCount: 6,
-  },
-  {
-    id: "VV-004",
-    title: "Villa de Luxe Ain Diab",
-    type: "Villa",
-    transaction: "Vente",
-    location: "Ain Diab, Casablanca",
-    price: 15000000,
-    isRental: false,
-    surface: 600,
-    furnished: false,
-    beds: 4,
-    salons: 3,
-    baths: 4,
-    floor: "2 niveaux",
-    description: "Magnifique villa de luxe dans un quartier calme et sécurisé à Ain Diab, à quelques minutes du Morocco Mall. 4 chambres, 3 salons, jardin privé avec piscine. Finition haut standing.",
-    gradientClass: g(3),
-    photoUrl: "https://www.canva.com/design/DAHD3CB3L88/jGcdfhxB09T1VnF-eN1jmg/view",
-  imageCount: 6,
-  },
-  {
-    id: "VV-005",
-    title: "Villa Dar Bouazza",
-    type: "Villa",
-    transaction: "Vente",
-    location: "Dar Bouazza",
-    price: 3750000,
-    isRental: false,
-    surface: 212,
-    furnished: false,
-    beds: 4,
-    salons: 3,
-    baths: 5,
-    floor: "R+1+SS",
-    description: "Villa de 212m² avec sous-sol, RDC avec salon marocain, double salon européen, piscine privative et jardin. Étage avec suite parentale et dressing.",
-    gradientClass: g(4),
-    photoUrl: "https://www.canva.com/design/DAHD3BRwQBg/ZJV-vBxF3zKoC2B9xRIsRw/view",
-  imageCount: 6,
-  },
-  {
-    id: "VV-006",
-    title: "Villa d'Exception Oued Merzegu",
-    type: "Villa",
-    transaction: "Vente",
-    location: "Oued Merzegu, Les Jardins de l'Océan",
-    price: 9000000,
-    isRental: false,
-    surface: 608,
-    surfaceLabel: "608 m² terrain / 540 m² hab.",
-    furnished: false,
-    beds: 6,
-    salons: 3,
-    baths: 5,
-    floor: "3 niveaux",
-    description: "Villa indépendante angle à 3 façades. 4 suites parentales, triple salon, piscine à débordement, chauffage central, climatisation réversible, double vitrage. À 2 pas de la mer.",
-    gradientClass: g(5),
-    photoUrl: "https://www.canva.com/design/DAHD3GspOJI/O6LDqr64qa5dGuiBhQbPXQ/view",
-  imageCount: 6,
-  },
-  {
-    id: "VV-007",
-    title: "Villa Dar Bouazza",
-    type: "Villa",
-    transaction: "Vente",
-    location: "Dar Bouazza",
-    price: 5400000,
-    isRental: false,
-    surface: 490,
-    furnished: false,
-    beds: 5,
-    salons: 2,
-    baths: 3,
-    description: "Villa de 490m² à Dar Bouazza avec 5 chambres, 2 salons et 3 salles de bain.",
-    gradientClass: g(0),
-    photoUrl: "https://www.canva.com/design/DAHD3KafhUw/qSoDtlC3RAicflGBfXeS7w/view",
-  imageCount: 6,
-  },
-  {
-    id: "VV-008",
-    title: "Ferme avec Villa",
-    type: "Ferme",
-    transaction: "Vente",
-    location: "Bir Jedid",
-    price: 4400000,
-    isRental: false,
-    surface: 10000,
-    surfaceLabel: "1 Hectare",
-    furnished: false,
-    description: "Ferme d'1 hectare avec villa de 500m², piscine et puits. Idéal pour projet résidentiel ou agricole.",
-    gradientClass: g(1),
-    photoUrl: "https://www.canva.com/design/DAHEG9SvAYg/bIl1UPjHFgtxoFg8DZbYVg/edit",
-  imageCount: 5,
-  },
-  {
-    id: "VL-001",
-    title: "Villa Californie",
-    type: "Villa",
-    transaction: "Location",
-    location: "Californie, Casablanca",
-    price: 60000,
-    isRental: true,
-    surface: 1150,
-    furnished: false,
-    beds: 3,
-    salons: 3,
-    baths: 3,
-    description: "Suite parentale avec terrasse, salle de bain avec baignoire et douche, dressing. Deux junior suites avec balcon et salle de bain.",
-    gradientClass: g(2),
-    photoUrl: "https://www.canva.com/design/DAG_5xB-t1o/8CUvQN4R0gqeHXq2RYQPow/view",
-  imageCount: 6,
-  },
-  {
-    id: "PL-001",
-    title: "Penthouse Ferme Bretonne",
-    type: "Penthouse",
-    transaction: "Location",
-    location: "Ferme Bretonne, Casablanca",
-    price: 19000,
-    isRental: true,
-    surface: 125,
-    furnished: true,
-    beds: 2,
-    salons: 1,
-    baths: 2,
-    description: "Penthouse meublé de 125m² avec 2 chambres, salon et 2 salles de bain à Ferme Bretonne.",
-    gradientClass: g(3),
-    photoUrl: "https://www.canva.com/design/DAHD3J67KZw/kJ2TEERB00DLxTK0Z_rmWA/edit",
-  imageCount: 6,
-  },
-  {
-    id: "PL-002",
-    title: "Penthouse Ain Diab",
-    type: "Penthouse",
-    transaction: "Location",
-    location: "Ain Diab, Casablanca",
-    price: 100000,
-    isRental: true,
-    surface: 450,
-    furnished: true,
-    beds: 4,
-    salons: 2,
-    baths: 5,
-    floor: "Dernier étage",
-    description: "Penthouse meublé de 450m² avec grande cuisine, 2 salons spacieux, suite parentale, grande terrasse double façade. Séjour et 3 suites avec dressing à l'étage.",
-    gradientClass: g(4),
-    photoUrl: "https://www.canva.com/design/DAHD3LFWRqQ/AyoeG8dB6Jm_o9H7UYKsPg/edit",
-  imageCount: 6,
-  },
-  {
-    id: "AV-001",
-    title: "Appartement Front de Mer",
-    type: "Appartement",
-    transaction: "Vente",
-    location: "Route d'Azemmour, Casablanca",
-    price: 3750000,
-    isRental: false,
-    surface: 188,
-    furnished: false,
-    beds: 3,
-    salons: 2,
-    baths: 3,
-    floor: "1er étage",
-    description: "Appartement de standing en front de mer avec vue imprenable sur l'océan. 3 chambres dont suite parentale avec dressing, 2 salons, cuisine équipée. 2 places parking + box.",
-    gradientClass: g(5),
-    photoUrl: "https://canva.link/71i0bm0jv9o64q7",
-  imageCount: 6,
-  },
-  {
-    id: "AV-002",
-    title: "Appartement Roches Noires",
-    type: "Appartement",
-    transaction: "Vente",
-    location: "Roches Noires, Casablanca",
-    price: 1190000,
-    isRental: false,
-    surface: 129,
-    furnished: false,
-    beds: 2,
-    salons: 2,
-    baths: 3,
-    description: "Appartement de 129m², bien ensoleillé. Double salons, suite parentale avec dressing et balcon, chambre d'enfant. Place au garage. Immeuble sécurisé.",
-    gradientClass: g(0),
-    photoUrl: "https://www.canva.com/design/DAHEHo95HHs/vG4hLeAPMSSnShBz7Y-fSQ/edit",
-  imageCount: 6,
-  },
-  {
-    id: "AV-003",
-    title: "Appartement Ain Sbaa",
-    type: "Appartement",
-    transaction: "Vente",
-    location: "Ain Sbaa, Casablanca",
-    price: 840000,
-    isRental: false,
-    surface: 83,
-    furnished: false,
-    beds: 2,
-    salons: 1,
-    baths: 2,
-    floor: "3e étage",
-    description: "Appartement 83m² avec place garage, 3e étage avec ascenseur, 2 chambres, salon, 2 salles de bain, 2 balcons. Résidence fermée et sécurisée.",
-    gradientClass: g(1),
-    photoUrl: "https://www.canva.com/design/DAHD3LNOQ3M/2E3VVtAV7yX1ux4sJE1_MQ/edit",
-  imageCount: 6,
-  },
-  {
-    id: "AV-004",
-    title: "Appartement Casablanca",
-    type: "Appartement",
-    transaction: "Vente",
-    location: "Casablanca",
-    price: 0,
-    priceLabel: "Prix sur demande",
-    isRental: false,
-    surface: 0,
-    furnished: false,
-    description: "Appartement à vendre à Casablanca. Contactez-nous pour plus de détails.",
-    gradientClass: g(2),
-    photoUrl: "https://www.canva.com/design/DAHEIfcz8S8/T8s40oWGQ7HJ0oVkmJYsUw/edit",
-  imageCount: 6,
-  },
-  {
-    id: "AV-005",
-    title: "Appartement d'Exception CFC",
-    type: "Appartement",
-    transaction: "Vente",
-    location: "CFC, Casablanca",
-    price: 3800000,
-    isRental: false,
-    surface: 153,
-    furnished: false,
-    beds: 2,
-    salons: 1,
-    baths: 2,
-    floor: "12e étage",
-    description: "Appartement 153m² au 12e étage, résidence neuve sécurisée au cœur du CFC. Prestations haut de gamme, luminosité remarquable, vue dégagée. 2 terrasses, salle de sport.",
-    gradientClass: g(2),
-  },
-  {
-    id: "AL-001",
-    title: "Appartement Marina Casablanca",
-    type: "Appartement",
-    transaction: "Location",
-    location: "Marina, Casablanca",
-    price: 45000,
-    isRental: true,
-    surface: 220,
-    furnished: true,
-    beds: 3,
-    salons: 2,
-    baths: 3,
-    floor: "6e étage",
-    description: "Exclusivité Marina Casablanca. Appartement meublé de 220m² avec 3 chambres, 2 salons, 3 salles de bain. 6e étage avec vue.",
-    gradientClass: g(3),
-    photoUrl: "https://canva.link/z2kw56n8ic1rxed",
-  imageCount: 5,
-  },
-  {
-    id: "AL-002",
-    title: "Appartement CFC",
-    type: "Appartement",
-    transaction: "Location",
-    location: "CFC, Casablanca",
-    price: 30000,
-    isRental: true,
-    surface: 168,
-    furnished: true,
-    beds: 3,
-    salons: 1,
-    baths: 2,
-    floor: "14e étage",
-    description: "Appartement au CFC, 14e étage, jamais habité. 3 chambres, salon, 2 salles de bain. Meublé avec goût.",
-    gradientClass: g(4),
-    photoUrl: "https://www.canva.com/design/DAG-ZyRzMes/L-xHV8hHoVa2uoh16bedaQ/view",
-  imageCount: 6,
-  },
-  {
-    id: "AL-003",
-    title: "Appartement Marina Casa",
-    type: "Appartement",
-    transaction: "Location",
-    location: "Marina, Casablanca",
-    price: 18000,
-    isRental: true,
-    surface: 200,
-    furnished: false,
-    beds: 2,
-    salons: 1,
-    baths: 3,
-    floor: "2e étage",
-    description: "Appartement 200m² à la Marina, cuisine équipée, 2 chambres, salon, 3 salles de bain. 2e étage.",
-    gradientClass: g(5),
-  },
-  {
-    id: "AL-004",
-    title: "Rez-de-Jardin Dar Bouazza",
-    type: "Rez de jardin",
-    transaction: "Location",
-    location: "Dar Bouazza",
-    price: 13500,
-    isRental: true,
-    surface: 140,
-    furnished: true,
-    beds: 3,
-    salons: 2,
-    baths: 3,
-    floor: "RDJ",
-    description: "Rez-de-jardin d'exception, volumes loft & grande terrasse. Résidence calme et familiale avec 2 piscines. 3 chambres dont suite parentale, 2 salons.",
-    gradientClass: g(0),
-    photoUrl: "https://www.canva.com/design/DAG-Z-Yh56s/nV3vsEJTS6uEf-1UlY_DdQ/view",
-  imageCount: 6,
-  },
-  {
-    id: "AL-005",
-    title: "Appartement Bourgogne",
-    type: "Appartement",
-    transaction: "Location",
-    location: "Bourgogne Hjajma, Casablanca",
-    price: 9500,
-    isRental: true,
-    surface: 125,
-    furnished: true,
-    beds: 2,
-    salons: 1,
-    baths: 2,
-    floor: "RDC",
-    description: "2 chambres, 1 salon, 2 salles de bains, cuisine et terrasse au RDC. Immeuble avec centre commercial Marjane. Sécurité 24/24.",
-    gradientClass: g(1),
-    photoUrl: "https://www.canva.com/design/DAHCbKoEXtg/eZSiUQx8iThYJMoEFkGhYA/view",
-  imageCount: 6,
-  },
-  {
-    id: "AL-006",
-    title: "Appartement Racine Extension",
-    type: "Appartement",
-    transaction: "Location",
-    location: "Racine Extension, Casablanca",
-    price: 9000,
-    isRental: true,
-    surface: 115,
-    furnished: false,
-    beds: 2,
-    salons: 1,
-    baths: 1,
-    floor: "RDC",
-    description: "Appartement 115m² à Racine Extension, 2 chambres, salon, salle de bain. RDC, non meublé.",
-    gradientClass: g(2),
-    photoUrl: "https://www.canva.com/design/DAG-ZhSZkLk/xV0drHTjLa1WAti8pkWmPw/view",
-  imageCount: 6,
-  },
-  {
-    id: "AL-007",
-    title: "Appartement Abdelmoumen-Oasis",
-    type: "Appartement",
-    transaction: "Location",
-    location: "Abdelmoumen-Oasis, Casablanca",
-    price: 8000,
-    isRental: true,
-    surface: 45,
-    furnished: true,
-    beds: 1,
-    salons: 1,
-    baths: 1,
-    floor: "1er étage",
-    description: "Appartement meublé de 45m² à Abdelmoumen-Oasis, 1 chambre, salon, salle de bain. 1er étage.",
-    gradientClass: g(3),
-    photoUrl: "https://www.canva.com/design/DAHD2MEHhh4/pOZKnAOrNjCfSNYJabRvPQ/view",
-  imageCount: 6,
-  },
-  {
-    id: "DV-001",
-    title: "Duplex Rénové Racine – Les Iris",
-    type: "Duplex",
-    transaction: "Vente",
-    location: "Racine – Les Iris, Casablanca",
-    price: 6700000,
-    isRental: false,
-    surface: 327,
-    furnished: false,
-    beds: 4,
-    salons: 3,
-    baths: 3,
-    floor: "2e et 3e étage",
-    description: "Magnifique duplex rénové de 327m² au cœur de Racine. Luminosité et confort moderne, volumes généreux. 4 chambres, 3 salons, parquet, climatisation, menuiserie haut de gamme.",
-    gradientClass: g(4),
-  },
-  {
-    id: "DV-002",
-    title: "Triplex Vue Mer Ain Diab",
-    type: "Triplex",
-    transaction: "Vente",
-    location: "Ain Diab, Casablanca",
-    price: 8000000,
-    isRental: false,
-    surface: 368,
-    furnished: false,
-    beds: 4,
-    salons: 3,
-    baths: 5,
-    floor: "Dernier étage",
-    description: "Exceptionnel triplex de 368m² avec vue mer, dernier étage avec cheminée, 3 chambres, roof top aménagé avec jacuzzi. Résidence de prestige à Ain Diab.",
-    gradientClass: g(5),
-    photoUrl: "https://www.canva.com/design/DAHD63sxPOo/SM6-mepYtAB851UFOqVfAQ/edit",
-  imageCount: 6,
-  },
-  {
-    id: "SV-001",
-    title: "Studio Ziraoui",
-    type: "Studio",
-    transaction: "Vente",
-    location: "Ziraoui, Casablanca",
-    price: 1100000,
-    isRental: false,
-    surface: 40,
-    furnished: true,
-    beds: 1,
-    salons: 1,
-    baths: 1,
-    floor: "3e étage",
-    description: "Studio meublé de 40m² au 3e étage à Ziraoui.",
-    gradientClass: g(0),
-  },
-  {
-    id: "SV-002",
-    title: "Studio Casablanca",
-    type: "Studio",
-    transaction: "Vente",
-    location: "Casablanca",
-    price: 1200000,
-    isRental: false,
-    surface: 54,
-    furnished: false,
-    beds: 1,
-    salons: 1,
-    baths: 1,
-    floor: "4e étage",
-    description: "Studio de 54m² à vendre à Casablanca. 4e étage.",
-    gradientClass: g(1),
-    photoUrl: "https://www.canva.com/design/DAHD7kqkuGc/QYrudhYk3YXM08rqhkA3bA/edit",
-  imageCount: 6,
-  },
-  {
-    id: "SL-001",
-    title: "Studio Marina Casa",
-    type: "Studio",
-    transaction: "Location",
-    location: "Marina, Casablanca",
-    price: 15500,
-    isRental: true,
-    surface: 60,
-    furnished: true,
-    beds: 1,
-    salons: 1,
-    baths: 1,
-    floor: "10e étage",
-    description: "Studio meublé à la Marina Casablanca, 60m², 10e étage. Vue et prestations de qualité.",
-    gradientClass: g(1),
-    photoUrl: "https://canva.link/biyj7wfkrjemw83",
-  imageCount: 5,
-  },
-  {
-    id: "SL-002",
-    title: "Studio Ferme Bretonne",
-    type: "Studio",
-    transaction: "Location",
-    location: "Ferme Bretonne, Casablanca",
-    price: 8300,
-    isRental: true,
-    surface: 50,
-    furnished: true,
-    beds: 1,
-    salons: 1,
-    baths: 1,
-    floor: "RDC surélevé",
-    description: "Studio meublé de 50m² à Ferme Bretonne, RDC surélevé. Calme et fonctionnel.",
-    gradientClass: g(2),
-    photoUrl: "https://www.canva.com/design/DAHBHLLibDM/q62iYe-obIWWboCajrqKnQ/view",
-  imageCount: 5,
-  },
-  {
-    id: "SL-003",
-    title: "Studio Ferme Bretonne",
-    type: "Studio",
-    transaction: "Location",
-    location: "Ferme Bretonne, Casablanca",
-    price: 7500,
-    isRental: true,
-    surface: 59,
-    furnished: true,
-    beds: 1,
-    salons: 1,
-    baths: 1,
-    floor: "RDC surélevé",
-    description: "Studio meublé de 59m² à Ferme Bretonne, quartier calme et sécurisé, proche CFC. Entièrement rénové.",
-    gradientClass: g(3),
-    photoUrl: "https://www.canva.com/design/DAG_sgbtWb4/OIRcNfIkmqMu0uucWkqjyA/view",
-  imageCount: 6,
-  },
-  {
-    id: "SL-004",
-    title: "Studio CFC",
-    type: "Studio",
-    transaction: "Location",
-    location: "CFC, Casablanca",
-    price: 11000,
-    isRental: true,
-    surface: 65,
-    furnished: true,
-    beds: 1,
-    salons: 1,
-    baths: 1,
-    floor: "11e étage",
-    description: "Studio meublé de 65m² au 11e étage d'une résidence moderne au CFC. Vue panoramique et prestations haut de gamme.",
-    gradientClass: g(4),
-    photoUrl: "https://canva.link/y5pkl9cvqtncsdd",
-  imageCount: 4,
-  },
-  {
-    id: "SL-005",
-    title: "Appartement Abdelmoumen",
-    type: "Appartement",
-    transaction: "Location",
-    location: "Abdelmoumen-Oasis, Casablanca",
-    price: 8000,
-    isRental: true,
-    surface: 45,
-    furnished: true,
-    beds: 1,
-    salons: 1,
-    baths: 1,
-    floor: "1er étage",
-    description: "Appartement meublé de 45m² à Abdelmoumen-Oasis, 1 chambre, salon, salle de bain.",
-    gradientClass: g(5),
-    photoUrl: "https://www.canva.com/design/DAHD2MEHhh4/pOZKnAOrNjCfSNYJabRvPQ/view",
-  imageCount: 6,
-  },
-  {
-    id: "BV-001",
-    title: "Bureau CIL – Proche CFC",
-    type: "Bureau",
-    transaction: "Vente",
-    location: "CIL, Casablanca",
-    price: 2000000,
-    isRental: false,
-    surface: 91,
-    furnished: false,
-    description: "Bureau de 91m² + 18m² parking, à 3 minutes du CFC. Idéal pour usage professionnel.",
-    gradientClass: g(0),
-    photoUrl: "https://www.canva.com/design/DAHCaxhFb9c/en40prOmyy1-1G8F0BklwQ/view",
-  imageCount: 5,
-  },
-  {
-    id: "BL-001",
-    title: "Bureau Haut Standing Bd Anfa",
-    type: "Bureau",
-    transaction: "Location",
-    location: "Boulevard d'Anfa, Casablanca",
-    price: 45000,
-    isRental: true,
-    surface: 225,
-    furnished: false,
-    description: "Bureau moderne haut standing de 225m² sur Boulevard d'Anfa. Prestations haut de gamme, matériaux nobles. Idéal cabinet professionnel ou siège d'entreprise.",
-    gradientClass: g(1),
-    photoUrl: "https://www.canva.com/design/DAHDES-w2xc/6z8NqE44Q_WsQCwvDH1OPw/view",
-  imageCount: 6,
-  },
-  {
-    id: "BL-002",
-    title: "Bureau CFC",
-    type: "Bureau",
-    transaction: "Location",
-    location: "CFC, Casablanca",
-    price: 18500,
-    isRental: true,
-    surface: 72,
-    furnished: false,
-    floor: "4e étage",
-    description: "Bureau de 72m² au CFC avec deux places parking. 4e étage.",
-    gradientClass: g(2),
-    photoUrl: "https://www.canva.com/design/DAHCnQH5dCo/uyBXme8Ikti3fDccfJLvBQ/view",
-  imageCount: 6,
-  },
-  {
-    id: "BL-003",
-    title: "Bureau Oasis",
-    type: "Bureau",
-    transaction: "Location",
-    location: "Oasis, Casablanca",
-    price: 25000,
-    priceLabel: "25 000 HT/mois",
-    isRental: true,
-    surface: 131,
-    furnished: false,
-    floor: "1er étage",
-    description: "Bureau traversant de 131m² au 1er étage, 2 façades (boulevard + cour). Proche commerces, écoles, restaurants.",
-    gradientClass: g(3),
-    photoUrl: "https://www.canva.com/design/DAHD1oGGkQg/B7HV_VWoziKLZlmDYuSmqg/view",
-  imageCount: 3,
-  },
-  {
-    id: "BL-004",
-    title: "Bureau Cheikh Khalifa",
-    type: "Bureau",
-    transaction: "Location",
-    location: "Cheikh Khalifa, Casablanca",
-    price: 8000,
-    isRental: true,
-    surface: 74,
-    furnished: false,
-    floor: "1er étage",
-    description: "Plateau bureau neuf de 74m², emplacement stratégique proche de l'Hôpital Cheikh Khalifa. Immeuble aux normes modernes.",
-    gradientClass: g(4),
-    photoUrl: "https://www.canva.com/design/DAHCa_M7jW4/LNqQtRTm6qfQoUCxX_KcKQ/view",
-  imageCount: 2,
-  },
-  {
-    id: "BL-005",
-    title: "Bureau Bd Abdelmoumen",
-    type: "Bureau",
-    transaction: "Location",
-    location: "Boulevard Abdelmoumen, Casablanca",
-    price: 11000,
-    isRental: true,
-    surface: 120,
-    furnished: false,
-    floor: "2e étage",
-    description: "Bureau de 120m² sur Boulevard Abdelmoumen, 2e étage. Garage de 17m² inclus.",
-    gradientClass: g(5),
-    photoUrl: "https://www.canva.com/design/DAHCniljX7g/c75Q8KysdaHqpzvWp8s3qQ/view",
-  imageCount: 6,
-  },
-  {
-    id: "BL-006",
-    title: "Bureau Casablanca",
-    type: "Bureau",
-    transaction: "Location",
-    location: "Casablanca",
-    price: 0,
-    priceLabel: "Prix sur demande",
-    isRental: true,
-    surface: 0,
-    furnished: false,
-    description: "Bureau à louer à Casablanca. Contactez-nous pour plus de détails.",
-    gradientClass: g(0),
-    photoUrl: "https://www.canva.com/design/DAHE3BH-TXw/qL5MkAvOVgeTrp1XvI4dxQ/edit",
-  imageCount: 6,
-  },
-  {
-    id: "TV-001",
-    title: "Terrain Industriel Zone I2S1",
-    type: "Terrain",
-    transaction: "Vente",
-    location: "Zone I2S1",
-    price: 24500000,
-    priceLabel: "3 500 dh/m²",
-    isRental: false,
-    surface: 7000,
-    furnished: false,
-    description: "Terrain industriel de 7000m² en zone I2S1. Prix: 3 500 dh/m².",
-    gradientClass: g(0),
-  },
-  {
-    id: "TV-002",
-    title: "Zone Industrielle Sapino",
-    type: "Terrain",
-    transaction: "Vente",
-    location: "Zone Industrielle Sapino",
-    price: 17000000,
-    isRental: false,
-    surface: 4000,
-    surfaceLabel: "4 000 m² (R+3)",
-    furnished: false,
-    description: "Zone industriel Sapino R+3. Surface terrain 1300m², 1000m² par étage, total 4000m². Monte charge disponible.",
-    gradientClass: g(1),
-    photoUrl: "https://www.canva.com/design/DAHAQggNGy0/cP1e82pW1E2-XsyBUkZvnw/view",
-  imageCount: 6,
-  },
-  {
-    id: "TV-003",
-    title: "Terrain Front Mer Tanger",
-    type: "Terrain",
-    transaction: "Vente",
-    location: "Tanger",
-    price: 55000000,
-    isRental: false,
-    surface: 23660,
-    surfaceLabel: "2 Hectares 3660 m²",
-    furnished: false,
-    description: "Terrain de 2 hectares 3660m² pour projet hôtelier, front mer à Tanger.",
-    gradientClass: g(2),
-  },
-  {
-    id: "TV-004",
-    title: "Terrain Industriel Zenata",
-    type: "Terrain",
-    transaction: "Vente",
-    location: "Zenata (Ain Sbaa), Casablanca",
-    price: 19250000,
-    priceLabel: "3 500 dh/m²",
-    isRental: false,
-    surface: 5500,
-    furnished: false,
-    description: "Terrain industriel de 5500m² à Zenata (Ain Sbaa). Prix: 3 500 dh/m².",
-    gradientClass: g(3),
-  },
-  {
-    id: "TV-005",
-    title: "Terrain France Ville",
-    type: "Terrain",
-    transaction: "Vente",
-    location: "France Ville, Casablanca",
-    price: 18612000,
-    priceLabel: "18 000 dh/m²",
-    isRental: false,
-    surface: 1034,
-    surfaceLabel: "1 034 m² (R+3)",
-    furnished: false,
-    description: "Terrain de 1034m² à France Ville, constructible R+3. Prix: 18 000 dh/m².",
-    gradientClass: g(4),
-  },
-  {
-    id: "IM-001",
-    title: "Bâtiment Industriel Mohammedia",
-    type: "Bâtiment industriel",
-    transaction: "Vente",
-    location: "Zone Industrielle Mohammedia",
-    price: 6500000,
-    isRental: false,
-    surface: 1200,
-    surfaceLabel: "1 200 m² (R+3)",
-    furnished: false,
-    description: "Bâtiment industriel 5 niveaux (R+3) en parfait état. Sous-sol 300m², RDC 300m², étages 200m² chacun. Ascenseur, monte charge, rue large sans vis-à-vis.",
-    gradientClass: g(5),
-  },
-  {
-    id: "IM-002",
-    title: "Magasin Bd Tantan",
-    type: "Commerce",
-    transaction: "Vente",
-    location: "Boulevard Tantan, Casablanca",
-    price: 18000000,
-    isRental: false,
-    surface: 748,
-    furnished: false,
-    description: "Magasin de 748m² sur Boulevard Tantan. Emplacement commercial de premier choix.",
-    gradientClass: g(0),
-  },
-];
+// ── Supabase row shape (mirrors DB columns) ───────────────────────────────────
 
-export const FEATURED_PROPERTIES = ALL_PROPERTIES.filter(p =>
-  ["VV-003", "VV-004", "DV-002", "AV-001", "PL-002", "AL-001"].includes(p.id)
-);
+export interface SupabaseProperty {
+  id: string;
+  reference: string;
+  type: string;
+  transaction: string;
+  neighborhood: string;
+  city: string;
+  price: string | number | null;
+  surface: string | number | null;
+  furnished: string | null;
+  rooms: string | number | null;
+  status: string;
+  agent: string;
+  photos: string[];
+  description: string | null;
+  notes: string | null;
+  owner: { name?: string; phone?: string; email?: string } | null;
+  photo_status: string | null;
+  published: boolean;
+  created_at: string;
+}
 
-export const PEPITE_DU_MOIS = ALL_PROPERTIES.find(p => p.id === "VV-003") ?? ALL_PROPERTIES[0];
+// ── Mapper: Supabase row → website Property ───────────────────────────────────
+
+export function mapSupabaseProperty(p: SupabaseProperty, index: number): Property {
+  const price = parseFloat(String(p.price ?? "0").replace(/[\s\u00a0,]/g, "")) || 0;
+  const surface = parseFloat(String(p.surface ?? "0").replace(/[\s\u00a0,]/g, "")) || 0;
+  const rooms = parseInt(String(p.rooms ?? "0"), 10) || 0;
+  const isFurnished = String(p.furnished ?? "").toLowerCase().includes("meublé");
+  const location = [p.neighborhood, p.city].filter(Boolean).join(", ");
+
+  // Title: first non-empty line of description, or type + neighborhood
+  const firstLine = p.description?.split("\n").find((l) => l.trim());
+  const title = firstLine?.trim() || `${p.type} ${p.neighborhood || p.city || ""}`.trim();
+
+  return {
+    id: p.id,
+    reference: p.reference,
+    title,
+    type: p.type,
+    transaction: (p.transaction === "Location" ? "Location" : "Vente"),
+    location,
+    price,
+    isRental: p.transaction === "Location",
+    surface,
+    furnished: isFurnished,
+    rooms: rooms > 0 ? rooms : undefined,
+    description: p.description ?? "",
+    gradientClass: g(index),
+    photos: p.photos ?? [],
+    imageCount: (p.photos ?? []).length,
+  };
+}
+
+// ── Supabase query helpers ────────────────────────────────────────────────────
+
+import { supabase } from "./supabase";
+
+/** Fetch all published properties with photos OK, with optional filters */
+export async function fetchProperties(opts?: {
+  transaction?: string;
+  type?: string;
+}): Promise<Property[]> {
+  let query = supabase
+    .from("properties")
+    .select("*")
+    .eq("published", true)
+    .eq("photo_status", "✅ Photos OK")
+    .order("created_at", { ascending: false });
+
+  if (opts?.transaction) query = query.eq("transaction", opts.transaction);
+  if (opts?.type) query = query.eq("type", opts.type);
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return (data as SupabaseProperty[]).map((p, i) => mapSupabaseProperty(p, i));
+}
+
+/** Fetch a single property by id */
+export async function fetchProperty(id: string): Promise<Property | null> {
+  const { data, error } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("id", id)
+    .eq("published", true)
+    .single();
+
+  if (error) return null;
+  return mapSupabaseProperty(data as SupabaseProperty, 0);
+}
+
+/** Fetch latest 3 published properties with photos for the homepage */
+export async function fetchFeaturedProperties(): Promise<Property[]> {
+  const { data, error } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("published", true)
+    .eq("photo_status", "✅ Photos OK")
+    .order("created_at", { ascending: false })
+    .limit(3);
+
+  if (error) throw error;
+  return (data as SupabaseProperty[]).map((p, i) => mapSupabaseProperty(p, i));
+}
+
+/** Save a lead (contact form submission) */
+export async function submitLead(lead: {
+  name: string;
+  phone: string;
+  email: string;
+  message: string;
+  property_reference?: string;
+}): Promise<void> {
+  const { error } = await supabase.from("leads").insert({
+    name: lead.name,
+    phone: lead.phone,
+    email: lead.email,
+    notes: lead.message,
+    source: "Website WeHome",
+    status: "New",
+    property_reference: lead.property_reference ?? null,
+    created_at: new Date().toISOString(),
+  });
+  if (error) throw error;
+}
+
+// ── Legacy data kept for fallback / type reference ────────────────────────────
 
 export const PROPERTY_TYPES = [
   "Villa",

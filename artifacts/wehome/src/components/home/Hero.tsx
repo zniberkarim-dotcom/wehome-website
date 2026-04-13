@@ -9,12 +9,16 @@ export function Hero() {
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center pt-24 pb-12 overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <img 
-          src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
-          alt="Architecture Moderne" 
+        <img
+          src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80"
+          alt="Villa de luxe avec piscine"
           className="w-full h-full object-cover object-center"
+          style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1 }}
+          loading="eager"
+          fetchPriority="high"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/40 to-background/90" />
+        <div className="absolute inset-0 bg-white/30" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/20 to-background/80" />
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">

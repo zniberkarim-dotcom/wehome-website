@@ -1,17 +1,25 @@
+import { useQuery } from "@tanstack/react-query";
+import { fetchFeaturedProperties, getPropertyImageUrls } from "@/lib/data";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
-import { Award, MapPin, Bed, Bath, Square, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Award, MapPin, Bed, Bath, Square, ArrowRight, ChevronLeft, ChevronRight, Loader2, LayoutGrid } from "lucide-react";
 import { formatMAD } from "@/lib/utils";
-import { PEPITE_DU_MOIS, getPropertyImageUrls } from "@/lib/data";
 import { useState, useCallback } from "react";
 import { useSwipe } from "@/hooks/useSwipe";
 
 export function PepiteDuMois() {
-  const pepite = PEPITE_DU_MOIS;
   const [failedIndexes, setFailedIndexes] = useState<Set<number>>(new Set());
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const imageUrls = getPropertyImageUrls(pepite);
+  const { data: properties = [], isLoading } = useQuery({
+    queryKey: ["featured-properties"],
+    queryFn: fetchFeaturedProperties,
+  });
+
+  // Use the first published property as the "Pépite du Mois"
+  const pepite = properties[0];
+
+  const imageUrls = pepite ? getPropertyImageUrls(pepite) : [];
   const validCount = imageUrls.length - failedIndexes.size;
   const hasImages = validCount > 0;
   const hasMultiple = validCount > 1;
@@ -42,10 +50,25 @@ export function PepiteDuMois() {
     setFailedIndexes((prev) => new Set(prev).add(index));
   }, []);
 
+  if (isLoading) {
+    return (
+      <section className="py-24 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center py-20">
+          <Loader2 size={32} className="animate-spin text-primary" />
+        </div>
+      </section>
+    );
+  }
+
+  if (!pepite) return null;
+
+  const hasPrice = pepite.price > 0;
+  const showRooms = pepite.rooms !== undefined && pepite.rooms > 0;
+
   return (
     <section className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         <div className="flex items-center gap-4 mb-10">
           <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center text-accent">
             <Award size={24} />
@@ -56,7 +79,7 @@ export function PepiteDuMois() {
         </div>
 
         <div className="bg-card rounded-[2.5rem] overflow-hidden border border-border shadow-2xl flex flex-col lg:flex-row">
-          
+
           <div
             className={`group w-full lg:w-3/5 relative min-h-[400px] lg:min-h-[600px] ${!hasImages ? 'bg-slate-100' : ''}`}
             onTouchStart={hasMultiple ? onTouchStart : undefined}
@@ -91,14 +114,14 @@ export function PepiteDuMois() {
                 )}
               </>
             ) : (
-              <img 
+              <img
                 src={`${import.meta.env.BASE_URL}images/pepite.png`}
                 alt="La Pépite du Mois"
                 className="absolute inset-0 w-full h-full object-cover"
               />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent lg:hidden pointer-events-none" />
-            
+
             <div className="absolute top-6 left-6 px-4 py-2 bg-accent text-accent-foreground font-bold rounded-xl shadow-lg backdrop-blur-md flex items-center gap-2 z-10">
               <Award size={18} />
               <span>Pépite du Mois</span>
@@ -125,41 +148,50 @@ export function PepiteDuMois() {
                   <span className="text-lg">{pepite.location}</span>
                 </div>
                 <div className="text-4xl font-display font-bold text-primary mb-6">
-                  {formatMAD(pepite.price)}
+                  {hasPrice ? formatMAD(pepite.price) : (pepite.priceLabel || "Prix sur demande")}
                 </div>
               </div>
 
-              <p className="text-muted-foreground leading-relaxed mb-8 text-lg">
+              <p className="text-muted-foreground leading-relaxed mb-8 text-lg line-clamp-4">
                 {pepite.description}
               </p>
 
               <div className="grid grid-cols-3 gap-4 py-6 border-y border-border/80 mb-8">
-                {pepite.beds && (
+                {pepite.beds ? (
                   <div className="flex flex-col items-center justify-center gap-2">
                     <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
                       <Bed size={20} />
                     </div>
                     <span className="font-semibold">{pepite.beds} Ch.</span>
                   </div>
-                )}
-                {pepite.baths && (
+                ) : showRooms ? (
+                  <div className="flex flex-col items-center justify-center gap-2">
+                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
+                      <LayoutGrid size={20} />
+                    </div>
+                    <span className="font-semibold">{pepite.rooms} p.</span>
+                  </div>
+                ) : null}
+                {pepite.baths ? (
                   <div className="flex flex-col items-center justify-center gap-2 border-x border-border/80">
                     <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
                       <Bath size={20} />
                     </div>
                     <span className="font-semibold">{pepite.baths} SdB</span>
                   </div>
-                )}
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
-                    <Square size={20} />
+                ) : null}
+                {pepite.surface > 0 && (
+                  <div className="flex flex-col items-center justify-center gap-2">
+                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
+                      <Square size={20} />
+                    </div>
+                    <span className="font-semibold">{pepite.surface} m²</span>
                   </div>
-                  <span className="font-semibold">{pepite.surface} m²</span>
-                </div>
+                )}
               </div>
 
-              <Link 
-                href={`/bien/${pepite.id}`} 
+              <Link
+                href={`/bien/${pepite.id}`}
                 className="w-full py-4 rounded-xl bg-foreground text-background font-bold text-lg flex items-center justify-center gap-3 hover:bg-primary transition-colors duration-300 group"
               >
                 Découvrir la Pépite
