@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "wehome-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@workspace/wehome", "dev"],
+      "port": 5173
+    }
+  ]
+}

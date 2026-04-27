@@ -35,62 +35,62 @@
   /* WeHome Brand: Burgundy #8B1A3A ≈ HSL(345, 68%, 33%) + Charcoal #3C4555 ≈ HSL(220, 18%, 28%) */
   --background: 0 0% 99%;
   --foreground: 220 18% 28%;
-  
+
   --card: 0 0% 100%;
   --card-foreground: 220 18% 28%;
-  
+
   --popover: 0 0% 100%;
   --popover-foreground: 220 18% 28%;
-  
+
   /* Primary = Burgundy from logo */
   --primary: 345 68% 33%;
   --primary-foreground: 0 0% 100%;
-  
+
   --secondary: 345 15% 95%;
   --secondary-foreground: 220 18% 28%;
-  
+
   --muted: 220 14% 96%;
   --muted-foreground: 220 10% 46%;
-  
+
   /* Accent = warm gold for premium feel */
   --accent: 38 60% 50%;
   --accent-foreground: 0 0% 100%;
-  
+
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  
+
   --border: 220 13% 91%;
   --input: 220 13% 91%;
   --ring: 345 68% 33%;
-  
+
   --radius: 1rem;
 }
 
 .dark {
   --background: 220 18% 10%;
   --foreground: 0 0% 95%;
-  
+
   --card: 220 18% 13%;
   --card-foreground: 0 0% 95%;
-  
+
   --popover: 220 18% 13%;
   --popover-foreground: 0 0% 95%;
-  
+
   --primary: 345 60% 45%;
   --primary-foreground: 0 0% 100%;
-  
+
   --secondary: 220 15% 18%;
   --secondary-foreground: 0 0% 95%;
-  
+
   --muted: 220 15% 18%;
   --muted-foreground: 220 10% 60%;
-  
+
   --accent: 38 60% 50%;
   --accent-foreground: 0 0% 100%;
-  
+
   --destructive: 0 62% 30%;
   --destructive-foreground: 0 0% 100%;
-  
+
   --border: 220 15% 18%;
   --input: 220 15% 18%;
   --ring: 345 60% 45%;

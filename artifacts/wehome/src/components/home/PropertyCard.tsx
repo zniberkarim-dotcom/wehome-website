@@ -23,10 +23,12 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const showBeds = property.beds !== undefined && property.beds > 0;
   const showBaths = property.baths !== undefined && property.baths > 0;
   const showSalons = property.salons !== undefined && property.salons > 0;
+  // Fallback: show total rooms as "Pièces" when individual room counts are absent
+  const showRooms = !showBeds && !showSalons && property.rooms !== undefined && property.rooms > 0;
   const isTerrain = ["Terrain", "Bâtiment industriel", "Commerce", "Ferme"].includes(property.type);
   const hasPrice = property.price > 0;
 
-  const statCount = [showBeds, showBaths, showSalons, true].filter(Boolean).length;
+  const statCount = [showBeds || showRooms, showBaths, showSalons, true].filter(Boolean).length;
 
   const goNextIndex = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
@@ -159,30 +161,41 @@ export function PropertyCard({ property }: PropertyCardProps) {
             <span className="text-sm font-medium">{property.surfaceLabel || `${property.surface.toLocaleString("fr-FR")} m²`}</span>
           </div>
         ) : (
-          <div className={`grid gap-4 py-4 border-y border-border/60 mt-auto ${
+          <div className={`grid gap-0 py-0 border-y border-border/60 mt-auto divide-x divide-border/60 ${
             statCount === 4 ? 'grid-cols-4' : statCount === 3 ? 'grid-cols-3' : statCount === 2 ? 'grid-cols-2' : 'grid-cols-1'
           }`}>
             {showBeds && (
-              <div className="flex flex-col items-center justify-center gap-1">
-                <Bed size={20} className="text-primary/70" />
-                <span className="text-sm font-medium">{property.beds} Ch.</span>
+              <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
+                <Bed size={18} style={{ color: "#8B1A2E" }} />
+                <span className="text-xs font-bold text-foreground">{property.beds}</span>
+                <span className="text-[10px] text-muted-foreground">Ch.</span>
+              </div>
+            )}
+            {showRooms && (
+              <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
+                <Bed size={18} style={{ color: "#8B1A2E" }} />
+                <span className="text-xs font-bold text-foreground">{property.rooms}</span>
+                <span className="text-[10px] text-muted-foreground">Pces.</span>
               </div>
             )}
             {showSalons && (
-              <div className="flex flex-col items-center justify-center gap-1 border-l border-border/60">
-                <Sofa size={20} className="text-primary/70" />
-                <span className="text-sm font-medium">{property.salons} Sal.</span>
+              <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
+                <Sofa size={18} style={{ color: "#8B1A2E" }} />
+                <span className="text-xs font-bold text-foreground">{property.salons}</span>
+                <span className="text-[10px] text-muted-foreground">Sal.</span>
               </div>
             )}
             {showBaths && (
-              <div className="flex flex-col items-center justify-center gap-1 border-l border-border/60">
-                <Bath size={20} className="text-primary/70" />
-                <span className="text-sm font-medium">{property.baths} SdB</span>
+              <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
+                <Bath size={18} style={{ color: "#8B1A2E" }} />
+                <span className="text-xs font-bold text-foreground">{property.baths}</span>
+                <span className="text-[10px] text-muted-foreground">SdB</span>
               </div>
             )}
-            <div className={`flex flex-col items-center justify-center gap-1 ${(showBeds || showBaths || showSalons) ? 'border-l border-border/60' : ''}`}>
-              <Square size={20} className="text-primary/70" />
-              <span className="text-sm font-medium">{property.surface > 0 ? `${property.surface} m²` : "—"}</span>
+            <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
+              <Square size={18} style={{ color: "#8B1A2E" }} />
+              <span className="text-xs font-bold text-foreground">{property.surface > 0 ? property.surface.toLocaleString("fr-FR") : "—"}</span>
+              <span className="text-[10px] text-muted-foreground">m²</span>
             </div>
           </div>
         )}

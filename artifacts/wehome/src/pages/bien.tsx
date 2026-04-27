@@ -2,15 +2,22 @@ import { useParams, Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { fetchProperty, getPropertyImageUrls, submitLead } from "@/lib/data";
+import { fetchProperty, fetchAgentById, getPropertyImageUrls, submitLead, submitAppointment } from "@/lib/data";
 import { formatMAD } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import {
   MapPin, Bed, Bath, Square, Sofa, ArrowLeft,
-  Building2, Layers, CheckCircle2, Phone, ChevronLeft, ChevronRight,
-  X, Maximize2, Loader2, LayoutGrid, Send, CheckCircle
+  Building2, Layers, CheckCircle2, Phone, Mail, ChevronLeft, ChevronRight,
+  X, Maximize2, Loader2, LayoutGrid, Send, CheckCircle, Calendar, Clock, ExternalLink
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { useSwipe } from "@/hooks/useSwipe";
 
 export default function BienPage() {
@@ -28,11 +35,64 @@ export default function BienPage() {
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
 
+  // ── RDV modal state ───────────────────────────────────────────────────────
+  const [rdvOpen, setRdvOpen] = useState(false);
+  const [rdvName, setRdvName] = useState("");
+  const [rdvPhone, setRdvPhone] = useState("");
+  const [rdvEmail, setRdvEmail] = useState("");
+  const [rdvDate, setRdvDate] = useState("");
+  const [rdvTime, setRdvTime] = useState("10:00");
+  const [rdvLoading, setRdvLoading] = useState(false);
+  const [rdvSuccess, setRdvSuccess] = useState(false);
+  const [rdvError, setRdvError] = useState("");
+
   const { data: property, isLoading, isError } = useQuery({
     queryKey: ["property", params.id],
     queryFn: () => fetchProperty(params.id),
     enabled: !!params.id,
   });
+
+  // Fetch the linked agent when agentId is available
+  const { data: agentData } = useQuery({
+    queryKey: ["agent-for-property", property?.agentId],
+    queryFn: () => fetchAgentById(property!.agentId!),
+    enabled: !!property?.agentId,
+  });
+
+  // ── Hooks that must run unconditionally (before any early return) ─────────
+  const imageUrls = useMemo(
+    () => (property ? getPropertyImageUrls(property) : []),
+    [property]
+  );
+
+  const goNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
+  }, [imageUrls.length]);
+
+  const goPrev = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+  }, [imageUrls.length]);
+
+  const { onTouchStart, onTouchEnd } = useSwipe(goNext, goPrev);
+
+  const handleImgError = useCallback((index: number) => {
+    setFailedIndexes((prev) => new Set(prev).add(index));
+  }, []);
+
+  useEffect(() => {
+    if (!fullscreen) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setFullscreen(false);
+      if (e.key === "ArrowRight") goNext();
+      if (e.key === "ArrowLeft") goPrev();
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKey);
+    };
+  }, [fullscreen, goNext, goPrev]);
 
   // Loading state
   if (isLoading) {
@@ -67,7 +127,6 @@ export default function BienPage() {
     );
   }
 
-  const imageUrls = getPropertyImageUrls(property);
   const validCount = imageUrls.length - failedIndexes.size;
   const hasImages = validCount > 0;
   const hasMultiple = validCount > 1;
@@ -89,39 +148,35 @@ export default function BienPage() {
     property.furnished && { icon: CheckCircle2, label: "Meublé", key: "furnished" },
   ].filter(Boolean) as { icon: typeof Bed; label: string; key: string }[];
 
-  const goNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
-  }, [imageUrls.length]);
-
-  const goPrev = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
-  }, [imageUrls.length]);
-
-  const { onTouchStart, onTouchEnd } = useSwipe(goNext, goPrev);
-
-  const handleImgError = useCallback((index: number) => {
-    setFailedIndexes((prev) => new Set(prev).add(index));
-  }, []);
-
-  useEffect(() => {
-    if (!fullscreen) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setFullscreen(false);
-      if (e.key === "ArrowRight") goNext();
-      if (e.key === "ArrowLeft") goPrev();
-    };
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKey);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKey);
-    };
-  }, [fullscreen, goNext, goPrev]);
-
   const whatsappMessage = encodeURIComponent(
     `Bonjour WeHome,\n\nJe suis intéressé(e) par le bien "${property.title}" (Réf: ${property.reference ?? property.id}) situé à ${property.location}.\n\nPouvez-vous me donner plus d'informations ?\n\nMerci !`
   );
   const whatsappUrl = `https://wa.me/212653535156?text=${whatsappMessage}`;
+
+  const handleRdvSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!rdvName || !rdvPhone || !rdvDate || !rdvTime) return;
+    setRdvLoading(true);
+    setRdvError("");
+    try {
+      await submitAppointment({
+        property_id: property!.id,
+        property_title: property!.title,
+        agent_name: property!.agent,
+        visitor_name: rdvName,
+        visitor_phone: rdvPhone,
+        visitor_email: rdvEmail || undefined,
+        appointment_date: rdvDate,
+        appointment_time: rdvTime,
+        notes: `RDV depuis wehome.ma — Réf: ${property!.reference ?? property!.id}`,
+      });
+      setRdvSuccess(true);
+    } catch {
+      setRdvError("Erreur lors de la réservation. Veuillez réessayer.");
+    } finally {
+      setRdvLoading(false);
+    }
+  };
 
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -286,6 +341,55 @@ export default function BienPage() {
                   {hasPrice && property.priceLabel && (
                     <p className="text-sm text-muted-foreground mt-1">{property.priceLabel}</p>
                   )}
+
+                  {/* Quick stats bar — like the screenshot */}
+                  {(() => {
+                    const hasBeds = property.beds && property.beds > 0;
+                    const hasSalons = property.salons && property.salons > 0;
+                    const hasBaths = property.baths && property.baths > 0;
+                    const hasRoomsFallback = !hasBeds && !hasSalons && property.rooms && property.rooms > 0;
+                    const hasSurface = property.surface > 0;
+                    if (!hasBeds && !hasSalons && !hasBaths && !hasRoomsFallback && !hasSurface) return null;
+                    return (
+                      <div className="flex items-stretch divide-x divide-border/60 border border-border/60 rounded-2xl overflow-hidden mt-5">
+                        {hasBeds && (
+                          <div className="flex flex-col items-center justify-center gap-1 py-4 px-5 flex-1">
+                            <Bed size={20} style={{ color: "#8B1A2E" }} />
+                            <span className="text-sm font-bold text-foreground">{property.beds}</span>
+                            <span className="text-xs text-muted-foreground">Ch.</span>
+                          </div>
+                        )}
+                        {hasRoomsFallback && (
+                          <div className="flex flex-col items-center justify-center gap-1 py-4 px-5 flex-1">
+                            <Bed size={20} style={{ color: "#8B1A2E" }} />
+                            <span className="text-sm font-bold text-foreground">{property.rooms}</span>
+                            <span className="text-xs text-muted-foreground">Pièces</span>
+                          </div>
+                        )}
+                        {hasSalons && (
+                          <div className="flex flex-col items-center justify-center gap-1 py-4 px-5 flex-1">
+                            <Sofa size={20} style={{ color: "#8B1A2E" }} />
+                            <span className="text-sm font-bold text-foreground">{property.salons}</span>
+                            <span className="text-xs text-muted-foreground">Sal.</span>
+                          </div>
+                        )}
+                        {hasBaths && (
+                          <div className="flex flex-col items-center justify-center gap-1 py-4 px-5 flex-1">
+                            <Bath size={20} style={{ color: "#8B1A2E" }} />
+                            <span className="text-sm font-bold text-foreground">{property.baths}</span>
+                            <span className="text-xs text-muted-foreground">SdB</span>
+                          </div>
+                        )}
+                        {hasSurface && (
+                          <div className="flex flex-col items-center justify-center gap-1 py-4 px-5 flex-1">
+                            <Square size={20} style={{ color: "#8B1A2E" }} />
+                            <span className="text-sm font-bold text-foreground">{property.surface.toLocaleString("fr-FR")}</span>
+                            <span className="text-xs text-muted-foreground">m²</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {specs.length > 0 && (
@@ -326,6 +430,127 @@ export default function BienPage() {
                   </div>
 
                   <hr className="border-border" />
+
+                  {/* ── Agent widget ── */}
+                  {agentData ? (
+                    <div className="space-y-4">
+                      {/* Photo + identité */}
+                      <div className="flex flex-col items-center text-center gap-3 pt-1">
+                        <div className="w-20 h-20 rounded-full overflow-hidden shrink-0 ring-4 ring-primary/10 bg-secondary">
+                          {agentData.photo_url
+                            ? <img src={agentData.photo_url} alt={`${agentData.prenom} ${agentData.nom}`} className="w-full h-full object-cover" />
+                            : <div className="w-full h-full flex items-center justify-center text-white text-2xl font-bold" style={{ background: "#8B1A2E" }}>
+                                {agentData.prenom.charAt(0)}{agentData.nom.charAt(0)}
+                              </div>}
+                        </div>
+                        <div>
+                          <p className="font-display font-bold text-foreground text-lg leading-tight">
+                            {agentData.prenom} {agentData.nom}
+                          </p>
+                          <p className="text-sm text-primary font-semibold mt-0.5">Agent WeHome</p>
+                          {agentData.specialites && agentData.specialites.length > 0 && (
+                            <div className="flex flex-wrap justify-center gap-1 mt-2">
+                              {agentData.specialites.slice(0, 3).map((s) => (
+                                <span key={s} className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-secondary text-foreground/60">{s}</span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Bio */}
+                      {agentData.bio && (
+                        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 text-center">
+                          {agentData.bio}
+                        </p>
+                      )}
+
+                      {/* Boutons contact */}
+                      <div className="space-y-2">
+                        <a
+                          href={`tel:${agentData.telephone || "+212653535156"}`}
+                          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-colors shadow-sm shadow-primary/20"
+                        >
+                          <Phone size={16} />
+                          {agentData.telephone || "+212 6 53 53 51 56"}
+                        </a>
+                        <div className="grid grid-cols-2 gap-2">
+                          <a
+                            href={`https://wa.me/${(agentData.telephone || "212653535156").replace(/\D/g, "")}?text=${whatsappMessage}`}
+                            target="_blank" rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border-2 border-foreground/80 text-foreground font-semibold text-xs hover:bg-foreground hover:text-background transition-colors"
+                          >
+                            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 shrink-0 fill-current"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            WhatsApp
+                          </a>
+                          {agentData.email ? (
+                            <a
+                              href={`mailto:${agentData.email}`}
+                              className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-border text-foreground/70 font-semibold text-xs hover:border-primary hover:text-primary transition-colors"
+                            >
+                              <Mail size={14} />
+                              Email
+                            </a>
+                          ) : (
+                            <button
+                              onClick={() => { setRdvOpen(true); setRdvSuccess(false); setRdvError(""); }}
+                              className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-primary/40 bg-primary/5 text-primary font-semibold text-xs hover:bg-primary hover:text-white transition-colors"
+                            >
+                              <Calendar size={14} />
+                              RDV
+                            </button>
+                          )}
+                        </div>
+                        {agentData.email && (
+                          <button
+                            onClick={() => { setRdvOpen(true); setRdvSuccess(false); setRdvError(""); }}
+                            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-primary/40 bg-primary/5 text-primary font-semibold text-sm hover:bg-primary hover:text-white transition-colors"
+                          >
+                            <Calendar size={15} />
+                            Prendre rendez-vous
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Lien profil */}
+                      <Link
+                        href={`/agents/${agentData.slug ?? agentData.id}`}
+                        className="flex items-center justify-center gap-1.5 w-full text-xs font-semibold text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <ExternalLink size={12} />
+                        Voir le profil complet
+                      </Link>
+
+                      <hr className="border-border" />
+                    </div>
+                  ) : property.agent ? (
+                    <div className="space-y-4">
+                      <div className="flex flex-col items-center text-center gap-3 pt-1">
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold ring-4 ring-primary/10" style={{ background: "#8B1A2E" }}>
+                          {property.agent.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="font-display font-bold text-foreground text-base">{property.agent}</p>
+                          <p className="text-sm text-primary font-semibold mt-0.5">Agent WeHome</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <a href="tel:+212653535156" className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-colors">
+                          <Phone size={16} />+212 6 53 53 51 56
+                        </a>
+                        <div className="grid grid-cols-2 gap-2">
+                          <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border-2 border-foreground/80 text-foreground font-semibold text-xs hover:bg-foreground hover:text-background transition-colors">
+                            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            WhatsApp
+                          </a>
+                          <button onClick={() => { setRdvOpen(true); setRdvSuccess(false); setRdvError(""); }} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-primary/40 bg-primary/5 text-primary font-semibold text-xs hover:bg-primary hover:text-white transition-colors">
+                            <Calendar size={14} />RDV
+                          </button>
+                        </div>
+                      </div>
+                      <hr className="border-border" />
+                    </div>
+                  ) : null}
 
                   {formSuccess ? (
                     <div className="text-center py-4">
@@ -411,6 +636,115 @@ export default function BienPage() {
           </motion.div>
         </div>
       </main>
+      {/* RDV Modal */}
+      <Dialog open={rdvOpen} onOpenChange={(open) => { setRdvOpen(open); if (!open) { setRdvSuccess(false); setRdvError(""); } }}>
+        <DialogContent className="sm:max-w-md rounded-3xl">
+          <DialogHeader>
+            <DialogTitle className="font-display text-xl">Prendre rendez-vous</DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              {property?.title} — {property?.location}
+            </DialogDescription>
+          </DialogHeader>
+
+          {rdvSuccess ? (
+            <div className="text-center py-6">
+              <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle size={28} className="text-green-600" />
+              </div>
+              <p className="font-display font-bold text-foreground text-lg mb-2">RDV confirmé !</p>
+              <p className="text-sm text-muted-foreground">Notre équipe vous contactera pour confirmer le rendez-vous.</p>
+              <button
+                onClick={() => setRdvOpen(false)}
+                className="mt-5 px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary/90 transition-colors"
+              >
+                Fermer
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleRdvSubmit} className="space-y-4 mt-2">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Date *</label>
+                  <div className="relative">
+                    <Calendar size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                    <input
+                      type="date"
+                      required
+                      value={rdvDate}
+                      onChange={(e) => setRdvDate(e.target.value)}
+                      min={new Date().toISOString().split("T")[0]}
+                      className="w-full pl-9 pr-3 py-3 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Heure *</label>
+                  <div className="relative">
+                    <Clock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                    <select
+                      required
+                      value={rdvTime}
+                      onChange={(e) => setRdvTime(e.target.value)}
+                      className="w-full pl-9 pr-3 py-3 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium appearance-none"
+                    >
+                      {["09:00","09:30","10:00","10:30","11:00","11:30","12:00","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"].map((t) => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Votre nom *</label>
+                <input
+                  type="text"
+                  required
+                  value={rdvName}
+                  onChange={(e) => setRdvName(e.target.value)}
+                  placeholder="Prénom et nom"
+                  className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Téléphone *</label>
+                <input
+                  type="tel"
+                  required
+                  value={rdvPhone}
+                  onChange={(e) => setRdvPhone(e.target.value)}
+                  placeholder="06 XX XX XX XX"
+                  className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Email (optionnel)</label>
+                <input
+                  type="email"
+                  value={rdvEmail}
+                  onChange={(e) => setRdvEmail(e.target.value)}
+                  placeholder="votre@email.com"
+                  className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                />
+              </div>
+
+              {rdvError && <p className="text-xs text-destructive">{rdvError}</p>}
+
+              <button
+                type="submit"
+                disabled={rdvLoading}
+                className="w-full py-3.5 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-60"
+              >
+                {rdvLoading ? <Loader2 size={18} className="animate-spin" /> : <Calendar size={18} />}
+                {rdvLoading ? "Réservation en cours..." : "Confirmer le rendez-vous"}
+              </button>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <Footer />
     </div>
   );

@@ -36,6 +36,7 @@ export function Footer() {
               <li><Link href="/louer" className="hover:text-primary transition-colors">Louer un bien</Link></li>
               <li><a href={`https://wa.me/212653535156?text=${encodeURIComponent("Bonjour WeHome,\n\nJe souhaite vendre mon bien immobilier.\n\nPouvez-vous me contacter pour en discuter ?\n\nMerci !")}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Vendre votre bien</a></li>
               <li><Link href="/a-propos" className="hover:text-primary transition-colors">À Propos</Link></li>
+              <li><Link href="/network" className="hover:text-primary transition-colors">Rejoindre le Network</Link></li>
               <li><Link href="/media" className="hover:text-primary transition-colors">Média & Contenu</Link></li>
             </ul>
           </div>
