@@ -90,24 +90,22 @@ export function Hero() {
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-            whileHover={{ opacity: 0.85, transition: { duration: 0.2 } }}
             style={{
               display: "inline-block",
-              background: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(255,255,255,0.18)",
-              backdropFilter: "blur(6px)",
-              padding: "6px 16px",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.10)",
+              padding: "5px 14px",
               borderRadius: "999px",
-              fontSize: "11px",
+              fontSize: "10px",
               fontWeight: 400,
-              letterSpacing: "0.14em",
+              letterSpacing: "0.22em",
               textTransform: "uppercase" as const,
-              color: "rgba(255,255,255,0.65)",
+              color: "rgba(255,255,255,0.35)",
               marginBottom: "24px",
               cursor: "default",
             }}
           >
-            <span style={{ color: "var(--primary, #C0392B)", fontSize: "7px", verticalAlign: "middle", marginRight: "8px" }}>◆</span>
+            <span style={{ color: "rgba(192,57,43,0.4)", fontSize: "6px", verticalAlign: "middle", marginRight: "8px" }}>◆</span>
             L'Écosystème Immobilier Hybride
           </motion.span>
           <h1
