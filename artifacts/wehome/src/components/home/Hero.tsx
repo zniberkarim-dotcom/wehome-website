@@ -106,16 +106,16 @@ export function Hero() {
             }}
           >
             <span style={{ color: "rgba(192,57,43,0.4)", fontSize: "6px", verticalAlign: "middle", marginRight: "8px" }}>◆</span>
-            L'Écosystème Immobilier Hybride
+            La plateforme immobilière du Maroc
           </motion.span>
           <h1
             className="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.1] tracking-tight mb-6"
             style={{ color: "#FFFFFF", textShadow: "0 2px 12px rgba(0,0,0,0.45)" }}
           >
-            Trouvez votre <br/>chez-vous.
+            L'immobilier marocain,<br/>enfin transparent.
           </h1>
           <p className="text-lg md:text-xl max-w-2xl mx-auto font-medium" style={{ color: "rgba(255,255,255,0.9)", textShadow: "0 1px 6px rgba(0,0,0,0.3)" }}>
-            Nous combinons expertise immobilière, marketing intelligent et stratégie data-driven pour vous aider à trouver ou vendre votre bien plus rapidement.
+            WeHome centralise les meilleures opportunités immobilières du Maroc — avec la donnée de marché, l'expertise locale, et l'accompagnement que vous méritez vraiment.
           </p>
         </motion.div>
 

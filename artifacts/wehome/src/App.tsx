@@ -23,6 +23,7 @@ import AgentsPage from "@/pages/agents/index";
 import AgentProfilePage from "@/pages/agents/slug";
 import AProposPage from "@/pages/a-propos";
 import EstimerPage from "@/pages/estimer";
+import PartenairesPage from "@/pages/partenaires";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -86,6 +87,7 @@ function Router() {
       <Route path="/vendre" component={HomePage} />
       <Route path="/a-propos" component={AProposPage} />
       <Route path="/estimer" component={EstimerPage} />
+      <Route path="/partenaires" component={PartenairesPage} />
       <Route path="/contact" component={HomePage} />
       <Route path="/publier" component={HomePage} />
 

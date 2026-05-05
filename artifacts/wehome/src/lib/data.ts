@@ -698,3 +698,20 @@ export async function submitEstimationLead(lead: EstimationLead): Promise<void> 
     .insert({ ...lead, status: "new" });
   if (error) throw error;
 }
+
+// ── Partenaires waitlist ─────────────────────────────────────────────────────
+
+export interface PartenairesWaitlistEntry {
+  nom: string;
+  nom_agence: string;
+  ville: string;
+  telephone: string;
+  email: string;
+}
+
+export async function submitPartenairesWaitlist(entry: PartenairesWaitlistEntry): Promise<void> {
+  const { error } = await supabase
+    .from("partenaires_waitlist")
+    .insert({ ...entry, status: "waitlist" });
+  if (error) throw error;
+}

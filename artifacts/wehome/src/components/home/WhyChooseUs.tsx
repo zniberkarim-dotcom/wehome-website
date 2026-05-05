@@ -1,78 +1,95 @@
 import { motion } from "framer-motion";
-import { Eye, Target, ArrowUpCircle, Users } from "lucide-react";
+import { Link } from "wouter";
+import { BarChart2, ShieldCheck, Handshake, Network } from "lucide-react";
+
+const CARDS = [
+  {
+    icon: BarChart2,
+    title: "Données de marché réelles",
+    body: "Nous publions les prix au m² par ville et par quartier chaque mois. Pas des estimations. Les vraies transactions du marché marocain.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Biens vérifiés et mandatés",
+    body: "Chaque bien listé sur WeHome a été visité et mandaté par un agent. Zéro annonce fantôme. Zéro doublon.",
+  },
+  {
+    icon: Handshake,
+    title: "Accompagnement de bout en bout",
+    body: "De l'estimation à la remise des clés — un agent dédié vous suit à chaque étape, où que vous soyez au Maroc.",
+  },
+  {
+    icon: Network,
+    title: "Le réseau se construit",
+    body: "Nous ouvrons notre plateforme aux agences partenaires qui partagent nos standards. Le premier MLS privé du Maroc — rejoignez l'aventure.",
+    cta: { label: "Rejoindre le réseau", href: "/partenaires" },
+  },
+];
 
 export function WhyChooseUs() {
-  const features = [
-    {
-      icon: <Eye size={28} />,
-      title: "Création de Visibilité",
-      description: "Nous ne listons pas simplement votre bien ; nous créons activement de la visibilité sur plusieurs plateformes pour une exposition maximale."
-    },
-    {
-      icon: <Target size={28} />,
-      title: "Génération de Demande",
-      description: "Grâce à des funnels marketing avancés, nous générons une demande ciblée plutôt que d'attendre que les acheteurs vous trouvent."
-    },
-    {
-      icon: <ArrowUpCircle size={28} />,
-      title: "Valeur Perçue",
-      description: "Notre production média haut de gamme et notre mise en scène élèvent la valeur perçue de votre bien, garantissant de meilleures offres."
-    },
-    {
-      icon: <Users size={28} />,
-      title: "Leads Qualifiés",
-      description: "Notre approche data-driven filtre les curieux et vous connecte uniquement avec des acheteurs sérieux et qualifiés."
-    }
-  ];
-
   return (
-    <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
-      <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[600px] h-[600px] rounded-full border-[60px] border-white/5 opacity-50" />
-      <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-[400px] h-[400px] rounded-full border-[40px] border-white/5 opacity-50" />
+    <section className="py-24 md:py-32 bg-primary text-primary-foreground relative overflow-hidden">
+      {/* Decorative circles */}
+      <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[600px] h-[600px] rounded-full border-[60px] border-white/5 opacity-50 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-[400px] h-[400px] rounded-full border-[40px] border-white/5 opacity-50 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-16 lg:items-center">
-          
-          <motion.div 
-            className="lg:w-1/3"
-            initial={{ opacity: 0, x: -30 }}
+
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-              Pourquoi choisir WeHome ?
-            </h2>
-            <p className="text-primary-foreground/80 text-lg leading-relaxed mb-8">
-              Nous utilisons des outils modernes pour réinventer l'immobilier. Découvrez la puissance d'une agence construite pour le marché d'aujourd'hui.
+            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-4 text-white/50">
+              Notre différence
             </p>
-            <button className="px-8 py-4 bg-white text-primary font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-              Découvrir notre méthode
-            </button>
+            <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
+              Pourquoi WeHome<br />est différent
+            </h2>
           </motion.div>
-
-          <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {features.map((feature, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-3xl hover:bg-white/15 transition-colors duration-300"
-              >
-                <div className="w-14 h-14 rounded-2xl bg-white text-primary flex items-center justify-center mb-6 shadow-md">
-                  {feature.icon}
-                </div>
-                <h3 className="text-2xl font-display font-bold mb-3">{feature.title}</h3>
-                <p className="text-primary-foreground/80 leading-relaxed">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="text-primary-foreground/70 text-base leading-relaxed max-w-md lg:text-right"
+          >
+            WeHome n'est pas une plateforme d'annonces.<br />
+            C'est l'infrastructure de confiance du marché immobilier marocain.
+          </motion.p>
         </div>
+
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {CARDS.map(({ icon: Icon, title, body, cta }, i) => (
+            <motion.div
+              key={title}
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-48px" }}
+              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-3xl p-7 hover:bg-white/[0.15] transition-colors duration-300 flex flex-col"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-white text-primary flex items-center justify-center mb-6 shadow-sm">
+                <Icon size={22} />
+              </div>
+              <h3 className="font-display font-bold text-lg mb-3 leading-snug">{title}</h3>
+              <p className="text-primary-foreground/70 text-sm leading-[1.75] flex-grow">{body}</p>
+              {cta && (
+                <Link
+                  href={cta.href}
+                  className="inline-flex items-center gap-1.5 mt-5 text-xs font-bold tracking-wide uppercase text-white/70 hover:text-white transition-colors"
+                >
+                  {cta.label} →
+                </Link>
+              )}
+            </motion.div>
+          ))}
+        </div>
+
       </div>
     </section>
   );

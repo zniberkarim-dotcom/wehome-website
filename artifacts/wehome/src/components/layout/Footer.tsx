@@ -13,7 +13,7 @@ export function Footer() {
               <Logo height={36} className="brightness-0 invert" />
             </Link>
             <p className="text-white/60 text-sm leading-relaxed max-w-sm">
-              Nous ne sommes pas une simple agence immobilière. Nous sommes un écosystème hybride combinant Immobilier, Marketing, Génération de leads et Média.
+              WeHome construit l'infrastructure immobilière transparente du Maroc — données de marché, biens vérifiés, accompagnement expert, réseau national.
             </p>
             <div className="flex gap-4">
               <a href="https://www.instagram.com/wehomeagency?igsh=ZDF5MTZ6ZzM3YXly" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:bg-primary hover:text-white transition-colors">
@@ -72,7 +72,7 @@ export function Footer() {
         </div>
         
         <div className="mt-16 pt-8 border-t border-white/10 text-center text-white/40 text-sm">
-          <p>&copy; {new Date().getFullYear()} WeHome Agency. Tous droits réservés.</p>
+          <p>&copy; {new Date().getFullYear()} WeHome — La plateforme immobilière du Maroc. Tous droits réservés.</p>
         </div>
       </div>
     </footer>
