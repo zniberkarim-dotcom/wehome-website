@@ -104,15 +104,28 @@ export function Navbar() {
               )}
             </div>
 
-            {/* CTA */}
-            <a
-              href={whatsappVendre}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-2.5 rounded-full font-semibold text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
-            >
-              Publier votre bien
-            </a>
+            {/* CTAs */}
+            <div className="flex items-center gap-2">
+              <Link
+                href="/estimer"
+                className={cn(
+                  "px-5 py-2.5 rounded-full font-semibold text-sm border transition-all duration-200 hover:-translate-y-0.5",
+                  isScrolled
+                    ? "border-primary text-primary hover:bg-primary/5"
+                    : "border-white/60 text-white hover:bg-white/10"
+                )}
+              >
+                Estimer mon bien
+              </Link>
+              <a
+                href={whatsappVendre}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-2.5 rounded-full font-semibold text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+              >
+                Publier votre bien
+              </a>
+            </div>
 
             {/* Agent zone — separator + auth */}
             <div
@@ -269,11 +282,18 @@ export function Navbar() {
               )
             )}
 
+            <Link
+              href="/estimer"
+              className="mt-4 px-6 py-4 rounded-xl font-bold text-center border-2 border-primary text-primary"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Estimer mon bien
+            </Link>
             <a
               href={whatsappVendre}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 px-6 py-4 rounded-xl font-bold text-center bg-primary text-primary-foreground shadow-lg"
+              className="px-6 py-4 rounded-xl font-bold text-center bg-primary text-primary-foreground shadow-lg"
               onClick={() => setMobileMenuOpen(false)}
             >
               Publier votre bien

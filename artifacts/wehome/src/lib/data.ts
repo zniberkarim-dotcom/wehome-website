@@ -674,3 +674,27 @@ export async function uploadPropertyPhoto(
   const { data } = supabase.storage.from("property-photos").getPublicUrl(path);
   return data.publicUrl;
 }
+
+// ── Estimation lead ──────────────────────────────────────────────────────────
+
+export interface EstimationLead {
+  type_bien: string;
+  quartier: string;
+  superficie: number | null;
+  chambres: string;
+  etat: string;
+  etage: string;
+  caracteristiques: string[];
+  motivation: string;
+  nom: string;
+  telephone: string;
+  email: string;
+  message?: string;
+}
+
+export async function submitEstimationLead(lead: EstimationLead): Promise<void> {
+  const { error } = await supabase
+    .from("estimation_leads")
+    .insert({ ...lead, status: "new" });
+  if (error) throw error;
+}
