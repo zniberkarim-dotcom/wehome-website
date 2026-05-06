@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useLocation } from "wouter";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ArrowLeft, Save, Loader2, CheckCircle, Upload, X, Building2, Star } from "lucide-react";
+import { ArrowLeft, Save, Loader2, CheckCircle, Upload, X, Building2, Star, MapPin, AlertCircle } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -13,6 +13,25 @@ import {
   PROPERTY_TYPES,
   type AgentProperty,
 } from "@/lib/data";
+
+const MAPS_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
+
+/** Call Google Maps Geocoding REST API and return {lat, lng} or null */
+async function geocodeAddress(address: string): Promise<{ lat: number; lng: number } | null> {
+  if (!address.trim() || !MAPS_KEY) return null;
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${MAPS_KEY}`;
+  try {
+    const res = await fetch(url);
+    const json = await res.json();
+    if (json.status === "OK" && json.results?.[0]?.geometry?.location) {
+      const { lat, lng } = json.results[0].geometry.location;
+      return { lat, lng };
+    }
+  } catch {
+    // silently fail — geocoding is best-effort
+  }
+  return null;
+}
 
 const TRANSACTION_TYPES = ["Vente", "Location"];
 const STATUT_TYPES = ["Actif", "Inactif", "Vendu", "Loué"];
@@ -54,6 +73,12 @@ export default function DashboardPropertyEditPage() {
   const [newPhotoFiles, setNewPhotoFiles] = useState<File[]>([]);
   const [newPhotoPreviews, setNewPhotoPreviews] = useState<string[]>([]);
 
+  const [lat, setLat] = useState<number | null>(null);
+  const [lng, setLng] = useState<number | null>(null);
+  const [geocoding, setGeocoding] = useState(false);
+  const [geocodeFailed, setGeocodeFailed] = useState(false);
+  const geocodeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
@@ -75,6 +100,9 @@ export default function DashboardPropertyEditPage() {
     setStatut(existing.statut ?? (existing.actif !== false ? "Actif" : "Inactif"));
     setMeuble(existing.meuble ?? false);
     setFeatures(existing.features ?? []);
+    // Coordinates
+    setLat(existing.lat ?? null);
+    setLng(existing.lng ?? null);
     // All photos from DB go into existingPhotos
     const allExisting = [
       ...(existing.photo_principale ? [existing.photo_principale] : []),
@@ -82,6 +110,31 @@ export default function DashboardPropertyEditPage() {
     ].filter(Boolean);
     setExistingPhotos(allExisting);
   }, [existing?.id]);
+
+  // Debounced geocoding — fires 900ms after adresse or ville stops changing
+  const triggerGeocode = useCallback(() => {
+    if (geocodeTimerRef.current) clearTimeout(geocodeTimerRef.current);
+    const query = [adresse, ville, "Maroc"].filter(Boolean).join(", ");
+    if (!query.replace(/,\s*Maroc$/, "").trim()) return; // nothing to geocode
+    geocodeTimerRef.current = setTimeout(async () => {
+      setGeocoding(true);
+      setGeocodeFailed(false);
+      const result = await geocodeAddress(query);
+      setGeocoding(false);
+      if (result) {
+        setLat(result.lat);
+        setLng(result.lng);
+        setGeocodeFailed(false);
+      } else {
+        setGeocodeFailed(true);
+      }
+    }, 900);
+  }, [adresse, ville]);
+
+  useEffect(() => {
+    triggerGeocode();
+    return () => { if (geocodeTimerRef.current) clearTimeout(geocodeTimerRef.current); };
+  }, [adresse, ville]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleFeature = (f: string) =>
     setFeatures((prev) => prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]);
@@ -130,6 +183,8 @@ export default function DashboardPropertyEditPage() {
         statut,
         meuble,
         features: features.length > 0 ? features : undefined,
+        lat: lat ?? undefined,
+        lng: lng ?? undefined,
       };
 
       let savedId = isNew ? "" : params.id;
@@ -218,6 +273,28 @@ export default function DashboardPropertyEditPage() {
                 <input type="text" value={ville} onChange={(e) => setVille(e.target.value)} placeholder="Casablanca"
                   className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium" />
               </div>
+            </div>
+
+            {/* Geocoding status badge */}
+            <div className="flex items-center gap-2 min-h-[20px]">
+              {geocoding && (
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Loader2 size={12} className="animate-spin" />
+                  Géolocalisation en cours…
+                </span>
+              )}
+              {!geocoding && lat !== null && lng !== null && (
+                <span className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
+                  <MapPin size={12} className="fill-emerald-100" />
+                  Géolocalisé — {lat.toFixed(5)}, {lng.toFixed(5)}
+                </span>
+              )}
+              {!geocoding && geocodeFailed && (
+                <span className="flex items-center gap-1.5 text-xs text-amber-600">
+                  <AlertCircle size={12} />
+                  Adresse introuvable — coordonnées non enregistrées
+                </span>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>

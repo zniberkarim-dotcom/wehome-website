@@ -472,6 +472,8 @@ export interface AgentProperty {
   actif?: boolean;          // → published column
   meuble?: boolean;         // → meuble column
   features?: string[];
+  lat?: number;
+  lng?: number;
   created_at?: string;
 }
 
@@ -573,6 +575,8 @@ function toDbRow(props: Partial<AgentProperty>) {
   if (props.agent_id    !== undefined) row.agent_id          = props.agent_id;
   if (props.meuble      !== undefined) row.meuble            = props.meuble;
   if (props.features !== undefined) row.features = props.features;
+  if (props.lat      !== undefined) row.lat       = props.lat;
+  if (props.lng      !== undefined) row.lng       = props.lng;
 
   // Field renames
   if (props.prix   !== undefined) row.price        = props.prix;      // prix → price
@@ -665,6 +669,8 @@ export async function fetchAgentPropertyById(
     photos: Array.isArray(p.photos) ? (p.photo_principale ? p.photos.filter(u => u !== p.photo_principale) : p.photos.slice(1)) : [],
     meuble: p.meuble ?? false,
     features: Array.isArray(p.features) ? p.features : [],
+    lat: (p as any).lat ?? undefined,
+    lng: (p as any).lng ?? undefined,
     created_at: p.created_at,
   };
 }
