@@ -62,11 +62,16 @@ const FAQ_ITEMS = [
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function FadeIn({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+function FadeIn({ children, delay = 0, className = "", from = "bottom" }: { children: React.ReactNode; delay?: number; className?: string; from?: "bottom" | "left" | "right" | "none" }) {
+  const initial =
+    from === "none" ? { opacity: 0 }
+    : from === "left"  ? { opacity: 0, x: -24 }
+    : from === "right" ? { opacity: 0, x: 24 }
+    : { opacity: 0, y: 24 };
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={initial}
+      whileInView={{ opacity: 1, y: 0, x: 0 }}
       viewport={{ once: true, margin: "-64px" }}
       transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}

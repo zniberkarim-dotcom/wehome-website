@@ -14,11 +14,13 @@ function FadeIn({
   delay = 0,
   className = "",
   from = "bottom",
+  style,
 }: {
   children: React.ReactNode;
   delay?: number;
   className?: string;
   from?: "bottom" | "left" | "right" | "none";
+  style?: React.CSSProperties;
 }) {
   const initial =
     from === "bottom" ? { opacity: 0, y: 32 }
@@ -33,6 +35,7 @@ function FadeIn({
       viewport={{ once: true, margin: "-72px" }}
       transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
+      style={style}
     >
       {children}
     </motion.div>

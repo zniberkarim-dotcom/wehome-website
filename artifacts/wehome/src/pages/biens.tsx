@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useSearch, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { SlidersHorizontal, X, ChevronLeft, ChevronRight, Search, User } from "lucide-react";
+import { SlidersHorizontal, X, ChevronLeft, ChevronRight, Search, User, LayoutList, Map } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PropertyCard } from "@/components/home/PropertyCard";
+import { PropertyMap } from "@/components/biens/PropertyMap";
 import {
   fetchProperties,
   fetchAgentById,
@@ -286,6 +287,7 @@ export default function BiensPage() {
   const search = useSearch();
   const [, navigate] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"list" | "map">("list");
 
   const params = parseFilterParams(search);
   const page = params.page ?? 1;
@@ -375,17 +377,47 @@ export default function BiensPage() {
               </div>
             </div>
 
-            {/* Sort */}
-            <Select value={params.sort ?? "recent"} onValueChange={(v) => updateParams({ ...params, sort: v as FilterParams["sort"], page: undefined })}>
-              <SelectTrigger className="w-[160px] h-9 text-sm rounded-lg">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {SORT_OPTIONS.map((o) => (
-                  <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="flex items-center gap-3">
+              {/* View toggle */}
+              <div className="hidden sm:flex items-center border border-border rounded-lg overflow-hidden h-9">
+                <button
+                  onClick={() => setViewMode("list")}
+                  title="Vue liste"
+                  className={`w-9 h-9 flex items-center justify-center transition-colors ${
+                    viewMode === "list"
+                      ? "bg-primary text-white"
+                      : "text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  <LayoutList size={16} />
+                </button>
+                <button
+                  onClick={() => setViewMode("map")}
+                  title="Vue carte"
+                  className={`w-9 h-9 flex items-center justify-center transition-colors border-l border-border ${
+                    viewMode === "map"
+                      ? "bg-primary text-white"
+                      : "text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  <Map size={16} />
+                </button>
+              </div>
+
+              {/* Sort — hidden in map view on small screens */}
+              {viewMode === "list" && (
+                <Select value={params.sort ?? "recent"} onValueChange={(v) => updateParams({ ...params, sort: v as FilterParams["sort"], page: undefined })}>
+                  <SelectTrigger className="w-[160px] h-9 text-sm rounded-lg">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SORT_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
           </div>
         </div>
 
@@ -399,67 +431,98 @@ export default function BiensPage() {
               </div>
             </aside>
 
-            {/* Results grid */}
+            {/* Results: list or map */}
             <div className="flex-1 min-w-0">
-              {isLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="bg-card rounded-3xl overflow-hidden border border-border animate-pulse">
-                      <div className="aspect-[4/5] bg-muted" />
-                      <div className="p-6 space-y-3">
-                        <div className="h-4 bg-muted rounded w-3/4" />
-                        <div className="h-3 bg-muted rounded w-1/2" />
+              {viewMode === "map" ? (
+                /* ── Map view ── */
+                <motion.div
+                  key="map-view"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {isLoading ? (
+                    <div className="h-[calc(100vh-200px)] min-h-[500px] bg-muted/30 rounded-2xl border border-border animate-pulse" />
+                  ) : (
+                    <PropertyMap
+                      properties={properties}
+                      className="h-[calc(100vh-200px)] min-h-[500px]"
+                    />
+                  )}
+                  {!isLoading && properties.length === 0 && (
+                    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center py-16">
+                      <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                        <Search size={28} className="text-muted-foreground" />
                       </div>
-                    </div>
-                  ))}
-                </div>
-              ) : isError ? (
-                <div className="text-center py-24">
-                  <p className="text-muted-foreground">Erreur lors du chargement. Veuillez réessayer.</p>
-                </div>
-              ) : properties.length === 0 ? (
-                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center py-24">
-                  <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                    <Search size={28} className="text-muted-foreground" />
-                  </div>
-                  <h2 className="text-xl font-display font-bold text-foreground mb-2">
-                    {activeFilterCount > 0 ? "Aucun résultat" : "Aucun bien disponible"}
-                  </h2>
-                  <p className="text-muted-foreground max-w-sm mx-auto">
-                    {activeFilterCount > 0
-                      ? "Essayez d'élargir vos critères de recherche."
-                      : "Revenez bientôt ou contactez-nous directement."}
-                  </p>
-                  {activeFilterCount > 0 && (
-                    <button
-                      onClick={() => updateParams({ sort: params.sort })}
-                      className="mt-6 px-6 py-2.5 rounded-full border border-border text-sm font-medium hover:border-primary hover:text-primary transition-colors"
-                    >
-                      Réinitialiser les filtres
-                    </button>
+                      <h2 className="text-xl font-display font-bold text-foreground mb-2">Aucun résultat</h2>
+                      <p className="text-muted-foreground">Essayez d'élargir vos critères de recherche.</p>
+                    </motion.div>
                   )}
                 </motion.div>
               ) : (
+                /* ── List view ── */
                 <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {properties.map((property, i) => (
-                      <motion.div
-                        key={property.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: Math.min(i * 0.05, 0.3) }}
-                      >
-                        <PropertyCard property={property} />
-                      </motion.div>
-                    ))}
-                  </div>
+                  {isLoading ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      {Array.from({ length: 6 }).map((_, i) => (
+                        <div key={i} className="bg-card rounded-3xl overflow-hidden border border-border animate-pulse">
+                          <div className="aspect-[4/5] bg-muted" />
+                          <div className="p-6 space-y-3">
+                            <div className="h-4 bg-muted rounded w-3/4" />
+                            <div className="h-3 bg-muted rounded w-1/2" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : isError ? (
+                    <div className="text-center py-24">
+                      <p className="text-muted-foreground">Erreur lors du chargement. Veuillez réessayer.</p>
+                    </div>
+                  ) : properties.length === 0 ? (
+                    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center py-24">
+                      <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                        <Search size={28} className="text-muted-foreground" />
+                      </div>
+                      <h2 className="text-xl font-display font-bold text-foreground mb-2">
+                        {activeFilterCount > 0 ? "Aucun résultat" : "Aucun bien disponible"}
+                      </h2>
+                      <p className="text-muted-foreground max-w-sm mx-auto">
+                        {activeFilterCount > 0
+                          ? "Essayez d'élargir vos critères de recherche."
+                          : "Revenez bientôt ou contactez-nous directement."}
+                      </p>
+                      {activeFilterCount > 0 && (
+                        <button
+                          onClick={() => updateParams({ sort: params.sort })}
+                          className="mt-6 px-6 py-2.5 rounded-full border border-border text-sm font-medium hover:border-primary hover:text-primary transition-colors"
+                        >
+                          Réinitialiser les filtres
+                        </button>
+                      )}
+                    </motion.div>
+                  ) : (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {properties.map((property, i) => (
+                          <motion.div
+                            key={property.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: Math.min(i * 0.05, 0.3) }}
+                          >
+                            <PropertyCard property={property} />
+                          </motion.div>
+                        ))}
+                      </div>
 
-                  <Pagination
-                    page={page}
-                    total={total}
-                    pageSize={PAGE_SIZE}
-                    onPage={(p) => updateParams({ ...params, page: p })}
-                  />
+                      <Pagination
+                        page={page}
+                        total={total}
+                        pageSize={PAGE_SIZE}
+                        onPage={(p) => updateParams({ ...params, page: p })}
+                      />
+                    </>
+                  )}
                 </>
               )}
             </div>
