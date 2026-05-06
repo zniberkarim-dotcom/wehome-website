@@ -188,22 +188,35 @@ export function Navbar() {
                         </div>
                         {/* Links */}
                         <div className="py-1">
-                          <Link
-                            href="/dashboard"
-                            onClick={() => setAgentMenuOpen(false)}
-                            className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground/80 hover:bg-primary/5 hover:text-primary transition-colors"
-                          >
-                            <LayoutDashboard size={15} className="text-primary/70" />
-                            Mon Dashboard
-                          </Link>
-                          <Link
-                            href="/dashboard/proprietes"
-                            onClick={() => setAgentMenuOpen(false)}
-                            className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground/80 hover:bg-primary/5 hover:text-primary transition-colors"
-                          >
-                            <User size={15} className="text-primary/70" />
-                            Mes propriétés
-                          </Link>
+                          {agent.role === "agent_partenaire" ? (
+                            <Link
+                              href="/espace-agent/dashboard"
+                              onClick={() => setAgentMenuOpen(false)}
+                              className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground/80 hover:bg-primary/5 hover:text-primary transition-colors"
+                            >
+                              <LayoutDashboard size={15} className="text-primary/70" />
+                              Mon Portail Agent
+                            </Link>
+                          ) : (
+                            <>
+                              <Link
+                                href="/dashboard"
+                                onClick={() => setAgentMenuOpen(false)}
+                                className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground/80 hover:bg-primary/5 hover:text-primary transition-colors"
+                              >
+                                <LayoutDashboard size={15} className="text-primary/70" />
+                                Mon Dashboard
+                              </Link>
+                              <Link
+                                href="/dashboard/proprietes"
+                                onClick={() => setAgentMenuOpen(false)}
+                                className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground/80 hover:bg-primary/5 hover:text-primary transition-colors"
+                              >
+                                <User size={15} className="text-primary/70" />
+                                Mes propriétés
+                              </Link>
+                            </>
+                          )}
                         </div>
                         <div className="border-t border-border/40 py-1">
                           <button
@@ -219,9 +232,9 @@ export function Navbar() {
                   </AnimatePresence>
                 </div>
               ) : (
-                /* ── Logged-out state: discrete link ── */
+                /* ── Logged-out state: portal link ── */
                 <Link
-                  href="/auth/login"
+                  href="/espace-agent"
                   className={cn(
                     "flex items-center gap-1.5 text-sm font-medium transition-colors duration-200",
                     isScrolled

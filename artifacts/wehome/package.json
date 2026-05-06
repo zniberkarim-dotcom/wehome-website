@@ -10,7 +10,10 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.4"
+    "@googlemaps/js-api-loader": "^2.0.2",
+    "@googlemaps/markerclusterer": "^2.6.2",
+    "@supabase/supabase-js": "^2.49.4",
+    "@types/google.maps": "^3.64.0"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",

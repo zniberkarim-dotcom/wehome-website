@@ -24,6 +24,15 @@ import AgentProfilePage from "@/pages/agents/slug";
 import AProposPage from "@/pages/a-propos";
 import EstimerPage from "@/pages/estimer";
 import PartenairesPage from "@/pages/partenaires";
+// Espace Agent portal
+import EspaceAgentPage from "@/pages/espace-agent/index";
+import PortalLoginPage from "@/pages/espace-agent/login";
+import PortalInscriptionPage from "@/pages/espace-agent/inscription";
+import PortalDashboardHome from "@/pages/espace-agent/dashboard/index";
+import PortalBiensPage from "@/pages/espace-agent/dashboard/biens";
+import PortalLeadsPage from "@/pages/espace-agent/dashboard/leads";
+import PortalPerformancePage from "@/pages/espace-agent/dashboard/performance";
+import PortalProfilPage from "@/pages/espace-agent/dashboard/profil";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -89,6 +98,16 @@ function Router() {
       <Route path="/estimer" component={EstimerPage} />
       <Route path="/partenaires" component={PartenairesPage} />
       <Route path="/contact" component={HomePage} />
+
+      {/* Espace Agent portal */}
+      <Route path="/espace-agent" component={EspaceAgentPage} />
+      <Route path="/espace-agent/login" component={PortalLoginPage} />
+      <Route path="/espace-agent/inscription" component={PortalInscriptionPage} />
+      <Route path="/espace-agent/dashboard" component={PortalDashboardHome} />
+      <Route path="/espace-agent/dashboard/biens" component={PortalBiensPage} />
+      <Route path="/espace-agent/dashboard/leads" component={PortalLeadsPage} />
+      <Route path="/espace-agent/dashboard/performance" component={PortalPerformancePage} />
+      <Route path="/espace-agent/dashboard/profil" component={PortalProfilPage} />
       <Route path="/publier" component={HomePage} />
 
       {/* Agent directory (public) */}

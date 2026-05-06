@@ -441,6 +441,15 @@ export interface Agent {
   slug?: string;
   created_at: string;
   updated_at?: string;
+  // Agent portal fields (added via migration)
+  role?: "admin" | "agent_interne" | "agent_partenaire";
+  nom_agence?: string;
+  logo_agence_url?: string;
+  ville?: string;
+  statut?: "pending" | "actif" | "suspendu";
+  date_activation?: string;
+  abonnement?: "essai" | "basic" | "premium";
+  listings_limit?: number;
 }
 
 export interface AgentProperty {
