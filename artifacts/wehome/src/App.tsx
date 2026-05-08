@@ -25,6 +25,7 @@ import AProposPage from "@/pages/a-propos";
 import EstimerPage from "@/pages/estimer";
 import FinancementPage from "@/pages/financement";
 import FavorisPage from "@/pages/favoris";
+import PublierPage from "@/pages/publier";
 import PartenairesPage from "@/pages/partenaires";
 // Espace Agent portal
 import EspaceAgentPage from "@/pages/espace-agent/index";
@@ -95,7 +96,6 @@ function Router() {
       <Route path="/louer">{() => <RedirectTo to="/biens?transaction=Location" />}</Route>
       <Route path="/bien/:id" component={BienPage} />
       <Route path="/network" component={NetworkPage} />
-      <Route path="/vendre" component={HomePage} />
       <Route path="/a-propos" component={AProposPage} />
       <Route path="/estimer" component={EstimerPage} />
       <Route path="/financement" component={FinancementPage} />
@@ -112,7 +112,8 @@ function Router() {
       <Route path="/espace-agent/dashboard/leads" component={PortalLeadsPage} />
       <Route path="/espace-agent/dashboard/performance" component={PortalPerformancePage} />
       <Route path="/espace-agent/dashboard/profil" component={PortalProfilPage} />
-      <Route path="/publier" component={HomePage} />
+      <Route path="/publier" component={PublierPage} />
+      <Route path="/vendre" component={PublierPage} />
 
       {/* Agent directory (public) */}
       <Route path="/agents" component={AgentsPage} />

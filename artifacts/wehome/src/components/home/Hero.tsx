@@ -22,8 +22,6 @@ const FEATURES_LIST = [
   { key: "Climatisation", label: "Climatisation" },
 ];
 
-const whatsappVendre = `https://wa.me/212653535156?text=${encodeURIComponent("Bonjour WeHome,\n\nJe souhaite vendre mon bien immobilier.\n\nPouvez-vous me contacter pour en discuter ?\n\nMerci !")}`;
-
 export function Hero() {
   const [activeTab, setActiveTab] = useState<"acheter" | "louer" | "vendre">("acheter");
   const [city, setCity] = useState("");
@@ -44,7 +42,7 @@ export function Hero() {
 
   const handleSearch = () => {
     if (activeTab === "vendre") {
-      window.open(whatsappVendre, "_blank");
+      navigate("/publier");
       return;
     }
     const range = PRICE_RANGES.find((r) => r.value === priceRange);

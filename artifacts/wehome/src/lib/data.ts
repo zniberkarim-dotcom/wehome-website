@@ -406,6 +406,117 @@ export async function submitNetworkApplication(data: {
   if (error) throw error;
 }
 
+/* ────────────────────────────────────────────────────────────────────────────
+ * Particulier (FSBO) submission — public self-publishing
+ *
+ * Inserts a row into `properties` with `agent_id = null` (no agent),
+ * status pending validation, owner contact stored in the `owner` JSON column.
+ * Uses the existing `agent-photos` bucket under a `particuliers/` prefix.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+export interface ParticulierSubmission {
+  // Bien
+  type: string;
+  transaction: "Vente" | "Location";
+  ville: string;
+  quartier?: string;
+  adresse?: string;
+  prix: number;
+  surface: number;
+  chambres?: number;
+  salles_de_bains?: number;
+  salons?: number;
+  meuble?: boolean;
+  description: string;
+  photos: string[]; // public URLs returned by uploadParticulierPhoto
+  features?: string[];
+  // Vendeur
+  vendeur_nom: string;
+  vendeur_prenom: string;
+  vendeur_email: string;
+  vendeur_telephone: string;
+  vendeur_message?: string;
+}
+
+/** Upload a single photo for a particulier listing.
+ *  Public bucket reused from agent-photos; path is unique to avoid clashes. */
+export async function uploadParticulierPhoto(file: File): Promise<string> {
+  const ext = (file.name.split(".").pop() ?? "jpg").toLowerCase();
+  const safeExt = /^(jpg|jpeg|png|webp|heic)$/.test(ext) ? ext : "jpg";
+  const path = `particuliers/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${safeExt}`;
+  const { error } = await supabase.storage
+    .from("agent-photos")
+    .upload(path, file, { upsert: false, cacheControl: "3600" });
+  if (error) throw error;
+  const { data } = supabase.storage.from("agent-photos").getPublicUrl(path);
+  return data.publicUrl;
+}
+
+/** Submit a particulier listing → properties (pending validation) + leads (sales pipeline). */
+export async function submitParticulierProperty(s: ParticulierSubmission): Promise<{ id: string }> {
+  const reference = `WHM-${Date.now()}`;
+  const photoPrincipale = s.photos[0] ?? null;
+  const fullName = `${s.vendeur_prenom} ${s.vendeur_nom}`.trim();
+
+  const row = {
+    reference,
+    type: s.type,
+    transaction: s.transaction,
+    titre: `${s.type} ${s.quartier || s.ville}`.trim(),
+    neighborhood: s.quartier ?? "",
+    city: s.ville,
+    ville: s.ville,
+    address: s.adresse ?? null,
+    price: String(s.prix),
+    surface: String(s.surface),
+    surface_construite: String(s.surface),
+    chambres: s.chambres ?? 0,
+    salles_de_bains: s.salles_de_bains ?? 0,
+    salons: s.salons ?? 0,
+    meuble: s.meuble ?? false,
+    description: s.description,
+    features: s.features ?? [],
+    photos: s.photos,
+    photo_principale: photoPrincipale,
+    photo_status: photoPrincipale ? "⏳ En attente" : "❌ Pas de photo",
+    published: false,
+    portal_statut: "en_attente_validation",
+    agent_id: null,
+    owner: {
+      name: fullName,
+      email: s.vendeur_email,
+      phone: s.vendeur_telephone,
+    },
+    notes: `Soumission particulier — ${s.vendeur_message ?? "(pas de message)"}`,
+    created_at: new Date().toISOString(),
+  };
+
+  const { data, error } = await supabase
+    .from("properties")
+    .insert(row)
+    .select("id")
+    .single();
+  if (error) throw error;
+
+  // Mirror in leads pipeline so the sales team sees a fresh seller lead immediately
+  try {
+    await supabase.from("leads").insert({
+      name: fullName,
+      phone: s.vendeur_telephone,
+      email: s.vendeur_email,
+      notes: `[VENDEUR PARTICULIER] ${s.type} à ${s.ville} · ${s.prix} MAD\n\n${s.vendeur_message ?? ""}`.trim(),
+      source: "Publier mon bien",
+      status: "New",
+      property_reference: reference,
+      created_at: new Date().toISOString(),
+    });
+  } catch {
+    /* best-effort; the property submission succeeded — don't break the UX */
+  }
+
+  return { id: data.id };
+}
+
 // ── Legacy constants ──────────────────────────────────────────────────────────
 
 export const PROPERTY_TYPES = [

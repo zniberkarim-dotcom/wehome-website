@@ -44,10 +44,10 @@ export function Navbar() {
 
   const whatsappVendre = `https://wa.me/212653535156?text=${encodeURIComponent("Bonjour WeHome,\n\nJe souhaite vendre mon bien immobilier.\n\nPouvez-vous me contacter pour en discuter ?\n\nMerci !")}`;
 
-  const navLinks = [
+  const navLinks: { name: string; href: string; external?: boolean }[] = [
     { name: "Acheter", href: "/acheter" },
     { name: "Louer", href: "/louer" },
-    { name: "Vendre", href: whatsappVendre, external: true },
+    { name: "Vendre", href: "/publier" },
     { name: "Financement", href: "/financement" },
     { name: "Agents", href: "/agents" },
     { name: "Network", href: "/network" },
@@ -139,14 +139,12 @@ export function Navbar() {
               >
                 Estimer mon bien
               </Link>
-              <a
-                href={whatsappVendre}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/publier"
                 className="px-6 py-2.5 rounded-full font-semibold text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
               >
                 Publier votre bien
-              </a>
+              </Link>
             </div>
 
             {/* Agent zone — separator + auth */}
@@ -337,15 +335,13 @@ export function Navbar() {
             >
               Estimer mon bien
             </Link>
-            <a
-              href={whatsappVendre}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/publier"
               className="px-6 py-4 rounded-xl font-bold text-center bg-primary text-primary-foreground shadow-lg"
               onClick={() => setMobileMenuOpen(false)}
             >
               Publier votre bien
-            </a>
+            </Link>
 
             {/* Agent zone — mobile */}
             <div className="mt-2 border-t border-border/40 pt-4">
