@@ -19,6 +19,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useSwipe } from "@/hooks/useSwipe";
+import { MortgageCalculator } from "@/components/financement/MortgageCalculator";
+import { FavoriteButton } from "@/components/favoris/FavoriteButton";
 
 export default function BienPage() {
   const params = useParams<{ id: string }>();
@@ -323,7 +325,10 @@ export default function BienPage() {
               {/* Left: details */}
               <div className="lg:col-span-2 space-y-8">
                 <div>
-                  <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-3">{property.title}</h1>
+                  <div className="flex items-start justify-between gap-4 mb-3">
+                    <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground">{property.title}</h1>
+                    <FavoriteButton propertyId={property.id} variant="inline" size="md" stopPropagation={false} />
+                  </div>
                   <div className="flex items-start gap-2 text-muted-foreground mb-4">
                     <MapPin size={20} className="shrink-0 mt-1" />
                     <span className="text-lg">{property.location}</span>
@@ -414,6 +419,19 @@ export default function BienPage() {
                     <p className="text-muted-foreground leading-relaxed text-lg whitespace-pre-line">
                       {property.description}
                     </p>
+                  </div>
+                )}
+
+                {/* Calculateur hypothécaire — visible uniquement pour les biens à la vente avec prix */}
+                {!property.isRental && hasPrice && (
+                  <div className="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm">
+                    <h2 className="text-xl font-display font-bold text-foreground mb-1">
+                      Estimer votre financement
+                    </h2>
+                    <p className="text-sm text-muted-foreground mb-6">
+                      Combien coûterait ce bien chaque mois ? Ajustez l'apport, la durée et le taux.
+                    </p>
+                    <MortgageCalculator initialPrix={property.price} compact />
                   </div>
                 )}
               </div>

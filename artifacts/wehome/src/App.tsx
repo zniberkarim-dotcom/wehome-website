@@ -23,6 +23,8 @@ import AgentsPage from "@/pages/agents/index";
 import AgentProfilePage from "@/pages/agents/slug";
 import AProposPage from "@/pages/a-propos";
 import EstimerPage from "@/pages/estimer";
+import FinancementPage from "@/pages/financement";
+import FavorisPage from "@/pages/favoris";
 import PartenairesPage from "@/pages/partenaires";
 // Espace Agent portal
 import EspaceAgentPage from "@/pages/espace-agent/index";
@@ -96,6 +98,8 @@ function Router() {
       <Route path="/vendre" component={HomePage} />
       <Route path="/a-propos" component={AProposPage} />
       <Route path="/estimer" component={EstimerPage} />
+      <Route path="/financement" component={FinancementPage} />
+      <Route path="/favoris" component={FavorisPage} />
       <Route path="/partenaires" component={PartenairesPage} />
       <Route path="/contact" component={HomePage} />
 

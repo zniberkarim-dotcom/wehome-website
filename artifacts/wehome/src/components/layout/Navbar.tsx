@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, LogIn, LayoutDashboard, LogOut, ChevronDown, User } from "lucide-react";
+import { Menu, X, LogIn, LayoutDashboard, LogOut, ChevronDown, User, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "./Logo";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
+import { useFavorites } from "@/hooks/useFavorites";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -15,6 +16,7 @@ export function Navbar() {
   const [, navigate] = useLocation();
 
   const { agent, loading } = useAuth();
+  const { count: favoritesCount } = useFavorites();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -46,6 +48,7 @@ export function Navbar() {
     { name: "Acheter", href: "/acheter" },
     { name: "Louer", href: "/louer" },
     { name: "Vendre", href: whatsappVendre, external: true },
+    { name: "Financement", href: "/financement" },
     { name: "Agents", href: "/agents" },
     { name: "Network", href: "/network" },
     { name: "Contact", href: "/contact" },
@@ -106,6 +109,25 @@ export function Navbar() {
 
             {/* CTAs */}
             <div className="flex items-center gap-2">
+              {/* Favoris (with count badge) */}
+              <Link
+                href="/favoris"
+                aria-label={`Favoris (${favoritesCount})`}
+                className={cn(
+                  "relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5",
+                  isScrolled
+                    ? "text-foreground/80 hover:text-primary hover:bg-primary/5"
+                    : "text-white/90 hover:text-white hover:bg-white/10"
+                )}
+                style={linkStyle}
+              >
+                <Heart size={20} className={favoritesCount > 0 ? "fill-current" : ""} />
+                {favoritesCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shadow">
+                    {favoritesCount > 99 ? "99+" : favoritesCount}
+                  </span>
+                )}
+              </Link>
               <Link
                 href="/estimer"
                 className={cn(
@@ -296,8 +318,21 @@ export function Navbar() {
             )}
 
             <Link
+              href="/favoris"
+              className="mt-4 px-6 py-4 rounded-xl font-bold text-center border border-border bg-card flex items-center justify-center gap-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Heart size={18} className={favoritesCount > 0 ? "fill-primary text-primary" : ""} />
+              Mes favoris
+              {favoritesCount > 0 && (
+                <span className="ml-1 px-2 py-0.5 rounded-full bg-primary text-white text-xs font-bold">
+                  {favoritesCount}
+                </span>
+              )}
+            </Link>
+            <Link
               href="/estimer"
-              className="mt-4 px-6 py-4 rounded-xl font-bold text-center border-2 border-primary text-primary"
+              className="px-6 py-4 rounded-xl font-bold text-center border-2 border-primary text-primary"
               onClick={() => setMobileMenuOpen(false)}
             >
               Estimer mon bien

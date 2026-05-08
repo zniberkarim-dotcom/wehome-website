@@ -1,17 +1,17 @@
-import { MapPin, Bed, Bath, Square, Heart, ArrowRight, Sofa, ChevronLeft, ChevronRight } from "lucide-react";
+import { MapPin, Bed, Bath, Square, ArrowRight, Sofa, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { formatMAD } from "@/lib/utils";
 import { useState, useCallback } from "react";
 import type { Property } from "@/lib/data";
 import { getPropertyImageUrls } from "@/lib/data";
 import { useSwipe } from "@/hooks/useSwipe";
+import { FavoriteButton } from "@/components/favoris/FavoriteButton";
 
 interface PropertyCardProps {
   property: Property;
 }
 
 export function PropertyCard({ property }: PropertyCardProps) {
-  const [isLiked, setIsLiked] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [failedIndexes, setFailedIndexes] = useState<Set<number>>(new Set());
   const [, navigate] = useLocation();
@@ -95,12 +95,12 @@ export function PropertyCard({ property }: PropertyCardProps) {
           )}
         </div>
         
-        <button 
-          onClick={(e) => { e.stopPropagation(); setIsLiked(!isLiked); }}
-          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-foreground hover:text-destructive hover:scale-110 transition-all shadow-sm z-10"
-        >
-          <Heart size={20} className={isLiked ? "fill-destructive text-destructive" : ""} />
-        </button>
+        <FavoriteButton
+          propertyId={property.id}
+          variant="floating"
+          size="md"
+          className="absolute top-4 right-4 z-10"
+        />
 
         {hasMultiple && (
           <>
