@@ -42,17 +42,13 @@ export function Navbar() {
     navigate("/");
   };
 
-  const whatsappVendre = `https://wa.me/212653535156?text=${encodeURIComponent("Bonjour WeHome,\n\nJe souhaite vendre mon bien immobilier.\n\nPouvez-vous me contacter pour en discuter ?\n\nMerci !")}`;
-
   const navLinks: { name: string; href: string; external?: boolean }[] = [
     { name: "Acheter", href: "/acheter" },
     { name: "Louer", href: "/louer" },
     { name: "Vendre", href: "/publier" },
+    { name: "Estimer", href: "/estimer" },
     { name: "Financement", href: "/financement" },
     { name: "Agents", href: "/agents" },
-    { name: "Network", href: "/network" },
-    { name: "Contact", href: "/contact" },
-    { name: "À Propos", href: "/a-propos" },
   ];
 
   // Shared text styles for scrolled vs transparent nav
@@ -127,17 +123,6 @@ export function Navbar() {
                     {favoritesCount > 99 ? "99+" : favoritesCount}
                   </span>
                 )}
-              </Link>
-              <Link
-                href="/estimer"
-                className={cn(
-                  "px-5 py-2.5 rounded-full font-semibold text-sm border transition-all duration-200 hover:-translate-y-0.5",
-                  isScrolled
-                    ? "border-primary text-primary hover:bg-primary/5"
-                    : "border-white/60 text-white hover:bg-white/10"
-                )}
-              >
-                Estimer mon bien
               </Link>
               <Link
                 href="/publier"
@@ -327,13 +312,6 @@ export function Navbar() {
                   {favoritesCount}
                 </span>
               )}
-            </Link>
-            <Link
-              href="/estimer"
-              className="px-6 py-4 rounded-xl font-bold text-center border-2 border-primary text-primary"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Estimer mon bien
             </Link>
             <Link
               href="/publier"

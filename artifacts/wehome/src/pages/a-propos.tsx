@@ -57,28 +57,22 @@ function Overline({ children }: { children: React.ReactNode }) {
 // ─── Team member ─────────────────────────────────────────────────────────────
 const TEAM = [
   {
-    name: "Nowfel Najib",
-    title: "Fondateur",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face&q=80",
-    bio: "Entrepreneur et investisseur immobilier, Nowfel a fondé WeHome avec une conviction : le marché marocain méritait une approche radicalement différente.",
+    name: "Kenza Zerrouk",
+    title: "Fondatrice",
+    photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=500&fit=crop&crop=face&q=80",
+    bio: "Architecte de formation et entrepreneure dans l'âme, Kenza a fondé WeHome avec une conviction : le marché immobilier marocain méritait une approche radicalement plus transparente, plus humaine, plus exigeante.",
   },
   {
     name: "Karim Zniber",
-    title: "Directeur Commercial & Opérations",
+    title: "CEO",
     photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop&crop=face&q=80",
-    bio: "Passionné par la relation client et la performance, Karim orchestre chaque transaction pour que l'expérience soit aussi mémorable que le bien lui-même.",
+    bio: "À la tête de la stratégie et des opérations, Karim pilote la croissance de WeHome et veille à ce que chaque transaction soit aussi mémorable que le bien lui-même.",
   },
   {
     name: "Basma Tazi",
     title: "Responsable Commerciale",
     photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=500&fit=crop&crop=face&q=80",
     bio: "Avec une connaissance intime des quartiers casablancais, Basma guide les acquéreurs et vendeurs avec une précision chirurgicale et une écoute rare.",
-  },
-  {
-    name: "Kenza Zerrouk",
-    title: "Directrice Artistique",
-    photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=500&fit=crop&crop=face&q=80",
-    bio: "Architecte de formation, Kenza façonne l'identité visuelle de WeHome et transforme chaque bien en objet de désir avant même la première visite.",
   },
 ];
 
