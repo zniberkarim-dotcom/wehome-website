@@ -57,12 +57,6 @@ function Overline({ children }: { children: React.ReactNode }) {
 // ─── Team member ─────────────────────────────────────────────────────────────
 const TEAM = [
   {
-    name: "Kenza Zerrouk",
-    title: "Fondatrice",
-    photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=500&fit=crop&crop=face&q=80",
-    bio: "Architecte de formation et entrepreneure dans l'âme, Kenza a fondé WeHome avec une conviction : le marché immobilier marocain méritait une approche radicalement plus transparente, plus humaine, plus exigeante.",
-  },
-  {
     name: "Karim Zniber",
     title: "CEO",
     photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop&crop=face&q=80",
@@ -70,9 +64,27 @@ const TEAM = [
   },
   {
     name: "Basma Tazi",
-    title: "Responsable Commerciale",
+    title: "COO",
     photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=500&fit=crop&crop=face&q=80",
-    bio: "Avec une connaissance intime des quartiers casablancais, Basma guide les acquéreurs et vendeurs avec une précision chirurgicale et une écoute rare.",
+    bio: "Avec une connaissance intime des quartiers casablancais, Basma orchestre les opérations de WeHome avec une précision chirurgicale et veille à l'excellence de chaque interaction client.",
+  },
+  {
+    name: "Maha El Hamzaoui",
+    title: "CMO",
+    photo: "https://ui-avatars.com/api/?name=Maha+El+Hamzaoui&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
+    bio: "Maha façonne l'identité et la voix de WeHome sur tous les canaux. Sa vision marketing allie rigueur data et sens de la narration pour positionner WeHome comme la référence immobilière au Maroc.",
+  },
+  {
+    name: "Oumaima Dakirelah",
+    title: "CFO",
+    photo: "https://ui-avatars.com/api/?name=Oumaima+Dakirelah&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
+    bio: "Oumaima pilote la stratégie financière de WeHome avec une exigence sans compromis. Elle garantit la solidité du modèle économique et la transparence des flux à chaque étape de la croissance.",
+  },
+  {
+    name: "Abdou",
+    title: "CTO",
+    photo: "https://ui-avatars.com/api/?name=Abdou&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
+    bio: "Abdou architecure les systèmes qui font tourner WeHome — CRM, plateforme, données marché. Sa conviction : la technologie doit être invisible pour le client et redoutablement efficace pour l'agent.",
   },
 ];
 
@@ -470,7 +482,7 @@ export default function AProposPage() {
             </p>
           </FadeIn>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
             {TEAM.map(({ name, title, photo, bio }, i) => (
               <FadeIn key={name} delay={i * 0.1}>
                 <div className="group flex flex-col">
