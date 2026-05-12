@@ -36,13 +36,20 @@ export interface Property {
 
 export interface FilterParams {
   transaction?: "Vente" | "Location";
-  type?: string;
+  /** Multi-select: list of property types (e.g. ["Appartement", "Villa"]) */
+  types?: string[];
   city?: string;           // searches city + neighborhood
   search?: string;         // free text
   prix_min?: number;
   prix_max?: number;
   surface_min?: number;
-  chambres_min?: number;
+  surface_max?: number;
+  /** Multi-select bedroom counts. 5 means "5 or more". e.g. [2, 3, 4] */
+  chambres?: number[];
+  /** Multi-select bathroom counts. 4 means "4 or more". */
+  sdb?: number[];
+  /** Multi-select condition. e.g. ["Neuf", "Bon état"] */
+  etat?: string[];
   is_furnished?: boolean;
   features?: string[];
   agent_id?: string;       // filter by agent UUID
@@ -50,23 +57,61 @@ export interface FilterParams {
   page?: number;
 }
 
-/** Parse URLSearchParams string → FilterParams */
+/** Helper to parse a comma-separated number list from a URL param. */
+function parseNumList(s: string | null | undefined): number[] | undefined {
+  if (!s) return undefined;
+  const arr = s
+    .split(",")
+    .map((x) => Number(x.trim()))
+    .filter((n) => Number.isFinite(n));
+  return arr.length ? arr : undefined;
+}
+
+/** Helper to parse a comma-separated string list from a URL param. */
+function parseStrList(s: string | null | undefined): string[] | undefined {
+  if (!s) return undefined;
+  const arr = s.split(",").map((x) => x.trim()).filter(Boolean);
+  return arr.length ? arr : undefined;
+}
+
+/** Parse URLSearchParams string → FilterParams.
+ *  Accepts both the new multi-select format (`types=Villa,Studio`) AND legacy
+ *  single-value params (`type=Villa`, `chambres_min=2`) for backwards compat. */
 export function parseFilterParams(search: string): FilterParams {
   const s = search.startsWith("?") ? search.slice(1) : search;
   const p = new URLSearchParams(s);
   const transaction = p.get("transaction");
   const sort = p.get("tri");
+
+  // Type: prefer multi, fall back to legacy single
+  const types =
+    parseStrList(p.get("types")) ??
+    (p.get("type") ? [p.get("type")!] : undefined);
+
+  // Chambres: prefer multi, fall back to legacy chambres_min → [n, n+1, …, 5]
+  let chambres = parseNumList(p.get("chambres"));
+  if (!chambres) {
+    const legacy = p.get("chambres_min");
+    if (legacy) {
+      const n = Math.max(1, Math.min(5, Number(legacy)));
+      chambres = Number.isFinite(n) ? Array.from({ length: 6 - n }, (_, i) => n + i) : undefined;
+    }
+  }
+
   return {
     transaction: (transaction === "Vente" || transaction === "Location") ? transaction : undefined,
-    type: p.get("type") || undefined,
+    types,
     city: p.get("ville") || undefined,
     search: p.get("q") || undefined,
     prix_min: p.get("prix_min") ? Number(p.get("prix_min")) : undefined,
     prix_max: p.get("prix_max") ? Number(p.get("prix_max")) : undefined,
     surface_min: p.get("surface_min") ? Number(p.get("surface_min")) : undefined,
-    chambres_min: p.get("chambres_min") ? Number(p.get("chambres_min")) : undefined,
+    surface_max: p.get("surface_max") ? Number(p.get("surface_max")) : undefined,
+    chambres,
+    sdb: parseNumList(p.get("sdb")),
+    etat: parseStrList(p.get("etat")),
     is_furnished: p.get("meuble") === "1" ? true : undefined,
-    features: p.get("equip") ? p.get("equip")!.split(",") : undefined,
+    features: parseStrList(p.get("equip")),
     agent_id: p.get("agent") || undefined,
     sort: (sort === "recent" || sort === "prix_asc" || sort === "prix_desc" || sort === "surface") ? sort : undefined,
     page: p.get("page") ? Math.max(1, Number(p.get("page"))) : undefined,
@@ -77,13 +122,16 @@ export function parseFilterParams(search: string): FilterParams {
 export function buildSearchUrl(params: FilterParams): string {
   const p = new URLSearchParams();
   if (params.transaction) p.set("transaction", params.transaction);
-  if (params.type) p.set("type", params.type);
+  if (params.types?.length) p.set("types", params.types.join(","));
   if (params.city) p.set("ville", params.city);
   if (params.search) p.set("q", params.search);
   if (params.prix_min) p.set("prix_min", String(params.prix_min));
   if (params.prix_max) p.set("prix_max", String(params.prix_max));
   if (params.surface_min) p.set("surface_min", String(params.surface_min));
-  if (params.chambres_min) p.set("chambres_min", String(params.chambres_min));
+  if (params.surface_max) p.set("surface_max", String(params.surface_max));
+  if (params.chambres?.length) p.set("chambres", params.chambres.join(","));
+  if (params.sdb?.length) p.set("sdb", params.sdb.join(","));
+  if (params.etat?.length) p.set("etat", params.etat.join(","));
   if (params.is_furnished) p.set("meuble", "1");
   if (params.features?.length) p.set("equip", params.features.join(","));
   if (params.agent_id) p.set("agent", params.agent_id);
@@ -251,7 +299,7 @@ export async function fetchProperties(
 
   // Server-side exact filters
   if (params?.transaction) query = query.eq("transaction", params.transaction);
-  if (params?.type) query = query.eq("type", params.type);
+  if (params?.types?.length) query = query.in("type", params.types);
   if (params?.agent_id) query = query.eq("agent_id", params.agent_id);
 
   // Server-side text search (city + neighborhood + ville)
@@ -286,18 +334,43 @@ export async function fetchProperties(
 
   // Client-side: surface
   if (params?.surface_min) results = results.filter((p) => p.surface >= params.surface_min!);
+  if (params?.surface_max) results = results.filter((p) => p.surface > 0 && p.surface <= params.surface_max!);
 
-  // Client-side: bedrooms
-  if (params?.chambres_min) {
-    results = results.filter(
-      (p) => (p.beds ?? p.rooms ?? 0) >= params.chambres_min!
+  // Client-side: chambres (multi-select, 5 means "5 or more")
+  if (params?.chambres?.length) {
+    const wanted = new Set(params.chambres);
+    const hasFive = wanted.has(5);
+    results = results.filter((p) => {
+      const n = p.beds ?? p.rooms ?? 0;
+      if (n <= 0) return false;
+      return wanted.has(n) || (hasFive && n >= 5);
+    });
+  }
+
+  // Client-side: salles de bains (multi-select, 4 means "4 or more")
+  if (params?.sdb?.length) {
+    const wanted = new Set(params.sdb);
+    const hasMax = wanted.has(4);
+    results = results.filter((p) => {
+      const n = p.baths ?? 0;
+      if (n <= 0) return false;
+      return wanted.has(n) || (hasMax && n >= 4);
+    });
+  }
+
+  // Client-side: état (state of the property) — looked up in features list since
+  // the DB doesn't yet have a dedicated column. Matches "Neuf", "Bon état", "À rénover".
+  if (params?.etat?.length) {
+    const wanted = new Set(params.etat.map((x) => x.toLowerCase()));
+    results = results.filter((p) =>
+      (p.features ?? []).some((f) => wanted.has(f.toLowerCase()))
     );
   }
 
   // Client-side: furnished
   if (params?.is_furnished) results = results.filter((p) => p.furnished);
 
-  // Client-side: features
+  // Client-side: features (must include ALL selected features)
   if (params?.features?.length) {
     results = results.filter((p) =>
       params.features!.every((f) => (p.features ?? []).includes(f))

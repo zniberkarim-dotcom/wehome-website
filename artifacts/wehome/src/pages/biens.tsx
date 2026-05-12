@@ -28,24 +28,38 @@ const SORT_OPTIONS = [
   { value: "surface",   label: "Surface" },
 ];
 
-const PRICE_PRESETS = [
-  { label: "Tout budget",     min: undefined,   max: undefined   },
-  { label: "< 500 000 MAD",   min: undefined,   max: 500_000     },
-  { label: "500 000 – 1M",    min: 500_000,     max: 1_000_000   },
-  { label: "1M – 3M",         min: 1_000_000,   max: 3_000_000   },
-  { label: "3M – 5M",         min: 3_000_000,   max: 5_000_000   },
-  { label: "> 5M MAD",        min: 5_000_000,   max: undefined   },
-];
-
-const BEDROOM_OPTIONS = [
-  { label: "Tout", value: undefined },
-  { label: "1+",  value: 1 },
-  { label: "2+",  value: 2 },
-  { label: "3+",  value: 3 },
-  { label: "4+",  value: 4 },
-];
+const ROOM_COUNT_OPTIONS = [1, 2, 3, 4, 5] as const;
+const SDB_COUNT_OPTIONS = [1, 2, 3, 4] as const;
+const ETAT_OPTIONS = ["Neuf", "Bon état", "À rénover"] as const;
+const FEATURE_OPTIONS = [
+  "Cuisine équipée",
+  "Climatisation",
+  "Chauffage",
+  "Ascenseur",
+  "Concierge",
+  "Gardien",
+  "Sécurité 24/7",
+  "Balcon",
+  "Terrasse",
+  "Jardin",
+  "Piscine",
+  "Parking",
+  "Garage",
+  "Vue mer",
+  "Vue dégagée",
+] as const;
 
 // ── Filter panel (desktop sidebar + mobile sheet) ─────────────────────────────
+
+/** Toggle a value inside an array filter; returns undefined when the array becomes empty
+ *  so the URL stays clean. */
+function toggleInArray<T>(arr: T[] | undefined, value: T): T[] | undefined {
+  const current = arr ?? [];
+  const next = current.includes(value)
+    ? current.filter((x) => x !== value)
+    : [...current, value];
+  return next.length ? next : undefined;
+}
 
 function FilterPanel({
   params,
@@ -58,23 +72,23 @@ function FilterPanel({
     onUpdate({ ...params, ...partial, page: undefined });
   }
 
-  const pricePresetIndex = PRICE_PRESETS.findIndex(
-    (p) => p.min === params.prix_min && p.max === params.prix_max
-  );
-
   const hasActiveFilters = [
-    params.transaction, params.type, params.city,
-    params.prix_min ?? params.prix_max, params.surface_min,
-    params.chambres_min, params.is_furnished,
+    params.transaction,
+    params.types?.length,
+    params.city,
+    params.prix_min ?? params.prix_max,
+    params.surface_min ?? params.surface_max,
+    params.chambres?.length,
+    params.sdb?.length,
+    params.etat?.length,
+    params.is_furnished,
+    params.features?.length,
   ].some(Boolean);
 
   return (
     <div className="space-y-6">
       {/* Transaction */}
-      <div>
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-          Transaction
-        </p>
+      <FilterGroup label="Transaction">
         <div className="flex gap-2">
           {([
             { label: "Tout",    value: undefined          },
@@ -94,13 +108,10 @@ function FilterPanel({
             </button>
           ))}
         </div>
-      </div>
+      </FilterGroup>
 
       {/* Ville / Quartier */}
-      <div>
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-          Ville / Quartier
-        </p>
+      <FilterGroup label="Ville / Quartier">
         <input
           type="text"
           placeholder="Casablanca, Maarif…"
@@ -108,90 +119,171 @@ function FilterPanel({
           onChange={(e) => set({ city: e.target.value || undefined })}
           className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
         />
-      </div>
+      </FilterGroup>
 
-      {/* Type */}
-      <div>
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-          Type de bien
-        </p>
-        <Select
-          value={params.type ?? "all"}
-          onValueChange={(v) => set({ type: v === "all" ? undefined : v })}
-        >
-          <SelectTrigger className="rounded-xl bg-muted/50 border-border/50">
-            <SelectValue placeholder="Tous les types" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tous les types</SelectItem>
-            {PROPERTY_TYPES.map((t) => (
-              <SelectItem key={t} value={t}>{t}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Budget */}
-      <div>
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-          Budget
-        </p>
-        <div className="space-y-1">
-          {PRICE_PRESETS.map((preset, i) => (
-            <button
-              key={i}
-              onClick={() => set({ prix_min: preset.min, prix_max: preset.max })}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                pricePresetIndex === i
-                  ? "bg-primary/10 text-primary font-medium"
-                  : "hover:bg-muted text-foreground/70"
-              }`}
-            >
-              {preset.label}
-            </button>
-          ))}
+      {/* Type de bien — multi-select */}
+      <FilterGroup
+        label="Type de bien"
+        hint={params.types?.length ? `${params.types.length} sélectionné${params.types.length > 1 ? "s" : ""}` : "Plusieurs choix possibles"}
+      >
+        <div className="flex flex-wrap gap-1.5">
+          {PROPERTY_TYPES.map((t) => {
+            const active = params.types?.includes(t) ?? false;
+            return (
+              <button
+                key={t}
+                onClick={() => set({ types: toggleInArray(params.types, t) })}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                  active
+                    ? "bg-primary text-white border-primary"
+                    : "bg-muted/50 text-muted-foreground border-border hover:bg-muted/80"
+                }`}
+              >
+                {t}
+              </button>
+            );
+          })}
         </div>
-      </div>
+      </FilterGroup>
 
-      {/* Surface min */}
-      <div>
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-          Surface minimum
-        </p>
-        <div className="flex items-center gap-2">
+      {/* Budget — typed min/max */}
+      <FilterGroup label="Budget (MAD)">
+        <div className="grid grid-cols-2 gap-2">
           <input
             type="number"
+            inputMode="numeric"
             min={0}
-            placeholder="0"
+            placeholder="Min"
+            value={params.prix_min ?? ""}
+            onChange={(e) => set({ prix_min: e.target.value ? Number(e.target.value) : undefined })}
+            className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
+          />
+          <input
+            type="number"
+            inputMode="numeric"
+            min={0}
+            placeholder="Max"
+            value={params.prix_max ?? ""}
+            onChange={(e) => set({ prix_max: e.target.value ? Number(e.target.value) : undefined })}
+            className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
+          />
+        </div>
+      </FilterGroup>
+
+      {/* Surface min / max — typed */}
+      <FilterGroup label="Surface (m²)">
+        <div className="grid grid-cols-2 gap-2">
+          <input
+            type="number"
+            inputMode="numeric"
+            min={0}
+            placeholder="Min"
             value={params.surface_min ?? ""}
             onChange={(e) => set({ surface_min: e.target.value ? Number(e.target.value) : undefined })}
-            className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+            className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
           />
-          <span className="text-sm text-muted-foreground shrink-0">m²</span>
+          <input
+            type="number"
+            inputMode="numeric"
+            min={0}
+            placeholder="Max"
+            value={params.surface_max ?? ""}
+            onChange={(e) => set({ surface_max: e.target.value ? Number(e.target.value) : undefined })}
+            className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
+          />
         </div>
-      </div>
+      </FilterGroup>
 
-      {/* Chambres */}
-      <div>
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
-          Chambres
-        </p>
-        <div className="flex gap-1.5">
-          {BEDROOM_OPTIONS.map((opt) => (
-            <button
-              key={opt.label}
-              onClick={() => set({ chambres_min: opt.value })}
-              className={`flex-1 py-2 rounded-xl text-xs font-medium transition-colors ${
-                params.chambres_min === opt.value
-                  ? "bg-primary text-white"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
+      {/* Chambres — multi-select */}
+      <FilterGroup label="Chambres" hint="Plusieurs choix possibles">
+        <div className="grid grid-cols-5 gap-1.5">
+          {ROOM_COUNT_OPTIONS.map((n) => {
+            const active = params.chambres?.includes(n) ?? false;
+            return (
+              <button
+                key={n}
+                onClick={() => set({ chambres: toggleInArray(params.chambres, n) })}
+                className={`py-2 rounded-xl text-xs font-bold border transition-colors ${
+                  active
+                    ? "bg-primary text-white border-primary"
+                    : "bg-muted/50 text-foreground/80 border-border hover:bg-muted/80"
+                }`}
+              >
+                {n === 5 ? "5+" : n}
+              </button>
+            );
+          })}
         </div>
-      </div>
+      </FilterGroup>
+
+      {/* Salles de bains — multi-select */}
+      <FilterGroup label="Salles de bains" hint="Plusieurs choix possibles">
+        <div className="grid grid-cols-4 gap-1.5">
+          {SDB_COUNT_OPTIONS.map((n) => {
+            const active = params.sdb?.includes(n) ?? false;
+            return (
+              <button
+                key={n}
+                onClick={() => set({ sdb: toggleInArray(params.sdb, n) })}
+                className={`py-2 rounded-xl text-xs font-bold border transition-colors ${
+                  active
+                    ? "bg-primary text-white border-primary"
+                    : "bg-muted/50 text-foreground/80 border-border hover:bg-muted/80"
+                }`}
+              >
+                {n === 4 ? "4+" : n}
+              </button>
+            );
+          })}
+        </div>
+      </FilterGroup>
+
+      {/* État du bien — multi-select */}
+      <FilterGroup label="État du bien">
+        <div className="flex flex-wrap gap-1.5">
+          {ETAT_OPTIONS.map((s) => {
+            const active = params.etat?.includes(s) ?? false;
+            return (
+              <button
+                key={s}
+                onClick={() => set({ etat: toggleInArray(params.etat, s) })}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                  active
+                    ? "bg-primary text-white border-primary"
+                    : "bg-muted/50 text-muted-foreground border-border hover:bg-muted/80"
+                }`}
+              >
+                {s}
+              </button>
+            );
+          })}
+        </div>
+      </FilterGroup>
+
+      {/* Équipements — multi-select */}
+      <FilterGroup
+        label="Équipements"
+        hint={params.features?.length ? `${params.features.length} sélectionné${params.features.length > 1 ? "s" : ""}` : "Plusieurs choix possibles"}
+      >
+        <div className="flex flex-wrap gap-1.5">
+          {FEATURE_OPTIONS.map((f) => {
+            const active = params.features?.includes(f) ?? false;
+            return (
+              <button
+                key={f}
+                onClick={() => set({ features: toggleInArray(params.features, f) })}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                  active
+                    ? "bg-primary text-white border-primary"
+                    : "bg-muted/50 text-muted-foreground border-border hover:bg-muted/80"
+                }`}
+              >
+                {f}
+              </button>
+            );
+          })}
+        </div>
+      </FilterGroup>
 
       {/* Meublé */}
       <div className="flex items-center justify-between">
@@ -212,6 +304,28 @@ function FilterPanel({
           Réinitialiser les filtres
         </button>
       )}
+    </div>
+  );
+}
+
+function FilterGroup({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between mb-2">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+          {label}
+        </p>
+        {hint && <span className="text-[10px] text-muted-foreground/70">{hint}</span>}
+      </div>
+      {children}
     </div>
   );
 }
@@ -313,9 +427,17 @@ export default function BiensPage() {
   }
 
   const activeFilterCount = [
-    params.transaction, params.type, params.city,
-    params.prix_min ?? params.prix_max, params.surface_min,
-    params.chambres_min, params.is_furnished, params.agent_id,
+    params.transaction,
+    params.types?.length,
+    params.city,
+    params.prix_min ?? params.prix_max,
+    params.surface_min ?? params.surface_max,
+    params.chambres?.length,
+    params.sdb?.length,
+    params.etat?.length,
+    params.is_furnished,
+    params.features?.length,
+    params.agent_id,
   ].filter(Boolean).length;
 
   return (

@@ -46,14 +46,16 @@ export function Hero() {
       return;
     }
     const range = PRICE_RANGES.find((r) => r.value === priceRange);
+    // Hero is single-select for simplicity; /biens page exposes full multi-select.
+    // We emit arrays of length 1 so the URL stays in the new shape.
     const url = buildSearchUrl({
       transaction: activeTab === "acheter" ? "Vente" : "Location",
       city: city.trim() || undefined,
-      type: type || undefined,
+      types: type ? [type] : undefined,
       prix_min: range?.prix_min,
       prix_max: range?.prix_max,
       surface_min: surfaceMin ? Number(surfaceMin) : undefined,
-      chambres_min: chambresMin,
+      chambres: chambresMin ? [chambresMin] : undefined,
       is_furnished: isFurnished || undefined,
       features: selectedFeatures.length > 0 ? selectedFeatures : undefined,
     });
