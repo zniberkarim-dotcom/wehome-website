@@ -27,6 +27,11 @@ import FinancementPage from "@/pages/financement";
 import FavorisPage from "@/pages/favoris";
 import PublierPage from "@/pages/publier";
 import PartenairesPage from "@/pages/partenaires";
+// Legal
+import MentionsLegalesPage from "@/pages/legal/mentions-legales";
+import ConditionsPage from "@/pages/legal/conditions";
+import ConfidentialitePage from "@/pages/legal/confidentialite";
+import CookiesPage from "@/pages/legal/cookies";
 // Espace Agent portal
 import EspaceAgentPage from "@/pages/espace-agent/index";
 import PortalLoginPage from "@/pages/espace-agent/login";
@@ -101,6 +106,12 @@ function Router() {
       <Route path="/financement" component={FinancementPage} />
       <Route path="/favoris" component={FavorisPage} />
       <Route path="/partenaires" component={PartenairesPage} />
+
+      {/* Legal */}
+      <Route path="/mentions-legales" component={MentionsLegalesPage} />
+      <Route path="/conditions" component={ConditionsPage} />
+      <Route path="/confidentialite" component={ConfidentialitePage} />
+      <Route path="/cookies" component={CookiesPage} />
       <Route path="/contact" component={HomePage} />
 
       {/* Espace Agent portal */}
