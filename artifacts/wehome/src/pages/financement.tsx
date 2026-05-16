@@ -61,7 +61,7 @@ function CapacityCalculator() {
   const [duree, setDuree] = useState(20);
   const [taux, setTaux] = useState(5.5);
   const [apport, setApport] = useState(300_000);
-  const [endettementPct, setEndettementPct] = useState(33); // %
+  const [endettementPct, setEndettementPct] = useState(42); // % (milieu de la fourchette 40-45)
 
   const result = useMemo(
     () =>
@@ -142,13 +142,13 @@ function CapacityCalculator() {
         <CapField label="Taux d'endettement maximum">
           <SuffixInput
             value={endettementPct}
-            onCommit={(v) => setEndettementPct(Math.max(10, Math.min(50, v)))}
+            onCommit={(v) => setEndettementPct(Math.max(10, Math.min(45, v)))}
             suffix="%"
             decimals={0}
             step={1}
           />
           <p className="text-[11px] text-muted-foreground mt-1.5">
-            Standard bancaire au Maroc : 33 %.
+            Standard bancaire au Maroc : 40-45 % (varie selon la banque et le profil emprunteur).
           </p>
         </CapField>
       </div>
