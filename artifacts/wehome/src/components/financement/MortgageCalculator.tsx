@@ -193,6 +193,7 @@ export function MortgageCalculator({
       <div className="grid grid-cols-2 gap-3">
         <SummaryTile label="Montant emprunté" value={formatMAD(Math.round(result.montantEmprunte))} />
         <SummaryTile label="Total des intérêts" value={formatMAD(Math.round(result.totalInterets))} />
+        <SummaryTile label="Mensualité estimée" value={`${formatMAD(Math.round(result.mensualite))}/mois`} highlight />
         <SummaryTile label="Coût total du crédit" value={formatMAD(Math.round(result.coutTotal))} />
         {!compact && (
           <SummaryTile
@@ -322,15 +323,17 @@ function SummaryTile({
   label,
   value,
   hint,
+  highlight = false,
 }: {
   label: string;
   value: string;
   hint?: string;
+  highlight?: boolean;
 }) {
   return (
-    <div className="rounded-xl bg-secondary/60 border border-border/40 p-3">
-      <p className="text-[11px] uppercase tracking-wide font-semibold text-muted-foreground">{label}</p>
-      <p className="text-sm font-display font-bold text-foreground mt-0.5 tabular-nums">{value}</p>
+    <div className={`rounded-xl border p-3 ${highlight ? "bg-primary/8 border-primary/25" : "bg-secondary/60 border-border/40"}`}>
+      <p className={`text-[11px] uppercase tracking-wide font-semibold ${highlight ? "text-primary/70" : "text-muted-foreground"}`}>{label}</p>
+      <p className={`text-sm font-display font-bold mt-0.5 tabular-nums ${highlight ? "text-primary" : "text-foreground"}`}>{value}</p>
       {hint && <p className="text-[10px] text-muted-foreground mt-0.5">{hint}</p>}
     </div>
   );
