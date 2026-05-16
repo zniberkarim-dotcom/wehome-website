@@ -8,6 +8,7 @@ import {
   Sparkles,
   ArrowRight,
   Info,
+  AlertCircle,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -33,7 +34,7 @@ function computeBorrowingCapacity({
   dureeAnnees: number;
   tauxAnnuel: number;
   apport: number;
-  tauxEndettement: number; // 0..1
+  tauxEndettement: number;
 }) {
   const mensualiteMax = Math.max(0, revenuMensuel * tauxEndettement - chargesMensuelles);
   const n = Math.max(1, Math.round(dureeAnnees * 12));
@@ -55,13 +56,21 @@ function computeBorrowingCapacity({
   };
 }
 
+const DUREE_MIN = 5;
+const DUREE_MAX = 30;
+const TAUX_MIN = 2;
+const TAUX_MAX = 10;
+
 function CapacityCalculator() {
   const [revenu, setRevenu] = useState(20_000);
   const [charges, setCharges] = useState(2_000);
   const [duree, setDuree] = useState(20);
   const [taux, setTaux] = useState(5.5);
   const [apport, setApport] = useState(300_000);
-  const [endettementPct, setEndettementPct] = useState(42); // % (milieu de la fourchette 40-45)
+  const [endettementPct, setEndettementPct] = useState(42);
+
+  const [tauxError, setTauxError] = useState("");
+  const [dureeError, setDureeError] = useState("");
 
   const result = useMemo(
     () =>
@@ -77,41 +86,31 @@ function CapacityCalculator() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-          <TrendingUp size={20} />
-        </div>
-        <div>
-          <h3 className="font-display font-bold text-foreground text-lg">Capacité d'emprunt</h3>
-          <p className="text-xs text-muted-foreground">Quel budget puis-je viser ?</p>
-        </div>
-      </div>
-
+    <div className="space-y-4">
       {/* Headline */}
       <motion.div
         key={result.budgetTotal}
-        initial={{ opacity: 0, y: 6 }}
+        initial={{ opacity: 0, y: 4 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25 }}
-        className="rounded-2xl bg-gradient-to-br from-foreground to-foreground/80 text-white p-5 shadow-lg"
+        transition={{ duration: 0.2 }}
+        className="rounded-xl bg-gradient-to-br from-foreground to-foreground/80 text-white p-4 shadow-md"
       >
         <p className="text-xs font-semibold uppercase tracking-wide opacity-90">Budget total accessible</p>
-        <p className="text-3xl md:text-4xl font-display font-bold mt-1 tabular-nums">
+        <p className="text-3xl font-display font-bold mt-0.5 tabular-nums">
           {formatMAD(result.budgetTotal)}
         </p>
-        <p className="text-xs opacity-90 mt-1 tabular-nums">
+        <p className="text-xs opacity-80 mt-0.5 tabular-nums">
           Emprunt {formatMAD(result.principalMax)} + apport {formatMAD(apport)}
         </p>
       </motion.div>
 
       {/* Inputs */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         <CapField label="Revenu mensuel net">
           <SuffixInput value={revenu} onCommit={setRevenu} suffix="MAD" decimals={0} step={500} />
         </CapField>
 
-        <CapField label="Charges / crédits en cours (par mois)">
+        <CapField label="Charges / crédits en cours">
           <SuffixInput value={charges} onCommit={setCharges} suffix="MAD" decimals={0} step={250} />
         </CapField>
 
@@ -122,21 +121,32 @@ function CapacityCalculator() {
         <CapField label="Durée du crédit">
           <SuffixInput
             value={duree}
-            onCommit={(v) => setDuree(Math.min(30, Math.max(1, Math.round(v))))}
+            onCommit={(v) => {
+              const r = Math.round(v);
+              if (r < DUREE_MIN) { setDureeError(`Durée minimum : ${DUREE_MIN} ans`); setDuree(DUREE_MIN); }
+              else if (r > DUREE_MAX) { setDureeError(`Durée maximum : ${DUREE_MAX} ans`); setDuree(DUREE_MAX); }
+              else { setDureeError(""); setDuree(r); }
+            }}
             suffix={duree > 1 ? "ans" : "an"}
             decimals={0}
             step={1}
           />
+          {dureeError && <FieldError msg={dureeError} />}
         </CapField>
 
         <CapField label="Taux d'intérêt annuel">
           <SuffixInput
             value={taux}
-            onCommit={(v) => setTaux(Math.max(0, Math.min(20, v)))}
+            onCommit={(v) => {
+              if (v < TAUX_MIN) { setTauxError(`Taux minimum : ${TAUX_MIN} %`); setTaux(TAUX_MIN); }
+              else if (v > TAUX_MAX) { setTauxError(`Taux maximum : ${TAUX_MAX} %`); setTaux(TAUX_MAX); }
+              else { setTauxError(""); setTaux(v); }
+            }}
             suffix="%"
             decimals={2}
             step={0.05}
           />
+          {tauxError && <FieldError msg={tauxError} />}
         </CapField>
 
         <CapField label="Taux d'endettement maximum">
@@ -147,19 +157,19 @@ function CapacityCalculator() {
             decimals={0}
             step={1}
           />
-          <p className="text-[11px] text-muted-foreground mt-1.5">
-            Standard bancaire au Maroc : 40-45 % (varie selon la banque et le profil emprunteur).
+          <p className="text-[11px] text-muted-foreground mt-1">
+            Standard au Maroc : 40–45 % (varie selon la banque).
           </p>
         </CapField>
       </div>
 
-      <div className="rounded-xl bg-secondary/60 border border-border/40 p-4">
-        <p className="text-xs uppercase tracking-wide font-semibold text-muted-foreground">Mensualité maximale</p>
-        <p className="text-lg font-display font-bold text-foreground tabular-nums">
+      <div className="rounded-xl bg-secondary/60 border border-border/40 p-3">
+        <p className="text-[10px] uppercase tracking-wide font-semibold text-muted-foreground">Mensualité maximale</p>
+        <p className="text-base font-display font-bold text-foreground tabular-nums">
           {formatMAD(result.mensualiteMax)}
           <span className="text-sm font-medium text-muted-foreground">/mois</span>
         </p>
-        <p className="text-[11px] text-muted-foreground mt-1">
+        <p className="text-[11px] text-muted-foreground mt-0.5">
           (revenu × {endettementPct} %) − charges actuelles
         </p>
       </div>
@@ -175,16 +185,21 @@ function CapacityCalculator() {
 function CapField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-sm font-semibold text-foreground/85 mb-1.5">{label}</label>
+      <label className="block text-xs font-semibold text-foreground/75 mb-1.5 uppercase tracking-wide">{label}</label>
       {children}
     </div>
   );
 }
 
-/**
- * SuffixInput — typed numeric input with trailing unit. Mirrors the one in
- * MortgageCalculator. Kept private here so the page stays self-contained.
- */
+function FieldError({ msg }: { msg: string }) {
+  return (
+    <p className="flex items-center gap-1 text-[11px] text-destructive mt-1 font-medium">
+      <AlertCircle size={11} className="shrink-0" />
+      {msg}
+    </p>
+  );
+}
+
 function SuffixInput({
   value,
   onCommit,
@@ -261,7 +276,7 @@ function SuffixInput({
             stepBy(-step);
           }
         }}
-        className="flex-1 bg-transparent px-3 py-2.5 text-sm font-semibold tabular-nums focus:outline-none"
+        className="flex-1 bg-transparent px-3 py-2 text-sm font-semibold tabular-nums focus:outline-none"
       />
       <span className="px-3 flex items-center text-xs font-semibold text-muted-foreground bg-muted/30 border-l border-border/40">
         {suffix}
@@ -286,103 +301,119 @@ const PARTNERS = [
 
 export default function FinancementPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-[#f6f5f3]">
       <Navbar />
 
-      {/* Hero */}
-      <section className="relative pt-32 pb-12 md:pt-40 md:pb-16 bg-gradient-to-br from-primary via-primary to-primary/80 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_30%,white_0%,transparent_50%),radial-gradient(circle_at_80%_70%,white_0%,transparent_50%)]" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-3xl"
-          >
-            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wide mb-5">
-              <Sparkles size={14} />
-              Outil gratuit
+      {/* ── Slim header bar — stays above fold ───────────────────────────── */}
+      <div className="pt-20 pb-5 bg-white border-b border-border/40">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-semibold mb-2">
+                <Sparkles size={12} />
+                Outil gratuit
+              </span>
+              <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground leading-tight">
+                Simulez votre financement immobilier
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                Mensualité, capacité d'emprunt et frais d'acquisition — mis à jour en temps réel.
+              </p>
             </div>
-            <h1 className="text-4xl md:text-6xl font-display font-bold leading-tight">
-              Calculez le financement de votre futur logement
-            </h1>
-            <p className="text-lg md:text-xl mt-5 opacity-95 leading-relaxed">
-              Mensualité, capacité d'emprunt, frais d'acquisition. Anticipez votre projet immobilier en quelques secondes — puis discutez-en avec nos partenaires bancaires.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Calculators */}
-      <section className="py-12 md:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4 }}
-              className="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm"
+            <a
+              href={whatsappFinancement}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm bg-primary text-white shadow-md shadow-primary/20 hover:-translate-y-0.5 transition-all"
             >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                  <Calculator size={20} />
+              Parler à un conseiller
+              <ArrowRight size={15} />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Calculators — visible immediately on load ─────────────────────── */}
+      <section className="py-5 flex-1">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-5">
+
+            {/* Left: Mortgage calculator */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+              className="bg-white border border-border/60 rounded-2xl p-5 shadow-sm"
+            >
+              <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border/40">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  <Calculator size={16} />
                 </div>
                 <div>
-                  <h2 className="font-display font-bold text-foreground text-xl">Calculateur de mensualité</h2>
+                  <h2 className="font-display font-bold text-foreground text-base leading-tight">Calculateur de mensualité</h2>
                   <p className="text-xs text-muted-foreground">Combien va me coûter mon crédit ?</p>
                 </div>
               </div>
-              <MortgageCalculator />
+              <MortgageCalculator compact />
             </motion.div>
 
+            {/* Right: Borrowing capacity */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.08 }}
+              className="bg-white border border-border/60 rounded-2xl p-5 shadow-sm"
             >
+              <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border/40">
+                <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center text-foreground shrink-0">
+                  <TrendingUp size={16} />
+                </div>
+                <div>
+                  <h2 className="font-display font-bold text-foreground text-base leading-tight">Capacité d'emprunt</h2>
+                  <p className="text-xs text-muted-foreground">Quel budget puis-je viser ?</p>
+                </div>
+              </div>
               <CapacityCalculator />
             </motion.div>
+
           </div>
         </div>
       </section>
 
-      {/* Profils */}
-      <section className="py-12 bg-secondary/40 border-y border-border/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground text-center mb-10">
+      {/* ── Profils ───────────────────────────────────────────────────────── */}
+      <section className="py-10 bg-white border-y border-border/50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-xl md:text-2xl font-display font-bold text-foreground text-center mb-8">
             Conditions selon votre profil
           </h2>
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-3 gap-5">
             {PARTNERS.map((p) => (
               <div
                 key={p.label}
-                className="bg-card border border-border rounded-2xl p-6 hover:shadow-md hover:-translate-y-0.5 transition-all"
+                className="bg-[#f6f5f3] border border-border/50 rounded-2xl p-5 hover:shadow-md hover:-translate-y-0.5 transition-all"
               >
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
-                  <ShieldCheck size={20} />
+                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-3">
+                  <ShieldCheck size={18} />
                 </div>
-                <h3 className="font-display font-bold text-foreground">{p.label}</h3>
+                <h3 className="font-display font-bold text-foreground text-sm">{p.label}</h3>
                 <p className="text-sm text-primary font-semibold mt-1">{p.duration}</p>
-                <p className="text-sm text-muted-foreground mt-2">{p.desc}</p>
+                <p className="text-sm text-muted-foreground mt-1">{p.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground">
+      {/* ── CTA ───────────────────────────────────────────────────────────── */}
+      <section className="py-14">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground">
             Besoin d'un coup de pouce pour votre dossier ?
           </h2>
-          <p className="text-lg text-muted-foreground mt-4 leading-relaxed">
-            Nos conseillers vous mettent en relation avec les meilleurs partenaires bancaires du Maroc pour obtenir le taux le plus compétitif.
+          <p className="text-muted-foreground mt-3 leading-relaxed">
+            Nos conseillers vous mettent en relation avec les meilleurs partenaires bancaires du Maroc.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-7">
             <a
               href={whatsappFinancement}
               target="_blank"
