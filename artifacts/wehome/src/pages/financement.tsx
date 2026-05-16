@@ -142,7 +142,7 @@ function CapacityCalculator() {
         <CapField label="Taux d'endettement maximum">
           <SuffixInput
             value={endettementPct}
-            onCommit={(v) => setEndettementPct(Math.max(10, Math.min(45, v)))}
+            onCommit={(v) => setEndettementPct(Math.max(10, Math.min(55, v)))}
             suffix="%"
             decimals={0}
             step={1}
