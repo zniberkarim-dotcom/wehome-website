@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Calculator, Info, AlertCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { formatMAD } from "@/lib/utils";
 
 /* ────────────────────────────────────────────────────────────────────────────
@@ -75,6 +76,7 @@ export function MortgageCalculator({
   initialTaux = 5.5,
   compact = false,
 }: Props) {
+  const { t } = useTranslation();
   const [prix, setPrix] = useState(initialPrix);
   const [apport, setApport] = useState(Math.round((initialPrix * initialApportPct) / 100));
   const [duree, setDuree] = useState(initialDuree);
@@ -111,8 +113,8 @@ export function MortgageCalculator({
             <Calculator size={20} />
           </div>
           <div>
-            <h3 className="font-display font-bold text-foreground text-lg">Calculateur hypothécaire</h3>
-            <p className="text-xs text-muted-foreground">Saisissez vos paramètres pour estimer votre mensualité</p>
+            <h3 className="font-display font-bold text-foreground text-lg">{t("mortgage.header_title")}</h3>
+            <p className="text-xs text-muted-foreground">{t("mortgage.header_subtitle")}</p>
           </div>
         </div>
       )}
@@ -125,25 +127,25 @@ export function MortgageCalculator({
         transition={{ duration: 0.2 }}
         className="rounded-xl bg-gradient-to-br from-primary to-primary/80 text-white p-4 shadow-md shadow-primary/20"
       >
-        <p className="text-xs font-semibold uppercase tracking-wide opacity-90">Mensualité estimée</p>
+        <p className="text-xs font-semibold uppercase tracking-wide opacity-90">{t("mortgage.monthly_estimate")}</p>
         <p className="text-3xl font-display font-bold mt-0.5 tabular-nums">
           {formatMAD(Math.round(result.mensualite))}
-          <span className="text-sm font-medium opacity-90">/mois</span>
+          <span className="text-sm font-medium opacity-90">{t("mortgage.per_month")}</span>
         </p>
         <p className="text-xs opacity-80 mt-0.5 tabular-nums">
-          sur {duree} {duree > 1 ? "ans" : "an"} · taux {taux.toFixed(2)} %
+          {t("mortgage.over_years", { count: duree, rate: taux.toFixed(2) })}
         </p>
       </motion.div>
 
       {/* ── Inputs ───────────────────────────────────────────────────────── */}
       <div className="space-y-3">
         {/* Prix du bien */}
-        <Field label="Prix du bien">
+        <Field label={t("mortgage.price")}>
           <SuffixInput
             value={prix}
             onCommit={(v) => {
               if (v < PRIX_MIN) {
-                setPrixError(`Montant minimum : ${formatMAD(PRIX_MIN)}`);
+                setPrixError(t("mortgage.err_min_price", { amount: formatMAD(PRIX_MIN) }));
                 setPrix(PRIX_MIN);
               } else {
                 setPrixError("");
@@ -158,7 +160,7 @@ export function MortgageCalculator({
         </Field>
 
         {/* Mise de fonds — dual input (% + MAD) */}
-        <Field label="Apport personnel">
+        <Field label={t("mortgage.down_payment")}>
           <div className="grid grid-cols-2 gap-2">
             <SuffixInput
               value={apportPctValue}
@@ -179,28 +181,28 @@ export function MortgageCalculator({
             />
           </div>
           <p className="text-[11px] text-muted-foreground mt-1">
-            Modifiez le % ou le montant — l'autre champ se met à jour.
+            {t("mortgage.down_payment_hint")}
           </p>
         </Field>
 
         {/* Durée */}
-        <Field label="Durée du crédit">
+        <Field label={t("mortgage.duration")}>
           <SuffixInput
             value={duree}
             onCommit={(v) => {
               const r = Math.round(v);
               if (r < DUREE_MIN) {
-                setDureeError(`Durée minimum : ${DUREE_MIN} ans`);
+                setDureeError(t("mortgage.err_min_duration", { years: DUREE_MIN }));
                 setDuree(DUREE_MIN);
               } else if (r > DUREE_MAX) {
-                setDureeError(`Durée maximum : ${DUREE_MAX} ans`);
+                setDureeError(t("mortgage.err_max_duration", { years: DUREE_MAX }));
                 setDuree(DUREE_MAX);
               } else {
                 setDureeError("");
                 setDuree(r);
               }
             }}
-            suffix={duree > 1 ? "ans" : "an"}
+            suffix={duree > 1 ? t("mortgage.year_other") : t("mortgage.year_one")}
             decimals={0}
             step={1}
           />
@@ -208,15 +210,15 @@ export function MortgageCalculator({
         </Field>
 
         {/* Taux */}
-        <Field label="Taux d'intérêt annuel">
+        <Field label={t("mortgage.interest_rate")}>
           <SuffixInput
             value={taux}
             onCommit={(v) => {
               if (v < TAUX_MIN) {
-                setTauxError(`Taux minimum : ${TAUX_MIN} %`);
+                setTauxError(t("mortgage.err_min_rate", { rate: TAUX_MIN }));
                 setTaux(TAUX_MIN);
               } else if (v > TAUX_MAX) {
-                setTauxError(`Taux maximum : ${TAUX_MAX} %`);
+                setTauxError(t("mortgage.err_max_rate", { rate: TAUX_MAX }));
                 setTaux(TAUX_MAX);
               } else {
                 setTauxError("");
@@ -229,29 +231,29 @@ export function MortgageCalculator({
           />
           {tauxError && <FieldError msg={tauxError} />}
           {!tauxError && (
-            <p className="text-[11px] text-muted-foreground mt-1">Taux indicatif au Maroc : 4 %–7 % selon profil.</p>
+            <p className="text-[11px] text-muted-foreground mt-1">{t("mortgage.interest_rate_hint")}</p>
           )}
         </Field>
       </div>
 
       {/* ── Résumé ───────────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-2">
-        <SummaryTile label="Montant emprunté"   value={formatMAD(Math.round(result.montantEmprunte))} />
-        <SummaryTile label="Total des intérêts" value={formatMAD(Math.round(result.totalInterets))} />
-        <SummaryTile label="Mensualité estimée" value={`${formatMAD(Math.round(result.mensualite))}/mois`} highlight />
-        <SummaryTile label="Coût total du crédit" value={formatMAD(Math.round(result.coutTotal))} />
+        <SummaryTile label={t("mortgage.loan_amount")}    value={formatMAD(Math.round(result.montantEmprunte))} />
+        <SummaryTile label={t("mortgage.total_interest")} value={formatMAD(Math.round(result.totalInterets))} />
+        <SummaryTile label={t("mortgage.monthly_estimate")} value={`${formatMAD(Math.round(result.mensualite))}${t("mortgage.per_month")}`} highlight />
+        <SummaryTile label={t("mortgage.total_cost")}     value={formatMAD(Math.round(result.coutTotal))} />
         {!compact && (
           <SummaryTile
-            label="Frais d'acquisition (~6,5 %)"
+            label={t("mortgage.acquisition_fees")}
             value={formatMAD(Math.round(result.fraisNotaireEstime))}
-            hint="Notaire, conservation, droits"
+            hint={t("mortgage.acquisition_fees_hint")}
           />
         )}
       </div>
 
       <p className="text-[11px] text-muted-foreground leading-relaxed flex gap-2">
         <Info size={12} className="shrink-0 mt-0.5" />
-        Estimation indicative. Le taux et les conditions définitives dépendent de votre dossier bancaire. WeHome peut vous mettre en relation avec ses partenaires bancaires.
+        {t("mortgage.disclaimer")}
       </p>
     </div>
   );

@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { AuthProvider } from "@/context/AuthContext";
+import "@/lib/i18n"; // initialise i18next (FR/EN/ZH) — must run before any t() call
 import HomePage from "@/pages/home";
 import BiensPage from "@/pages/biens";
 import BienPage from "@/pages/bien";

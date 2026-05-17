@@ -2,27 +2,29 @@ import { useState } from "react";
 import { Search, MapPin, Home as HomeIcon, DollarSign, ChevronDown, SlidersHorizontal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
 import { PROPERTY_TYPES, buildSearchUrl } from "@/lib/data";
 
-const PRICE_RANGES: { label: string; value: string; prix_min?: number; prix_max?: number }[] = [
-  { label: "Tout prix", value: "" },
-  { label: "Moins de 500 000 MAD", value: "0-500k", prix_max: 500000 },
-  { label: "500 000 - 1M MAD", value: "500k-1m", prix_min: 500000, prix_max: 1000000 },
-  { label: "1M - 3M MAD", value: "1m-3m", prix_min: 1000000, prix_max: 3000000 },
-  { label: "3M - 5M MAD", value: "3m-5m", prix_min: 3000000, prix_max: 5000000 },
-  { label: "Plus de 5M MAD", value: "5m+", prix_min: 5000000 },
+const PRICE_RANGES: { i18nKey: string; value: string; prix_min?: number; prix_max?: number }[] = [
+  { i18nKey: "price_ranges.any",        value: "" },
+  { i18nKey: "price_ranges.under_500k", value: "0-500k", prix_max: 500000 },
+  { i18nKey: "price_ranges.500k_1m",    value: "500k-1m", prix_min: 500000, prix_max: 1000000 },
+  { i18nKey: "price_ranges.1m_3m",      value: "1m-3m",   prix_min: 1000000, prix_max: 3000000 },
+  { i18nKey: "price_ranges.3m_5m",      value: "3m-5m",   prix_min: 3000000, prix_max: 5000000 },
+  { i18nKey: "price_ranges.over_5m",    value: "5m+",     prix_min: 5000000 },
 ];
 
 const FEATURES_LIST = [
-  { key: "Parking", label: "Parking" },
-  { key: "Piscine", label: "Piscine" },
-  { key: "Ascenseur", label: "Ascenseur" },
-  { key: "Gardien", label: "Gardien" },
-  { key: "Terrasse", label: "Terrasse" },
-  { key: "Climatisation", label: "Climatisation" },
+  { key: "Parking",       i18nKey: "features.parking" },
+  { key: "Piscine",       i18nKey: "features.pool" },
+  { key: "Ascenseur",     i18nKey: "features.elevator" },
+  { key: "Gardien",       i18nKey: "features.doorman" },
+  { key: "Terrasse",      i18nKey: "features.terrace" },
+  { key: "Climatisation", i18nKey: "features.ac" },
 ];
 
 export function Hero() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<"acheter" | "louer" | "vendre">("acheter");
   const [city, setCity] = useState("");
   const [type, setType] = useState("");
@@ -106,16 +108,16 @@ export function Hero() {
             }}
           >
             <span style={{ color: "rgba(192,57,43,0.4)", fontSize: "6px", verticalAlign: "middle", marginRight: "8px" }}>◆</span>
-            La plateforme immobilière du Maroc
+            {t("hero.badge")}
           </motion.span>
           <h1
             className="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.1] tracking-tight mb-6"
             style={{ color: "#FFFFFF", textShadow: "0 2px 12px rgba(0,0,0,0.45)" }}
           >
-            L'immobilier marocain,<br/>enfin transparent.
+            {t("hero.title_line1")}<br/>{t("hero.title_line2")}
           </h1>
           <p className="text-lg md:text-xl max-w-2xl mx-auto font-medium" style={{ color: "rgba(255,255,255,0.9)", textShadow: "0 1px 6px rgba(0,0,0,0.3)" }}>
-            WeHome centralise les meilleures opportunités immobilières du Maroc — avec la donnée de marché, l'expertise locale, et l'accompagnement que vous méritez vraiment.
+            {t("hero.subtitle")}
           </p>
         </motion.div>
 
@@ -127,17 +129,21 @@ export function Hero() {
         >
           {/* Tabs */}
           <div className="flex gap-2 mb-6 border-b border-border/50 pb-4">
-            {(["acheter", "louer", "vendre"] as const).map((tab) => (
+            {([
+              { id: "acheter", labelKey: "hero.tab_buy" },
+              { id: "louer",   labelKey: "hero.tab_rent" },
+              { id: "vendre",  labelKey: "hero.tab_sell" },
+            ] as const).map((tab) => (
               <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-6 py-2 rounded-full text-sm font-semibold capitalize transition-all duration-200 ${
-                  activeTab === tab
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-6 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                  activeTab === tab.id
                     ? "bg-primary text-white shadow-md"
                     : "text-foreground/60 hover:bg-muted hover:text-foreground"
                 }`}
               >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {t(tab.labelKey)}
               </button>
             ))}
           </div>
@@ -153,7 +159,7 @@ export function Hero() {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ville, quartier ou adresse"
+                placeholder={t("hero.city_placeholder")}
                 className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-foreground placeholder:text-muted-foreground font-medium"
               />
             </div>
@@ -167,7 +173,7 @@ export function Hero() {
                 onChange={(e) => setType(e.target.value)}
                 className="w-full pl-12 pr-8 py-4 rounded-2xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-foreground font-medium appearance-none"
               >
-                <option value="">Type de bien</option>
+                <option value="">{t("hero.type_placeholder")}</option>
                 {PROPERTY_TYPES.map((t) => (
                   <option key={t} value={t}>{t}</option>
                 ))}
@@ -184,7 +190,7 @@ export function Hero() {
                 className="w-full pl-12 pr-8 py-4 rounded-2xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-foreground font-medium appearance-none"
               >
                 {PRICE_RANGES.map((r) => (
-                  <option key={r.value} value={r.value}>{r.label}</option>
+                  <option key={r.value} value={r.value}>{t(r.i18nKey)}</option>
                 ))}
               </select>
             </div>
@@ -195,7 +201,7 @@ export function Hero() {
                 className="w-full h-full min-h-[56px] bg-primary text-primary-foreground rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
               >
                 <Search size={20} />
-                <span>Rechercher</span>
+                <span>{t("hero.search")}</span>
               </button>
             </div>
           </div>
@@ -207,7 +213,7 @@ export function Hero() {
               className="flex items-center gap-2 text-sm font-medium text-foreground/60 hover:text-primary transition-colors"
             >
               <SlidersHorizontal size={16} />
-              Filtres avancés
+              {t("hero.advanced_filters")}
               <ChevronDown
                 size={16}
                 className={`transition-transform duration-300 ${showAdvanced ? "rotate-180" : ""}`}
@@ -222,7 +228,7 @@ export function Hero() {
                 }}
                 className="text-xs text-muted-foreground hover:text-destructive transition-colors"
               >
-                Réinitialiser
+                {t("hero.reset")}
               </button>
             )}
           </div>
@@ -240,12 +246,12 @@ export function Hero() {
                 <div className="pt-5 border-t border-border/40 mt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Surface min */}
                   <div>
-                    <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider">Surface minimum (m²)</label>
+                    <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider">{t("hero.surface_min")}</label>
                     <input
                       type="number"
                       value={surfaceMin}
                       onChange={(e) => setSurfaceMin(e.target.value)}
-                      placeholder="Ex: 100"
+                      placeholder={t("hero.surface_min_placeholder")}
                       min={0}
                       className="w-full px-4 py-3 rounded-xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                     />
@@ -253,7 +259,7 @@ export function Hero() {
 
                   {/* Chambres min */}
                   <div>
-                    <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider">Chambres minimum</label>
+                    <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider">{t("hero.bedrooms_min")}</label>
                     <div className="flex gap-2">
                       {[undefined, 1, 2, 3, 4].map((n) => (
                         <button
@@ -265,7 +271,7 @@ export function Hero() {
                               : "bg-white/50 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
                           }`}
                         >
-                          {n === undefined ? "Tous" : `${n}+`}
+                          {n === undefined ? t("hero.bedrooms_any") : `${n}+`}
                         </button>
                       ))}
                     </div>
@@ -273,7 +279,7 @@ export function Hero() {
 
                   {/* Meublé */}
                   <div>
-                    <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider">Meublé</label>
+                    <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider">{t("hero.furnished")}</label>
                     <button
                       onClick={() => setIsFurnished(!isFurnished)}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-sm font-semibold transition-all duration-200 ${
@@ -285,13 +291,13 @@ export function Hero() {
                       <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isFurnished ? "border-white bg-white" : "border-foreground/40"}`}>
                         {isFurnished && <span className="w-2.5 h-2.5 rounded-full bg-primary block" />}
                       </span>
-                      Meublé uniquement
+                      {t("hero.furnished_only")}
                     </button>
                   </div>
 
                   {/* Features / Équipements */}
                   <div className="md:col-span-3">
-                    <label className="block text-xs font-semibold text-foreground/70 mb-3 uppercase tracking-wider">Équipements</label>
+                    <label className="block text-xs font-semibold text-foreground/70 mb-3 uppercase tracking-wider">{t("hero.features")}</label>
                     <div className="flex flex-wrap gap-2">
                       {FEATURES_LIST.map((f) => (
                         <button
@@ -303,7 +309,7 @@ export function Hero() {
                               : "bg-white/50 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
                           }`}
                         >
-                          {f.label}
+                          {t(f.i18nKey)}
                         </button>
                       ))}
                     </div>

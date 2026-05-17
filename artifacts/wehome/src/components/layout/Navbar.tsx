@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X, LogIn, LayoutDashboard, LogOut, ChevronDown, User, Heart } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "./Logo";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useFavorites } from "@/hooks/useFavorites";
@@ -14,6 +16,7 @@ export function Navbar() {
   const [agentMenuOpen, setAgentMenuOpen] = useState(false);
   const agentMenuRef = useRef<HTMLDivElement>(null);
   const [, navigate] = useLocation();
+  const { t } = useTranslation();
 
   const { agent, loading } = useAuth();
   const { count: favoritesCount } = useFavorites();
@@ -43,12 +46,12 @@ export function Navbar() {
   };
 
   const navLinks: { name: string; href: string; external?: boolean }[] = [
-    { name: "Acheter", href: "/acheter" },
-    { name: "Louer", href: "/louer" },
-    { name: "Vendre", href: "/publier" },
-    { name: "Estimer", href: "/estimer" },
-    { name: "Financement", href: "/financement" },
-    { name: "Agents", href: "/agents" },
+    { name: t("nav.buy"),       href: "/acheter" },
+    { name: t("nav.rent"),      href: "/louer" },
+    { name: t("nav.sell"),      href: "/publier" },
+    { name: t("nav.estimate"),  href: "/estimer" },
+    { name: t("nav.financing"), href: "/financement" },
+    { name: t("nav.agents"),    href: "/agents" },
   ];
 
   // Shared text styles for scrolled vs transparent nav
@@ -128,8 +131,10 @@ export function Navbar() {
                 href="/publier"
                 className="px-6 py-2.5 rounded-full font-semibold text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
               >
-                Publier votre bien
+                {t("nav.publish_property")}
               </Link>
+              {/* Language switcher */}
+              <LanguageSwitcher onDark={!isScrolled} />
             </div>
 
             {/* Agent zone — separator + auth */}
@@ -186,7 +191,7 @@ export function Navbar() {
                       >
                         {/* Header */}
                         <div className="px-4 py-3 border-b border-border/40 bg-secondary/30">
-                          <p className="text-xs text-muted-foreground font-medium">Connecté en tant que</p>
+                          <p className="text-xs text-muted-foreground font-medium">{t("nav.logged_in_as")}</p>
                           <p className="text-sm font-semibold text-foreground mt-0.5 truncate">
                             {agent.prenom} {agent.nom}
                           </p>
@@ -200,7 +205,7 @@ export function Navbar() {
                               className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground/80 hover:bg-primary/5 hover:text-primary transition-colors"
                             >
                               <LayoutDashboard size={15} className="text-primary/70" />
-                              Mon Portail Agent
+                              {t("nav.my_portal")}
                             </Link>
                           ) : (
                             <>
@@ -210,7 +215,7 @@ export function Navbar() {
                                 className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground/80 hover:bg-primary/5 hover:text-primary transition-colors"
                               >
                                 <LayoutDashboard size={15} className="text-primary/70" />
-                                Mon Dashboard
+                                {t("nav.my_dashboard")}
                               </Link>
                               <Link
                                 href="/dashboard/proprietes"
@@ -218,7 +223,7 @@ export function Navbar() {
                                 className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground/80 hover:bg-primary/5 hover:text-primary transition-colors"
                               >
                                 <User size={15} className="text-primary/70" />
-                                Mes propriétés
+                                {t("nav.my_properties")}
                               </Link>
                             </>
                           )}
@@ -229,7 +234,7 @@ export function Navbar() {
                             className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-muted-foreground hover:bg-red-50 hover:text-red-600 transition-colors"
                           >
                             <LogOut size={15} />
-                            Déconnexion
+                            {t("nav.logout")}
                           </button>
                         </div>
                       </motion.div>
@@ -249,7 +254,7 @@ export function Navbar() {
                   style={linkStyle}
                 >
                   <LogIn size={14} />
-                  <span>Espace agent</span>
+                  <span>{t("nav.agent_portal")}</span>
                 </Link>
               )}
             </div>
@@ -259,7 +264,7 @@ export function Navbar() {
           <button
             className="md:hidden p-2 text-foreground z-50 relative"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Ouvrir le menu"
+            aria-label={t("nav.open_menu")}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -306,7 +311,7 @@ export function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
             >
               <Heart size={18} className={favoritesCount > 0 ? "fill-primary text-primary" : ""} />
-              Mes favoris
+              {t("nav.my_favorites")}
               {favoritesCount > 0 && (
                 <span className="ml-1 px-2 py-0.5 rounded-full bg-primary text-white text-xs font-bold">
                   {favoritesCount}
@@ -318,8 +323,14 @@ export function Navbar() {
               className="px-6 py-4 rounded-xl font-bold text-center bg-primary text-primary-foreground shadow-lg"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Publier votre bien
+              {t("nav.publish_property")}
             </Link>
+
+            {/* Language switcher (mobile) */}
+            <div className="flex items-center justify-between px-1 py-3 border-t border-border/40 mt-2">
+              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t("nav.language")}</span>
+              <LanguageSwitcher />
+            </div>
 
             {/* Agent zone — mobile */}
             <div className="mt-2 border-t border-border/40 pt-4">
@@ -348,7 +359,7 @@ export function Navbar() {
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <LayoutDashboard size={18} />
-                      Mon Dashboard
+                      {t("nav.my_dashboard")}
                     </Link>
                     <Link
                       href="/dashboard/proprietes"
@@ -356,14 +367,14 @@ export function Navbar() {
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <User size={18} />
-                      Mes propriétés
+                      {t("nav.my_properties")}
                     </Link>
                     <button
                       onClick={handleSignOut}
                       className="flex items-center gap-2 py-3 text-base font-semibold text-red-500 hover:text-red-600 transition-colors"
                     >
                       <LogOut size={18} />
-                      Déconnexion
+                      {t("nav.logout")}
                     </button>
                   </div>
                 ) : (
@@ -373,7 +384,7 @@ export function Navbar() {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <LogIn size={18} />
-                    Espace agent — Connexion
+                    {t("nav.agent_portal")}
                   </Link>
                 )
               )}
