@@ -21,6 +21,7 @@ import {
   ArrowRight,
   AlertCircle,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import {
@@ -30,18 +31,19 @@ import {
   type ParticulierSubmission,
 } from "@/lib/data";
 
-const FEATURES_LIST = [
-  "Parking",
-  "Piscine",
-  "Ascenseur",
-  "Gardien",
-  "Terrasse",
-  "Jardin",
-  "Climatisation",
-  "Balcon",
-  "Garage",
-  "Cave",
-] as const;
+/** DB values paired with i18n keys — toggle state continues to use the FR backend value. */
+const FEATURES_LIST: { value: string; labelKey: string }[] = [
+  { value: "Parking",        labelKey: "publier.feature_parking" },
+  { value: "Piscine",        labelKey: "publier.feature_pool" },
+  { value: "Ascenseur",      labelKey: "publier.feature_elevator" },
+  { value: "Gardien",        labelKey: "publier.feature_doorman" },
+  { value: "Terrasse",       labelKey: "publier.feature_terrace" },
+  { value: "Jardin",         labelKey: "publier.feature_garden" },
+  { value: "Climatisation",  labelKey: "publier.feature_ac" },
+  { value: "Balcon",         labelKey: "publier.feature_balcony" },
+  { value: "Garage",         labelKey: "publier.feature_garage" },
+  { value: "Cave",           labelKey: "publier.feature_cellar" },
+];
 
 const whatsappVendre = `https://wa.me/212653535156?text=${encodeURIComponent(
   "Bonjour WeHome,\n\nJe préfère parler à un conseiller pour publier mon bien.\n\nMerci !"
@@ -50,6 +52,7 @@ const whatsappVendre = `https://wa.me/212653535156?text=${encodeURIComponent(
 const MAX_PHOTOS = 12;
 
 export default function PublierPage() {
+  const { t } = useTranslation();
   // ── Form state ─────────────────────────────────────────────────────────────
   const [type, setType] = useState<string>("Appartement");
   const [transaction, setTransaction] = useState<"Vente" | "Location">("Vente");
@@ -115,8 +118,8 @@ export default function PublierPage() {
         });
         setUploadError(
           err instanceof Error
-            ? `Échec d'upload : ${err.message}`
-            : "Échec d'upload d'une photo."
+            ? `${t("publier.err_upload_prefix")} ${err.message}`
+            : t("publier.err_upload_generic")
         );
       }
     }
@@ -127,19 +130,19 @@ export default function PublierPage() {
   };
 
   const isValid = (): string | null => {
-    if (!ville.trim()) return "Indiquez la ville.";
-    if (!prix || Number(prix) <= 0) return "Indiquez un prix valide.";
-    if (!surface || Number(surface) <= 0) return "Indiquez la surface.";
+    if (!ville.trim()) return t("publier.err_city");
+    if (!prix || Number(prix) <= 0) return t("publier.err_price");
+    if (!surface || Number(surface) <= 0) return t("publier.err_surface");
     if (!description.trim() || description.trim().length < 30)
-      return "Une description d'au moins 30 caractères est requise.";
+      return t("publier.err_description");
     if (!vendeurPrenom.trim() || !vendeurNom.trim())
-      return "Indiquez vos prénom et nom.";
+      return t("publier.err_name");
     if (!/^\S+@\S+\.\S+$/.test(vendeurEmail))
-      return "Indiquez un email valide.";
+      return t("publier.err_email");
     if (!/^[+\d][\d\s-]{6,}$/.test(vendeurTelephone))
-      return "Indiquez un numéro de téléphone valide.";
+      return t("publier.err_phone");
     if (photos.some((p) => p.uploading))
-      return "Attendez la fin de l'upload des photos.";
+      return t("publier.err_uploading");
     return null;
   };
 
@@ -183,8 +186,8 @@ export default function PublierPage() {
     } catch (err) {
       setSubmitError(
         err instanceof Error
-          ? `Erreur : ${err.message}`
-          : "Impossible d'envoyer votre annonce. Réessayez ou contactez-nous via WhatsApp."
+          ? `${t("publier.err_submit_prefix")} ${err.message}`
+          : t("publier.err_submit_generic")
       );
     } finally {
       setSubmitting(false);
@@ -202,19 +205,19 @@ export default function PublierPage() {
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wide mb-5">
             <Sparkles size={14} />
-            Gratuit · 100 % en ligne
+            {t("publier.hero_badge")}
           </div>
           <h1 className="text-4xl md:text-6xl font-display font-bold leading-tight">
-            Publiez votre bien gratuitement
+            {t("publier.hero_title")}
           </h1>
           <p className="text-lg md:text-xl mt-5 opacity-95 leading-relaxed max-w-2xl mx-auto">
-            Décrivez votre bien en 3 minutes. Notre équipe valide votre annonce sous 24 h, puis la diffuse sur la plateforme et auprès de notre réseau d'acheteurs qualifiés.
+            {t("publier.hero_subtitle")}
           </p>
 
           <div className="flex flex-wrap justify-center gap-2 mt-8">
-            <Pill icon={<ShieldCheck size={14} />} label="Validation par un expert" />
-            <Pill icon={<Clock size={14} />} label="Mise en ligne sous 24 h" />
-            <Pill icon={<CheckCircle2 size={14} />} label="100 % gratuit" />
+            <Pill icon={<ShieldCheck size={14} />} label={t("publier.pill_validation")} />
+            <Pill icon={<Clock size={14} />} label={t("publier.pill_24h")} />
+            <Pill icon={<CheckCircle2 size={14} />} label={t("publier.pill_free")} />
           </div>
         </div>
       </section>
@@ -236,15 +239,15 @@ export default function PublierPage() {
                 {/* ── Section 1: votre bien ──────────────────────────── */}
                 <FormSection
                   number={1}
-                  title="Votre bien"
-                  subtitle="Quelques informations essentielles"
+                  title={t("publier.section1_title")}
+                  subtitle={t("publier.section1_subtitle")}
                 >
                   {/* Transaction */}
-                  <Field label="Vous voulez">
+                  <Field label={t("publier.you_want")}>
                     <div className="flex gap-2">
                       {([
-                        { label: "Vendre", value: "Vente" as const },
-                        { label: "Louer", value: "Location" as const },
+                        { label: t("publier.sell"),     value: "Vente" as const },
+                        { label: t("publier.rent_out"), value: "Location" as const },
                       ]).map((opt) => (
                         <button
                           type="button"
@@ -262,7 +265,7 @@ export default function PublierPage() {
                     </div>
                   </Field>
 
-                  <Field label="Type de bien" icon={<HomeIcon size={16} />}>
+                  <Field label={t("publier.type")} icon={<HomeIcon size={16} />}>
                     <select
                       value={type}
                       onChange={(e) => setType(e.target.value)}
@@ -277,51 +280,51 @@ export default function PublierPage() {
                   </Field>
 
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <Field label="Ville" required icon={<MapPin size={16} />}>
+                    <Field label={t("publier.city")} required icon={<MapPin size={16} />}>
                       <Input
                         value={ville}
                         onChange={(v) => setVille(v)}
-                        placeholder="Casablanca"
+                        placeholder={t("publier.city_placeholder")}
                       />
                     </Field>
-                    <Field label="Quartier (optionnel)">
+                    <Field label={t("publier.neighborhood_optional")}>
                       <Input
                         value={quartier}
                         onChange={(v) => setQuartier(v)}
-                        placeholder="Maarif, Anfa…"
+                        placeholder={t("publier.neighborhood_placeholder")}
                       />
                     </Field>
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <Field label={`Prix (${transaction === "Location" ? "MAD/mois" : "MAD"})`} required icon={<Banknote size={16} />}>
+                    <Field label={transaction === "Location" ? t("publier.price_rent") : t("publier.price_sale")} required icon={<Banknote size={16} />}>
                       <Input
                         type="number"
                         inputMode="numeric"
                         value={prix}
                         onChange={setPrix}
-                        placeholder={transaction === "Location" ? "8 000" : "1 800 000"}
+                        placeholder={transaction === "Location" ? t("publier.price_placeholder_rent") : t("publier.price_placeholder_sale")}
                       />
                     </Field>
-                    <Field label="Surface (m²)" required icon={<Square size={16} />}>
+                    <Field label={t("publier.surface")} required icon={<Square size={16} />}>
                       <Input
                         type="number"
                         inputMode="numeric"
                         value={surface}
                         onChange={setSurface}
-                        placeholder="120"
+                        placeholder={t("publier.surface_placeholder")}
                       />
                     </Field>
                   </div>
 
                   <div className="grid grid-cols-3 gap-4">
-                    <Field label="Chambres" icon={<Bed size={16} />}>
+                    <Field label={t("publier.bedrooms")} icon={<Bed size={16} />}>
                       <NumberStepper value={chambres} onChange={setChambres} />
                     </Field>
-                    <Field label="Salons" icon={<Sofa size={16} />}>
+                    <Field label={t("publier.salons")} icon={<Sofa size={16} />}>
                       <NumberStepper value={salons} onChange={setSalons} />
                     </Field>
-                    <Field label="Salles de bains" icon={<Bath size={16} />}>
+                    <Field label={t("publier.bathrooms")} icon={<Bath size={16} />}>
                       <NumberStepper value={sdb} onChange={setSdb} />
                     </Field>
                   </div>
@@ -336,43 +339,43 @@ export default function PublierPage() {
                         className="w-4 h-4 accent-primary"
                       />
                       <label htmlFor="meuble" className="text-sm font-medium">
-                        Bien meublé
+                        {t("publier.furnished_property")}
                       </label>
                     </div>
                   )}
 
-                  <Field label="Équipements (optionnel)">
+                  <Field label={t("publier.features_optional")}>
                     <div className="flex flex-wrap gap-2">
                       {FEATURES_LIST.map((f) => {
-                        const active = features.includes(f);
+                        const active = features.includes(f.value);
                         return (
                           <button
                             type="button"
-                            key={f}
-                            onClick={() => toggleFeature(f)}
+                            key={f.value}
+                            onClick={() => toggleFeature(f.value)}
                             className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                               active
                                 ? "bg-primary text-white"
                                 : "bg-muted text-muted-foreground hover:bg-muted/80"
                             }`}
                           >
-                            {f}
+                            {t(f.labelKey)}
                           </button>
                         );
                       })}
                     </div>
                   </Field>
 
-                  <Field label="Description du bien" required>
+                  <Field label={t("publier.description")} required>
                     <textarea
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      placeholder="Décrivez votre bien : ses points forts, l'environnement, l'orientation, l'état général…"
+                      placeholder={t("publier.description_placeholder")}
                       rows={5}
                       className="w-full px-3 py-3 rounded-xl bg-muted/50 border border-border focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all resize-none"
                     />
                     <p className="text-[11px] text-muted-foreground mt-1">
-                      Minimum 30 caractères. {description.trim().length}/30
+                      {t("publier.description_counter", { count: description.trim().length })}
                     </p>
                   </Field>
                 </FormSection>
@@ -380,8 +383,8 @@ export default function PublierPage() {
                 {/* ── Section 2: photos ─────────────────────────────── */}
                 <FormSection
                   number={2}
-                  title="Photos"
-                  subtitle="Les annonces avec photos reçoivent 5× plus de demandes"
+                  title={t("publier.section2_title")}
+                  subtitle={t("publier.section2_subtitle")}
                 >
                   <div>
                     <input
@@ -412,14 +415,14 @@ export default function PublierPage() {
                               />
                               {i === 0 && (
                                 <span className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-full bg-primary text-white text-[10px] font-bold shadow">
-                                  Principale
+                                  {t("publier.photo_principale")}
                                 </span>
                               )}
                               <button
                                 type="button"
                                 onClick={() => removePhoto(i)}
                                 className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-colors opacity-0 group-hover:opacity-100"
-                                aria-label="Supprimer"
+                                aria-label={t("publier.photo_delete")}
                               >
                                 <X size={14} />
                               </button>
@@ -435,14 +438,14 @@ export default function PublierPage() {
                           className="aspect-square rounded-xl border-2 border-dashed border-border hover:border-primary hover:bg-primary/5 text-muted-foreground hover:text-primary flex flex-col items-center justify-center gap-2 transition-colors"
                         >
                           <Upload size={20} />
-                          <span className="text-xs font-semibold">Ajouter</span>
+                          <span className="text-xs font-semibold">{t("publier.photo_add")}</span>
                         </button>
                       )}
                     </div>
 
                     <p className="text-[11px] text-muted-foreground mt-3 flex items-center gap-1.5">
                       <Camera size={12} />
-                      JPG/PNG/WebP — la 1ʳᵉ photo sera la photo principale ({photos.filter((p) => !!p.url).length}/{MAX_PHOTOS})
+                      {t("publier.photo_hint", { current: photos.filter((p) => !!p.url).length, max: MAX_PHOTOS })}
                     </p>
 
                     {uploadError && (
@@ -457,41 +460,41 @@ export default function PublierPage() {
                 {/* ── Section 3: vous ───────────────────────────────── */}
                 <FormSection
                   number={3}
-                  title="Vos coordonnées"
-                  subtitle="Utilisées uniquement pour vous transmettre les demandes des acheteurs"
+                  title={t("publier.section3_title")}
+                  subtitle={t("publier.section3_subtitle")}
                 >
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <Field label="Prénom" required>
-                      <Input value={vendeurPrenom} onChange={setVendeurPrenom} placeholder="Karim" />
+                    <Field label={t("publier.first_name")} required>
+                      <Input value={vendeurPrenom} onChange={setVendeurPrenom} placeholder={t("publier.first_name_placeholder")} />
                     </Field>
-                    <Field label="Nom" required>
-                      <Input value={vendeurNom} onChange={setVendeurNom} placeholder="Zniber" />
+                    <Field label={t("publier.last_name")} required>
+                      <Input value={vendeurNom} onChange={setVendeurNom} placeholder={t("publier.last_name_placeholder")} />
                     </Field>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <Field label="Email" required>
+                    <Field label={t("publier.email")} required>
                       <Input
                         type="email"
                         value={vendeurEmail}
                         onChange={setVendeurEmail}
-                        placeholder="vous@email.com"
+                        placeholder={t("publier.email_placeholder")}
                       />
                     </Field>
-                    <Field label="Téléphone" required icon={<Phone size={16} />}>
+                    <Field label={t("publier.phone")} required icon={<Phone size={16} />}>
                       <Input
                         type="tel"
                         value={vendeurTelephone}
                         onChange={setVendeurTelephone}
-                        placeholder="+212 6 53 53 51 56"
+                        placeholder={t("publier.phone_placeholder")}
                       />
                     </Field>
                   </div>
 
-                  <Field label="Message à notre équipe (optionnel)">
+                  <Field label={t("publier.message_optional")}>
                     <textarea
                       value={vendeurMessage}
                       onChange={(e) => setVendeurMessage(e.target.value)}
-                      placeholder="Ex : disponible pour visites le week-end, prix négociable…"
+                      placeholder={t("publier.message_placeholder")}
                       rows={3}
                       className="w-full px-3 py-3 rounded-xl bg-muted/50 border border-border focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all resize-none"
                     />
@@ -508,7 +511,7 @@ export default function PublierPage() {
 
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between pt-2 border-t border-border/50">
                   <p className="text-xs text-muted-foreground max-w-md">
-                    En soumettant ce formulaire, vous acceptez d'être recontacté par notre équipe pour valider votre annonce. Aucune information n'est partagée avant publication.
+                    {t("publier.consent")}
                   </p>
                   <button
                     type="submit"
@@ -518,11 +521,11 @@ export default function PublierPage() {
                     {submitting ? (
                       <>
                         <Loader2 size={18} className="animate-spin" />
-                        Envoi en cours…
+                        {t("publier.submitting")}
                       </>
                     ) : (
                       <>
-                        Publier mon annonce
+                        {t("publier.submit")}
                         <ArrowRight size={18} />
                       </>
                     )}
@@ -532,14 +535,14 @@ export default function PublierPage() {
                 {/* WhatsApp fallback */}
                 <div className="text-center pt-2">
                   <p className="text-xs text-muted-foreground">
-                    Vous préférez parler à un conseiller ?{" "}
+                    {t("publier.whatsapp_prefix")}{" "}
                     <a
                       href={whatsappVendre}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-primary font-semibold hover:underline"
                     >
-                      Contactez-nous sur WhatsApp
+                      {t("publier.whatsapp_link")}
                     </a>
                   </p>
                 </div>
@@ -685,6 +688,7 @@ function NumberStepper({
 }
 
 function SuccessState({ onPublishAnother }: { onPublishAnother: () => void }) {
+  const { t } = useTranslation();
   return (
     <motion.div
       key="success"
@@ -697,20 +701,20 @@ function SuccessState({ onPublishAnother }: { onPublishAnother: () => void }) {
         <CheckCircle2 size={40} />
       </div>
       <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground">
-        Annonce reçue, merci !
+        {t("publier.success_title")}
       </h2>
       <p className="text-lg text-muted-foreground mt-4 max-w-xl mx-auto leading-relaxed">
-        Notre équipe vérifie chaque annonce manuellement pour garantir la qualité de la plateforme. Vous recevrez un email <strong>sous 24 h</strong> dès que votre bien sera en ligne.
+        {t("publier.success_body_part1")} <strong>{t("publier.success_body_part2")}</strong> {t("publier.success_body_part3")}
       </p>
       <p className="text-sm text-muted-foreground mt-3">
-        Une question ?{" "}
+        {t("publier.success_question")}{" "}
         <a
           href={whatsappVendre}
           target="_blank"
           rel="noopener noreferrer"
           className="text-primary font-semibold hover:underline"
         >
-          Écrivez-nous sur WhatsApp
+          {t("publier.success_whatsapp")}
         </a>
       </p>
 
@@ -719,14 +723,14 @@ function SuccessState({ onPublishAnother }: { onPublishAnother: () => void }) {
           href="/biens"
           className="px-6 py-3 rounded-full font-bold bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all flex items-center gap-2"
         >
-          Voir les autres biens
+          {t("publier.success_see_biens")}
           <ArrowRight size={18} />
         </Link>
         <button
           onClick={onPublishAnother}
           className="px-6 py-3 rounded-full font-bold border-2 border-foreground text-foreground hover:bg-foreground hover:text-background transition-colors"
         >
-          Publier un autre bien
+          {t("publier.success_publish_another")}
         </button>
       </div>
     </motion.div>

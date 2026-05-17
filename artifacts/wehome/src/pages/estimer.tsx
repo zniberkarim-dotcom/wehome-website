@@ -5,13 +5,23 @@ import {
   ChevronDown, ChevronRight, CheckCircle2, Home, User, Zap,
   BarChart2, Shield, Clock, ArrowLeft, Loader2, Check,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { submitEstimationLead } from "@/lib/data";
 
-// ─── Constants ───────────────────────────────────────────────────────────────
+// ─── Constants — DB values paired with i18n keys ────────────────────────────
+// Each option stores the original FR `value` (sent to Supabase) plus a key
+// used purely for display. Names/quartiers stay in their original characters.
 
-const TYPE_BIEN = ["Appartement", "Villa", "Maison", "Bureau", "Local commercial", "Terrain"];
+const TYPE_BIEN: { value: string; labelKey: string }[] = [
+  { value: "Appartement",       labelKey: "estimer.type_apt" },
+  { value: "Villa",             labelKey: "estimer.type_villa" },
+  { value: "Maison",            labelKey: "estimer.type_maison" },
+  { value: "Bureau",            labelKey: "estimer.type_bureau" },
+  { value: "Local commercial",  labelKey: "estimer.type_local" },
+  { value: "Terrain",           labelKey: "estimer.type_terrain" },
+];
 
 const QUARTIERS = [
   "Maarif", "Racine", "Gauthier", "CIL", "Ain Diab", "Anfa", "Palmier",
@@ -19,45 +29,52 @@ const QUARTIERS = [
   "Hay Hassani", "Bernoussi", "Autre",
 ];
 
-const CHAMBRES_OPTIONS = ["Studio", "1", "2", "3", "4", "5+"];
-
-const ETAT_OPTIONS = [
-  { value: "Neuf / Récent", desc: "Moins de 5 ans ou rénové" },
-  { value: "Bon état", desc: "Entretenu, habitable sans travaux" },
-  { value: "À rénover", desc: "Travaux nécessaires" },
+const CHAMBRES_OPTIONS: { value: string; labelKey?: string }[] = [
+  { value: "Studio", labelKey: "estimer.chambres_studio" },
+  { value: "1" },
+  { value: "2" },
+  { value: "3" },
+  { value: "4" },
+  { value: "5+", labelKey: "estimer.chambres_5p" },
 ];
 
-const ETAGE_OPTIONS = ["RDC", "1–3", "4–6", "7+", "Non applicable"];
-
-const CARACT_OPTIONS = [
-  "Parking / Garage", "Terrasse / Balcon", "Vue dégagée",
-  "Ascenseur", "Gardien / Sécurité", "Piscine", "Climatisation", "Cuisine équipée",
+const ETAT_OPTIONS: { value: string; labelKey: string; descKey: string }[] = [
+  { value: "Neuf / Récent", labelKey: "estimer.etat_neuf_value",     descKey: "estimer.etat_neuf_desc" },
+  { value: "Bon état",      labelKey: "estimer.etat_bon_value",      descKey: "estimer.etat_bon_desc" },
+  { value: "À rénover",     labelKey: "estimer.etat_renover_value",  descKey: "estimer.etat_renover_desc" },
 ];
 
-const MOTIVATION_OPTIONS = [
-  "Dans les 3 prochains mois",
-  "Dans les 6 prochains mois",
-  "J'explore les options",
-  "Je veux louer, pas vendre",
+const ETAGE_OPTIONS: { value: string; labelKey: string }[] = [
+  { value: "RDC",            labelKey: "estimer.etage_rdc" },
+  { value: "1–3",            labelKey: "estimer.etage_1_3" },
+  { value: "4–6",            labelKey: "estimer.etage_4_6" },
+  { value: "7+",             labelKey: "estimer.etage_7p" },
+  { value: "Non applicable", labelKey: "estimer.etage_na" },
+];
+
+const CARACT_OPTIONS: { value: string; labelKey: string }[] = [
+  { value: "Parking / Garage",   labelKey: "estimer.caract_parking" },
+  { value: "Terrasse / Balcon",  labelKey: "estimer.caract_terrace" },
+  { value: "Vue dégagée",        labelKey: "estimer.caract_view" },
+  { value: "Ascenseur",          labelKey: "estimer.caract_elevator" },
+  { value: "Gardien / Sécurité", labelKey: "estimer.caract_security" },
+  { value: "Piscine",            labelKey: "estimer.caract_pool" },
+  { value: "Climatisation",      labelKey: "estimer.caract_ac" },
+  { value: "Cuisine équipée",    labelKey: "estimer.caract_kitchen" },
+];
+
+const MOTIVATION_OPTIONS: { value: string; labelKey: string }[] = [
+  { value: "Dans les 3 prochains mois", labelKey: "estimer.moti_3m" },
+  { value: "Dans les 6 prochains mois", labelKey: "estimer.moti_6m" },
+  { value: "J'explore les options",     labelKey: "estimer.moti_explore" },
+  { value: "Je veux louer, pas vendre", labelKey: "estimer.moti_rent" },
 ];
 
 const FAQ_ITEMS = [
-  {
-    q: "L'estimation est-elle vraiment gratuite ?",
-    a: "Oui, sans condition et sans engagement. Nous croyons que la relation commence par la confiance, pas par un contrat.",
-  },
-  {
-    q: "Comment WeHome calcule-t-il la valeur de mon bien ?",
-    a: "Notre agent analyse les transactions réelles récentes dans votre quartier, compare votre bien à des propriétés similaires vendues, et tient compte des spécificités de votre logement (étage, état, vue, équipements).",
-  },
-  {
-    q: "Que se passe-t-il après l'estimation ?",
-    a: "Vous recevez une estimation détaillée. Si vous souhaitez aller plus loin, nous vous proposons un mandat de vente. Sinon, nous restons disponibles quand vous êtes prêt.",
-  },
-  {
-    q: "Combien de temps prend la vente d'un bien avec WeHome ?",
-    a: "En moyenne, nos biens trouvent acquéreur en 6 à 10 semaines pour les biens correctement estimés. La transparence sur le prix est le facteur #1 de rapidité de vente.",
-  },
+  { qKey: "estimer.faq_1_q", aKey: "estimer.faq_1_a" },
+  { qKey: "estimer.faq_2_q", aKey: "estimer.faq_2_a" },
+  { qKey: "estimer.faq_3_q", aKey: "estimer.faq_3_a" },
+  { qKey: "estimer.faq_4_q", aKey: "estimer.faq_4_a" },
 ];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -84,22 +101,26 @@ function FadeIn({ children, delay = 0, className = "", from = "bottom" }: { chil
 function ButtonGroup({
   options, value, onChange, columns = 3,
 }: {
-  options: string[]; value: string; onChange: (v: string) => void; columns?: number;
+  /** Each option's `value` is the DB value sent to Supabase; `label` is the displayed text. */
+  options: { value: string; label: string }[];
+  value: string;
+  onChange: (v: string) => void;
+  columns?: number;
 }) {
   return (
     <div className={`grid gap-2.5`} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0,1fr))` }}>
       {options.map((opt) => (
         <button
-          key={opt}
+          key={opt.value}
           type="button"
-          onClick={() => onChange(opt)}
+          onClick={() => onChange(opt.value)}
           className={`py-3 px-3 rounded-xl border text-sm font-semibold transition-all duration-200 text-center ${
-            value === opt
+            value === opt.value
               ? "border-primary bg-primary/5 text-primary"
               : "border-border/60 bg-white text-foreground/70 hover:border-primary/40 hover:bg-primary/3"
           }`}
         >
-          {opt}
+          {opt.label}
         </button>
       ))}
     </div>
@@ -116,6 +137,7 @@ function FieldLabel({ children, required }: { children: React.ReactNode; require
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function EstimerPage() {
+  const { t } = useTranslation();
   const formRef = useRef<HTMLDivElement>(null);
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
@@ -150,29 +172,29 @@ export default function EstimerPage() {
 
   const validateStep1 = () => {
     const e: Record<string, string> = {};
-    if (!typeBien) e.typeBien = "Sélectionnez un type de bien";
-    if (!quartier) e.quartier = "Sélectionnez un quartier";
+    if (!typeBien) e.typeBien = t("estimer.err_type");
+    if (!quartier) e.quartier = t("estimer.err_quartier");
     if (!superficie || isNaN(Number(superficie)) || Number(superficie) <= 0)
-      e.superficie = "Entrez une superficie valide";
-    if (!chambres) e.chambres = "Sélectionnez une option";
+      e.superficie = t("estimer.err_superficie");
+    if (!chambres) e.chambres = t("estimer.err_chambres");
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
   const validateStep2 = () => {
     const e: Record<string, string> = {};
-    if (!etat) e.etat = "Sélectionnez l'état du bien";
-    if (!motivation) e.motivation = "Sélectionnez votre projet";
+    if (!etat) e.etat = t("estimer.err_etat");
+    if (!motivation) e.motivation = t("estimer.err_motivation");
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
   const validateStep3 = () => {
     const e: Record<string, string> = {};
-    if (!nom.trim()) e.nom = "Entrez votre nom";
-    if (!telephone.trim()) e.telephone = "Entrez votre téléphone";
-    if (!email.trim() || !email.includes("@")) e.email = "Entrez un email valide";
-    if (!consent) e.consent = "Veuillez accepter pour continuer";
+    if (!nom.trim()) e.nom = t("estimer.err_nom");
+    if (!telephone.trim()) e.telephone = t("estimer.err_telephone");
+    if (!email.trim() || !email.includes("@")) e.email = t("estimer.err_email");
+    if (!consent) e.consent = t("estimer.err_consent");
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -219,7 +241,7 @@ export default function EstimerPage() {
       setSuccess(true);
       setTimeout(() => formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
     } catch {
-      setSubmitError("Une erreur est survenue. Veuillez réessayer ou nous contacter directement.");
+      setSubmitError(t("estimer.err_generic"));
     } finally {
       setLoading(false);
     }
@@ -268,7 +290,7 @@ export default function EstimerPage() {
           >
             <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
             <span className="text-xs font-semibold tracking-wider text-white/80 uppercase">
-              Gratuit · Sans engagement · Résultat sous 24h
+              {t("estimer.hero_badge")}
             </span>
           </motion.div>
 
@@ -280,7 +302,7 @@ export default function EstimerPage() {
             className="font-display font-bold text-white leading-[1.1] tracking-tight mb-6"
             style={{ fontSize: "clamp(2.4rem, 6vw, 4.8rem)", textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}
           >
-            Combien vaut vraiment<br className="hidden sm:block" /> votre bien&nbsp;?
+            {t("estimer.hero_title_line1")}<br className="hidden sm:block" /> {t("estimer.hero_title_line2")}
           </motion.h1>
 
           {/* Sub */}
@@ -291,8 +313,7 @@ export default function EstimerPage() {
             className="text-base md:text-lg font-light leading-relaxed mb-10 max-w-2xl mx-auto"
             style={{ color: "rgba(255,255,255,0.72)", textShadow: "0 1px 8px rgba(0,0,0,0.4)" }}
           >
-            Obtenez une estimation précise basée sur les transactions réelles du marché casablancais —
-            par un agent WeHome expert de votre quartier.
+            {t("estimer.hero_subtitle")}
           </motion.p>
 
           {/* CTA */}
@@ -304,7 +325,7 @@ export default function EstimerPage() {
             className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl font-bold text-base text-white shadow-2xl hover:-translate-y-1 transition-all duration-300"
             style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 8px 32px rgba(139,26,46,0.5)" }}
           >
-            Estimer mon bien maintenant
+            {t("estimer.hero_cta")}
             <ChevronDown size={18} />
           </motion.button>
 
@@ -316,9 +337,9 @@ export default function EstimerPage() {
             className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8"
           >
             {[
-              { icon: Home, text: "Basé sur les vraies transactions du marché" },
-              { icon: User, text: "Agent expert de votre quartier" },
-              { icon: Zap, text: "Réponse garantie sous 24h" },
+              { icon: Home, text: t("estimer.trust_1") },
+              { icon: User, text: t("estimer.trust_2") },
+              { icon: Zap,  text: t("estimer.trust_3") },
             ].map(({ icon: Icon, text }) => (
               <div key={text} className="flex items-center gap-2">
                 <Icon size={15} style={{ color: "rgba(255,255,255,0.55)" }} />
@@ -357,7 +378,10 @@ export default function EstimerPage() {
                   ))}
                 </div>
                 <p className="text-xs text-muted-foreground font-medium">
-                  Étape {step} sur 3 — {step === 1 ? "Votre bien" : step === 2 ? "État & caractéristiques" : "Vos coordonnées"}
+                  {t("estimer.step_indicator", {
+                    current: step,
+                    name: step === 1 ? t("estimer.step1_name") : step === 2 ? t("estimer.step2_name") : t("estimer.step3_name"),
+                  })}
                 </p>
               </div>
             )}
@@ -384,14 +408,13 @@ export default function EstimerPage() {
                       </motion.div>
                     </div>
                     <h2 className="font-display font-bold text-foreground text-2xl mb-3">
-                      Votre demande est envoyée&nbsp;✓
+                      {t("estimer.success_title")}
                     </h2>
                     <p className="text-muted-foreground leading-relaxed mb-8 max-w-sm mx-auto">
-                      Merci <strong>{prenom}</strong>. Un agent WeHome expert de{" "}
-                      <strong>{quartier}</strong> vous contactera dans les prochaines
-                      24 heures avec une estimation détaillée de votre bien.
+                      {t("estimer.success_body_part1")} <strong>{prenom}</strong>{t("estimer.success_body_part2")}{" "}
+                      <strong>{quartier}</strong> {t("estimer.success_body_part3")}
                       <br /><br />
-                      En attendant, découvrez les biens similaires dans votre quartier.
+                      {t("estimer.success_body_part4")}
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                       <Link
@@ -399,13 +422,13 @@ export default function EstimerPage() {
                         className="px-7 py-3 rounded-xl font-bold text-sm text-white hover:-translate-y-0.5 transition-all duration-200"
                         style={{ background: "var(--primary, #8B1A2E)" }}
                       >
-                        Voir les biens à {quartier}
+                        {t("estimer.success_see_biens")} {quartier}
                       </Link>
                       <Link
                         href="/"
                         className="px-7 py-3 rounded-xl font-semibold text-sm text-foreground/70 hover:text-foreground border border-border/50 hover:border-border transition-colors"
                       >
-                        Retour à l'accueil
+                        {t("estimer.success_home")}
                       </Link>
                     </div>
                   </motion.div>
@@ -422,26 +445,31 @@ export default function EstimerPage() {
                     transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <h2 className="font-display font-bold text-foreground text-xl mb-7">
-                      Parlez-nous de votre bien
+                      {t("estimer.step1_title")}
                     </h2>
 
                     {/* Type de bien */}
                     <div className="mb-6">
-                      <FieldLabel required>Type de bien</FieldLabel>
-                      <ButtonGroup options={TYPE_BIEN} value={typeBien} onChange={setTypeBien} columns={3} />
+                      <FieldLabel required>{t("estimer.f_type")}</FieldLabel>
+                      <ButtonGroup
+                        options={TYPE_BIEN.map((o) => ({ value: o.value, label: t(o.labelKey) }))}
+                        value={typeBien}
+                        onChange={setTypeBien}
+                        columns={3}
+                      />
                       {errors.typeBien && <p className="text-xs text-destructive mt-2">{errors.typeBien}</p>}
                     </div>
 
                     {/* Quartier */}
                     <div className="mb-6">
-                      <FieldLabel required>Quartier / Zone</FieldLabel>
+                      <FieldLabel required>{t("estimer.f_quartier")}</FieldLabel>
                       <div className="relative">
                         <select
                           value={quartier}
                           onChange={(e) => setQuartier(e.target.value)}
                           className="w-full px-4 py-3.5 rounded-xl border border-border/60 bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium appearance-none"
                         >
-                          <option value="">Sélectionner un quartier...</option>
+                          <option value="">{t("estimer.f_quartier_placeholder")}</option>
                           {QUARTIERS.map((q) => <option key={q} value={q}>{q}</option>)}
                         </select>
                         <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
@@ -451,26 +479,31 @@ export default function EstimerPage() {
 
                     {/* Superficie */}
                     <div className="mb-6">
-                      <FieldLabel required>Superficie approximative</FieldLabel>
+                      <FieldLabel required>{t("estimer.f_superficie")}</FieldLabel>
                       <div className="relative">
                         <input
                           type="number"
                           value={superficie}
                           onChange={(e) => setSuperficie(e.target.value)}
-                          placeholder="Ex: 120"
+                          placeholder={t("estimer.f_superficie_placeholder")}
                           min={1}
                           className="w-full pl-4 pr-14 py-3.5 rounded-xl border border-border/60 bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                         />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground">m²</span>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1.5">Surface habitable, hors terrasse et parking</p>
+                      <p className="text-xs text-muted-foreground mt-1.5">{t("estimer.f_superficie_hint")}</p>
                       {errors.superficie && <p className="text-xs text-destructive mt-1">{errors.superficie}</p>}
                     </div>
 
                     {/* Chambres */}
                     <div className="mb-8">
-                      <FieldLabel required>Nombre de chambres</FieldLabel>
-                      <ButtonGroup options={CHAMBRES_OPTIONS} value={chambres} onChange={setChambres} columns={6} />
+                      <FieldLabel required>{t("estimer.f_chambres")}</FieldLabel>
+                      <ButtonGroup
+                        options={CHAMBRES_OPTIONS.map((o) => ({ value: o.value, label: o.labelKey ? t(o.labelKey) : o.value }))}
+                        value={chambres}
+                        onChange={setChambres}
+                        columns={6}
+                      />
                       {errors.chambres && <p className="text-xs text-destructive mt-2">{errors.chambres}</p>}
                     </div>
 
@@ -480,7 +513,7 @@ export default function EstimerPage() {
                       className="w-full py-4 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200"
                       style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 4px 20px rgba(139,26,46,0.25)" }}
                     >
-                      Continuer <ChevronRight size={18} />
+                      {t("estimer.btn_continue")} <ChevronRight size={18} />
                     </button>
                   </motion.div>
 
@@ -496,14 +529,14 @@ export default function EstimerPage() {
                     transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <h2 className="font-display font-bold text-foreground text-xl mb-7">
-                      L'état et les caractéristiques
+                      {t("estimer.step2_title")}
                     </h2>
 
                     {/* État */}
                     <div className="mb-6">
-                      <FieldLabel required>État général du bien</FieldLabel>
+                      <FieldLabel required>{t("estimer.f_etat")}</FieldLabel>
                       <div className="grid gap-2.5">
-                        {ETAT_OPTIONS.map(({ value, desc }) => (
+                        {ETAT_OPTIONS.map(({ value, labelKey, descKey }) => (
                           <button
                             key={value}
                             type="button"
@@ -518,8 +551,8 @@ export default function EstimerPage() {
                               {etat === value && <div className="w-2 h-2 rounded-full" style={{ background: "var(--primary, #8B1A2E)" }} />}
                             </div>
                             <div>
-                              <p className={`text-sm font-semibold ${etat === value ? "text-primary" : "text-foreground"}`}>{value}</p>
-                              <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+                              <p className={`text-sm font-semibold ${etat === value ? "text-primary" : "text-foreground"}`}>{t(labelKey)}</p>
+                              <p className="text-xs text-muted-foreground mt-0.5">{t(descKey)}</p>
                             </div>
                           </button>
                         ))}
@@ -529,29 +562,34 @@ export default function EstimerPage() {
 
                     {/* Étage */}
                     <div className="mb-6">
-                      <FieldLabel>Étage</FieldLabel>
-                      <ButtonGroup options={ETAGE_OPTIONS} value={etage} onChange={setEtage} columns={5} />
+                      <FieldLabel>{t("estimer.f_etage")}</FieldLabel>
+                      <ButtonGroup
+                        options={ETAGE_OPTIONS.map((o) => ({ value: o.value, label: t(o.labelKey) }))}
+                        value={etage}
+                        onChange={setEtage}
+                        columns={5}
+                      />
                     </div>
 
                     {/* Caractéristiques */}
                     <div className="mb-6">
-                      <FieldLabel>Caractéristiques</FieldLabel>
+                      <FieldLabel>{t("estimer.f_caract")}</FieldLabel>
                       <div className="grid grid-cols-2 gap-2.5">
                         {CARACT_OPTIONS.map((c) => (
                           <button
-                            key={c}
+                            key={c.value}
                             type="button"
-                            onClick={() => toggleCaract(c)}
+                            onClick={() => toggleCaract(c.value)}
                             className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border text-left text-sm font-medium transition-all duration-200 ${
-                              caracteristiques.includes(c)
+                              caracteristiques.includes(c.value)
                                 ? "border-primary bg-primary/5 text-primary"
                                 : "border-border/60 text-foreground/70 hover:border-primary/30"
                             }`}
                           >
-                            <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${caracteristiques.includes(c) ? "bg-primary border-primary" : "border-border"}`}>
-                              {caracteristiques.includes(c) && <Check size={10} className="text-white" />}
+                            <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${caracteristiques.includes(c.value) ? "bg-primary border-primary" : "border-border"}`}>
+                              {caracteristiques.includes(c.value) && <Check size={10} className="text-white" />}
                             </div>
-                            {c}
+                            {t(c.labelKey)}
                           </button>
                         ))}
                       </div>
@@ -559,15 +597,15 @@ export default function EstimerPage() {
 
                     {/* Motivation */}
                     <div className="mb-8">
-                      <FieldLabel required>Votre projet de vente</FieldLabel>
+                      <FieldLabel required>{t("estimer.f_motivation")}</FieldLabel>
                       <div className="relative">
                         <select
                           value={motivation}
                           onChange={(e) => setMotivation(e.target.value)}
                           className="w-full px-4 py-3.5 rounded-xl border border-border/60 bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium appearance-none"
                         >
-                          <option value="">Vous souhaitez vendre...</option>
-                          {MOTIVATION_OPTIONS.map((m) => <option key={m} value={m}>{m}</option>)}
+                          <option value="">{t("estimer.f_motivation_placeholder")}</option>
+                          {MOTIVATION_OPTIONS.map((m) => <option key={m.value} value={m.value}>{t(m.labelKey)}</option>)}
                         </select>
                         <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                       </div>
@@ -581,10 +619,10 @@ export default function EstimerPage() {
                         className="w-full py-4 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200"
                         style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 4px 20px rgba(139,26,46,0.25)" }}
                       >
-                        Continuer <ChevronRight size={18} />
+                        {t("estimer.btn_continue")} <ChevronRight size={18} />
                       </button>
                       <button type="button" onClick={goBack} className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors py-2">
-                        <ArrowLeft size={14} /> Retour
+                        <ArrowLeft size={14} /> {t("estimer.btn_back")}
                       </button>
                     </div>
                   </motion.div>
@@ -601,21 +639,21 @@ export default function EstimerPage() {
                     transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <h2 className="font-display font-bold text-foreground text-xl mb-2">
-                      Où envoyer votre estimation ?
+                      {t("estimer.step3_title")}
                     </h2>
                     <p className="text-sm text-muted-foreground mb-7">
-                      Un agent WeHome expert de votre quartier vous contacte sous 24h.
+                      {t("estimer.step3_subtitle")}
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                       {/* Nom */}
                       <div>
-                        <FieldLabel required>Prénom et Nom</FieldLabel>
+                        <FieldLabel required>{t("estimer.f_name")}</FieldLabel>
                         <input
                           type="text"
                           value={nom}
                           onChange={(e) => setNom(e.target.value)}
-                          placeholder="Karim Zniber"
+                          placeholder={t("estimer.f_name_placeholder")}
                           className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                         />
                         {errors.nom && <p className="text-xs text-destructive mt-1.5">{errors.nom}</p>}
@@ -623,12 +661,12 @@ export default function EstimerPage() {
 
                       {/* Téléphone */}
                       <div>
-                        <FieldLabel required>Téléphone</FieldLabel>
+                        <FieldLabel required>{t("estimer.f_phone")}</FieldLabel>
                         <input
                           type="tel"
                           value={telephone}
                           onChange={(e) => setTelephone(e.target.value)}
-                          placeholder="+212 6XX XXX XXX"
+                          placeholder={t("estimer.f_phone_placeholder")}
                           className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                         />
                         {errors.telephone && <p className="text-xs text-destructive mt-1.5">{errors.telephone}</p>}
@@ -636,12 +674,12 @@ export default function EstimerPage() {
 
                       {/* Email */}
                       <div>
-                        <FieldLabel required>Email</FieldLabel>
+                        <FieldLabel required>{t("estimer.f_email")}</FieldLabel>
                         <input
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="votre@email.com"
+                          placeholder={t("estimer.f_email_placeholder")}
                           className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                         />
                         {errors.email && <p className="text-xs text-destructive mt-1.5">{errors.email}</p>}
@@ -649,11 +687,11 @@ export default function EstimerPage() {
 
                       {/* Message */}
                       <div>
-                        <FieldLabel>Message (optionnel)</FieldLabel>
+                        <FieldLabel>{t("estimer.f_message")}</FieldLabel>
                         <textarea
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
-                          placeholder="Informations complémentaires sur votre bien..."
+                          placeholder={t("estimer.f_message_placeholder")}
                           rows={3}
                           className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium resize-none"
                         />
@@ -670,8 +708,8 @@ export default function EstimerPage() {
                             {consent && <Check size={11} className="text-white" />}
                           </div>
                           <p className="text-xs text-muted-foreground leading-relaxed">
-                            J'accepte d'être contacté par un agent WeHome concernant mon estimation.{" "}
-                            <span className="font-semibold">Aucun démarchage, aucune obligation.</span>
+                            {t("estimer.consent_part1")}{" "}
+                            <span className="font-semibold">{t("estimer.consent_part2")}</span>
                           </p>
                         </button>
                         {errors.consent && <p className="text-xs text-destructive mt-1.5">{errors.consent}</p>}
@@ -688,11 +726,11 @@ export default function EstimerPage() {
                         style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 4px 20px rgba(139,26,46,0.25)" }}
                       >
                         {loading ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
-                        {loading ? "Envoi en cours..." : "Recevoir mon estimation gratuite"}
+                        {loading ? t("estimer.btn_submitting") : t("estimer.btn_submit")}
                       </button>
 
                       <button type="button" onClick={goBack} className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors py-2 w-full">
-                        <ArrowLeft size={14} /> Retour
+                        <ArrowLeft size={14} /> {t("estimer.btn_back")}
                       </button>
                     </form>
                   </motion.div>
@@ -710,7 +748,7 @@ export default function EstimerPage() {
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-8">
           <FadeIn className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="font-display font-bold text-foreground text-3xl md:text-4xl">
-              Pourquoi notre estimation<br />est différente
+              {t("estimer.why_title_line1")}<br />{t("estimer.why_title_line2")}
             </h2>
           </FadeIn>
 
@@ -718,20 +756,20 @@ export default function EstimerPage() {
             {[
               {
                 icon: User,
-                title: "Pas un algorithme. Un expert.",
-                body: "Contrairement aux estimateurs automatiques, votre bien est analysé par un agent qui connaît votre quartier, ses prix réels, et les transactions récentes — pas seulement des moyennes nationales.",
+                title: t("estimer.why1_title"),
+                body:  t("estimer.why1_body"),
                 delay: 0,
               },
               {
                 icon: BarChart2,
-                title: "Basée sur les vraies transactions",
-                body: "Nous accédons aux données des transactions effectivement réalisées à Casablanca — pas aux prix affichés. La différence peut atteindre 15 à 20% selon le quartier.",
+                title: t("estimer.why2_title"),
+                body:  t("estimer.why2_body"),
                 delay: 0.1,
               },
               {
                 icon: Shield,
-                title: "Sans engagement, sans pression",
-                body: "Notre estimation est gratuite et sans obligation. Nous pensons que la confiance se construit avant la signature, pas après.",
+                title: t("estimer.why3_title"),
+                body:  t("estimer.why3_body"),
                 delay: 0.2,
               },
             ].map(({ icon: Icon, title, body, delay }) => (
@@ -758,30 +796,15 @@ export default function EstimerPage() {
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-8">
           <FadeIn className="text-center max-w-xl mx-auto mb-14">
             <h2 className="font-display font-bold text-foreground text-3xl md:text-4xl">
-              Ils nous ont fait confiance
+              {t("estimer.testimonials_title")}
             </h2>
           </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              {
-                quote: "J'avais une estimation d'une autre agence à 1.8M. WeHome m'a expliqué pourquoi le marché justifiait 2.1M — et ils ont vendu en 6 semaines.",
-                author: "Karim B.",
-                location: "Maarif",
-                delay: 0,
-              },
-              {
-                quote: "Première fois que j'ai eu un vrai rapport écrit avec des comparables. Pas juste un chiffre sorti de nulle part.",
-                author: "Sophia M.",
-                location: "Racine",
-                delay: 0.1,
-              },
-              {
-                quote: "L'agent connaissait chaque immeuble de ma rue. C'est ça la vraie expertise locale.",
-                author: "Ahmed R.",
-                location: "Gauthier",
-                delay: 0.2,
-              },
+              { quote: t("estimer.testimonial_1_quote"), author: "Karim B.",  location: "Maarif",   delay: 0 },
+              { quote: t("estimer.testimonial_2_quote"), author: "Sophia M.", location: "Racine",   delay: 0.1 },
+              { quote: t("estimer.testimonial_3_quote"), author: "Ahmed R.",  location: "Gauthier", delay: 0.2 },
             ].map(({ quote, author, location, delay }) => (
               <FadeIn key={author} delay={delay}>
                 <div className="bg-white rounded-3xl p-8 shadow-sm flex flex-col gap-6 hover:shadow-md transition-shadow duration-300">
@@ -814,12 +837,12 @@ export default function EstimerPage() {
         <div className="max-w-3xl mx-auto px-6 sm:px-10 lg:px-8">
           <FadeIn className="text-center mb-14">
             <h2 className="font-display font-bold text-foreground text-3xl md:text-4xl">
-              Questions fréquentes
+              {t("estimer.faq_title")}
             </h2>
           </FadeIn>
 
           <div className="space-y-3">
-            {FAQ_ITEMS.map(({ q, a }, i) => (
+            {FAQ_ITEMS.map(({ qKey, aKey }, i) => (
               <FadeIn key={i} delay={i * 0.06}>
                 <div className="border border-border/60 rounded-2xl overflow-hidden">
                   <button
@@ -827,7 +850,7 @@ export default function EstimerPage() {
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                     className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left hover:bg-secondary/30 transition-colors"
                   >
-                    <span className="font-semibold text-foreground text-sm leading-snug">{q}</span>
+                    <span className="font-semibold text-foreground text-sm leading-snug">{t(qKey)}</span>
                     <motion.div
                       animate={{ rotate: openFaq === i ? 180 : 0 }}
                       transition={{ duration: 0.25 }}
@@ -846,7 +869,7 @@ export default function EstimerPage() {
                         className="overflow-hidden"
                       >
                         <p className="px-6 pb-5 text-muted-foreground text-sm leading-[1.75] border-t border-border/40 pt-4">
-                          {a}
+                          {t(aKey)}
                         </p>
                       </motion.div>
                     )}
@@ -867,7 +890,7 @@ export default function EstimerPage() {
             className="font-display font-bold text-white leading-tight mb-6"
             style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}
           >
-            Prêt à connaître la vraie valeur<br />de votre bien ?
+            {t("estimer.closing_title_line1")}<br />{t("estimer.closing_title_line2")}
           </h2>
           <button
             onClick={scrollToForm}
@@ -875,7 +898,7 @@ export default function EstimerPage() {
             style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 8px 32px rgba(139,26,46,0.45)" }}
           >
             <Clock size={18} />
-            Estimer mon bien maintenant
+            {t("estimer.hero_cta")}
           </button>
         </FadeIn>
       </section>

@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { useQueries } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Heart, Search, Trash2, Share2, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PropertyCard } from "@/components/home/PropertyCard";
@@ -9,6 +10,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { fetchProperty, type Property } from "@/lib/data";
 
 export default function FavorisPage() {
+  const { t } = useTranslation();
   const { favoriteIds, count, clearAll, removeFavorite } = useFavorites();
 
   // Fetch each saved property in parallel
@@ -33,10 +35,10 @@ export default function FavorisPage() {
 
   const handleShare = async () => {
     const url = `${window.location.origin}/favoris`;
-    const text = `Voici ma sélection de biens sur WeHome (${count} bien${count > 1 ? "s" : ""}).`;
+    const text = t("favoris.share_text", { count });
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
-        await navigator.share({ title: "Mes favoris WeHome", text, url });
+        await navigator.share({ title: t("favoris.share_title"), text, url });
         return;
       } catch {
         /* user cancelled — fall through */
@@ -44,13 +46,13 @@ export default function FavorisPage() {
     }
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       await navigator.clipboard.writeText(`${text} ${url}`);
-      alert("Lien copié dans le presse-papier !");
+      alert(t("favoris.share_copied"));
     }
   };
 
   const handleClearAll = () => {
     if (count === 0) return;
-    if (confirm(`Vider votre liste de ${count} favori${count > 1 ? "s" : ""} ?`)) {
+    if (confirm(t("favoris.clear_confirm", { count }))) {
       clearAll();
     }
   };
@@ -66,15 +68,15 @@ export default function FavorisPage() {
             <div>
               <div className="inline-flex items-center gap-2 text-primary text-xs font-bold uppercase tracking-wide mb-3">
                 <Heart size={14} className="fill-primary" />
-                Mes favoris
+                {t("favoris.badge")}
               </div>
               <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground">
-                Votre sélection
+                {t("favoris.page_title")}
               </h1>
               <p className="text-muted-foreground mt-2">
                 {count === 0
-                  ? "Aucun bien sauvegardé pour le moment."
-                  : `${count} bien${count > 1 ? "s" : ""} sauvegardé${count > 1 ? "s" : ""} sur ce navigateur.`}
+                  ? t("favoris.empty_inline")
+                  : t("favoris.count", { count })}
               </p>
             </div>
 
@@ -85,14 +87,14 @@ export default function FavorisPage() {
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm bg-card border border-border hover:bg-primary/5 hover:border-primary/30 hover:text-primary transition-colors"
                 >
                   <Share2 size={16} />
-                  Partager ma sélection
+                  {t("favoris.share")}
                 </button>
                 <button
                   onClick={handleClearAll}
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm text-destructive hover:bg-destructive/5 transition-colors"
                 >
                   <Trash2 size={16} />
-                  Tout effacer
+                  {t("favoris.clear_all")}
                 </button>
               </div>
             )}
@@ -108,7 +110,7 @@ export default function FavorisPage() {
           ) : isLoading && properties.length === 0 ? (
             <div className="flex items-center justify-center py-24 text-muted-foreground">
               <Loader2 size={28} className="animate-spin mr-3" />
-              Chargement de vos favoris…
+              {t("favoris.loading")}
             </div>
           ) : (
             <motion.div
@@ -131,23 +133,24 @@ export default function FavorisPage() {
 }
 
 function EmptyState() {
+  const { t } = useTranslation();
   return (
     <div className="max-w-md mx-auto text-center py-12 md:py-20">
       <div className="w-20 h-20 mx-auto rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6">
         <Heart size={36} />
       </div>
       <h2 className="text-2xl font-display font-bold text-foreground">
-        Aucun favori pour l'instant
+        {t("favoris.empty_title")}
       </h2>
       <p className="text-muted-foreground mt-3 leading-relaxed">
-        Cliquez sur le ♥ d'un bien pour l'ajouter à votre sélection. Vous pourrez retrouver ici tous vos coups de cœur.
+        {t("favoris.empty_body")}
       </p>
       <Link
         href="/biens"
         className="inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-full font-bold bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all"
       >
         <Search size={18} />
-        Découvrir les biens
+        {t("favoris.empty_cta")}
       </Link>
     </div>
   );

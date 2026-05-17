@@ -1,5 +1,6 @@
 import { Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useFavorites } from "@/hooks/useFavorites";
 import { cn } from "@/lib/utils";
 
@@ -33,6 +34,7 @@ export function FavoriteButton({
   stopPropagation = true,
   onToggle,
 }: Props) {
+  const { t } = useTranslation();
   const { isFavorite, toggleFavorite } = useFavorites();
   const liked = isFavorite(propertyId);
   const sizing = SIZE_MAP[size];
@@ -60,7 +62,7 @@ export function FavoriteButton({
         type="button"
         onClick={handleClick}
         aria-pressed={liked}
-        aria-label={liked ? "Retirer des favoris" : "Ajouter aux favoris"}
+        aria-label={liked ? t("favoris.btn_remove") : t("favoris.btn_add")}
         className={cn(
           "inline-flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm transition-all border",
           liked
@@ -70,7 +72,7 @@ export function FavoriteButton({
         )}
       >
         <HeartIcon liked={liked} size={18} />
-        <span>{liked ? "Sauvegardé" : "Sauvegarder"}</span>
+        <span>{liked ? t("favoris.btn_saved") : t("favoris.btn_save")}</span>
       </button>
     );
   }
@@ -80,7 +82,7 @@ export function FavoriteButton({
       type="button"
       onClick={handleClick}
       aria-pressed={liked}
-      aria-label={liked ? "Retirer des favoris" : "Ajouter aux favoris"}
+      aria-label={liked ? t("favoris.btn_remove") : t("favoris.btn_add")}
       className={cn(baseBtn, sizing.btn, variantClass[variant], className)}
     >
       <HeartIcon liked={liked} size={sizing.icon} />
