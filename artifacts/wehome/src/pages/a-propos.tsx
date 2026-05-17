@@ -5,6 +5,7 @@ import {
   ChevronDown, LayoutGrid, Handshake, Gem,
   Users, BarChart2, Cpu, Building2, Palette, Home,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
@@ -55,51 +56,53 @@ function Overline({ children }: { children: React.ReactNode }) {
 }
 
 // ─── Team member ─────────────────────────────────────────────────────────────
+// Names stay in Latin script across all locales; only `bioKey` is translated.
 const TEAM = [
   {
     name: "Karim Zniber",
     title: "CEO",
     photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop&crop=face&q=80",
-    bio: "À la tête de la stratégie et des opérations, Karim pilote la croissance de WeHome et veille à ce que chaque transaction soit aussi mémorable que le bien lui-même.",
+    bioKey: "about.team_bio_karim",
   },
   {
     name: "Basma Tazi",
     title: "COO",
     photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=500&fit=crop&crop=face&q=80",
-    bio: "Avec une connaissance intime des quartiers casablancais, Basma orchestre les opérations de WeHome avec une précision chirurgicale et veille à l'excellence de chaque interaction client.",
+    bioKey: "about.team_bio_basma",
   },
   {
     name: "Maha El Hamzaoui",
     title: "CMO",
     photo: "https://ui-avatars.com/api/?name=Maha+El+Hamzaoui&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
-    bio: "Maha façonne l'identité et la voix de WeHome sur tous les canaux. Sa vision marketing allie rigueur data et sens de la narration pour positionner WeHome comme la référence immobilière au Maroc.",
+    bioKey: "about.team_bio_maha",
   },
   {
     name: "Oumaima Dakirelah",
     title: "CFO",
     photo: "https://ui-avatars.com/api/?name=Oumaima+Dakirelah&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
-    bio: "Oumaima pilote la stratégie financière de WeHome avec une exigence sans compromis. Elle garantit la solidité du modèle économique et la transparence des flux à chaque étape de la croissance.",
+    bioKey: "about.team_bio_oumaima",
   },
   {
     name: "Abdou",
     title: "CTO",
     photo: "https://ui-avatars.com/api/?name=Abdou&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
-    bio: "Abdou architecure les systèmes qui font tourner WeHome — CRM, plateforme, données marché. Sa conviction : la technologie doit être invisible pour le client et redoutablement efficace pour l'agent.",
+    bioKey: "about.team_bio_abdou",
   },
 ];
 
 // ─── Commitments ─────────────────────────────────────────────────────────────
 const COMMITMENTS = [
-  { n: "01", text: "Pas d'annonces sans accompagnement humain." },
-  { n: "02", text: "Pas de prix sans explication du marché." },
-  { n: "03", text: "Pas d'honoraires sans résultat justifié." },
-  { n: "04", text: "Pas de raccourcis sur la qualité du suivi." },
-  { n: "05", text: "Pas de promesses qu'on ne peut pas tenir." },
-  { n: "06", text: "Pas de transaction sans transparence totale." },
+  { n: "01", key: "about.commitment_1" },
+  { n: "02", key: "about.commitment_2" },
+  { n: "03", key: "about.commitment_3" },
+  { n: "04", key: "about.commitment_4" },
+  { n: "05", key: "about.commitment_5" },
+  { n: "06", key: "about.commitment_6" },
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function AProposPage() {
+  const { t } = useTranslation();
   const heroRef  = useRef<HTMLElement>(null);
   const ctaRef   = useRef<HTMLElement>(null);
 
@@ -155,7 +158,7 @@ export default function AProposPage() {
             className="text-xs font-bold tracking-[0.28em] uppercase mb-10"
             style={{ color: "rgba(255,255,255,0.38)" }}
           >
-            WeHome — Casablanca
+            {t("about.hero_overline")}
           </motion.p>
 
           <motion.h1
@@ -165,7 +168,7 @@ export default function AProposPage() {
             className="font-display font-bold text-white leading-[1.08] tracking-tight mb-8"
             style={{ fontSize: "clamp(2.6rem, 7vw, 5.5rem)", textShadow: "0 2px 24px rgba(0,0,0,0.5)" }}
           >
-            L'immobilier tel qu'il aurait<br className="hidden sm:block" /> toujours dû exister.
+            {t("about.hero_title")}
           </motion.h1>
 
           <motion.p
@@ -175,7 +178,7 @@ export default function AProposPage() {
             className="text-lg md:text-xl font-light tracking-wide"
             style={{ color: "rgba(255,255,255,0.72)", textShadow: "0 1px 8px rgba(0,0,0,0.4)" }}
           >
-            Expertise humaine.&nbsp; Intelligence des données.&nbsp; Transparence absolue.
+            {t("about.hero_subtitle")}
           </motion.p>
         </div>
 
@@ -214,39 +217,37 @@ export default function AProposPage() {
                 style={{ fontSize: "clamp(1.05rem, 2vw, 1.25rem)", lineHeight: 1.88, letterSpacing: "0.01em" }}
               >
                 <p className="font-medium text-foreground/90">
-                  Il y a quelque chose de particulier dans l'acte d'acheter une maison.
+                  {t("about.manifesto_p1")}
                 </p>
 
                 <p className="text-foreground/75">
-                  Ce n'est pas une transaction. C'est une décision de vie.<br />
-                  C'est choisir où vos enfants grandiront.<br />
-                  C'est définir le cadre dans lequel vous vous réveillerez chaque matin.<br />
-                  C'est, souvent, le fruit de dix ans d'effort.
+                  {t("about.manifesto_p2_line1")}<br />
+                  {t("about.manifesto_p2_line2")}<br />
+                  {t("about.manifesto_p2_line3")}<br />
+                  {t("about.manifesto_p2_line4")}
                 </p>
 
                 <p className="text-foreground/75">
-                  Et pourtant — le marché immobilier marocain vous offre deux options :
-                  des plateformes qui publient des annonces et vous laissent seuls face à l'incertitude,
-                  ou des agences traditionnelles qui n'ont pas évolué depuis vingt ans.
+                  {t("about.manifesto_p3")}
                 </p>
 
                 <p
                   className="font-semibold"
                   style={{ color: "var(--primary, #8B1A2E)" }}
                 >
-                  Nous avons refusé ces deux options.
+                  {t("about.manifesto_p4")}
                 </p>
 
                 <p className="text-foreground/75">
-                  WeHome est né d'une conviction simple mais radicale :<br />
-                  l'immobilier mérite d'être traité avec la rigueur d'une science<br />
-                  et la sensibilité d'un art.
+                  {t("about.manifesto_p5_line1")}<br />
+                  {t("about.manifesto_p5_line2")}<br />
+                  {t("about.manifesto_p5_line3")}
                 </p>
 
                 <p className="font-medium text-foreground/90">
-                  Nous mettons l'actif au centre.{" "}
-                  <span style={{ color: "var(--primary, #8B1A2E)" }}>L'humain au cœur.</span>{" "}
-                  La technologie au service.
+                  {t("about.manifesto_p6_part1")}{" "}
+                  <span style={{ color: "var(--primary, #8B1A2E)" }}>{t("about.manifesto_p6_part2")}</span>{" "}
+                  {t("about.manifesto_p6_part3")}
                 </p>
               </div>
             </div>
@@ -261,14 +262,14 @@ export default function AProposPage() {
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-8">
           <FadeIn className="text-center mb-20">
             <p className="text-xs font-bold tracking-[0.2em] uppercase mb-5" style={{ color: "rgba(139,26,46,0.9)" }}>
-              Le constat
+              {t("about.section2_overline")}
             </p>
             <h2
               className="font-display font-bold text-white leading-tight"
               style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}
             >
-              Deux modèles ont échoué.<br />
-              Nous en construisons un troisième.
+              {t("about.section2_title_line1")}<br />
+              {t("about.section2_title_line2")}
             </h2>
           </FadeIn>
 
@@ -279,12 +280,10 @@ export default function AProposPage() {
                 <LayoutGrid size={22} style={{ color: "rgba(139,26,46,0.85)" }} />
               </div>
               <h3 className="font-display font-bold text-white text-xl mb-4">
-                Les plateformes vous abandonnent.
+                {t("about.section2_col1_title")}
               </h3>
               <p className="text-white/50 leading-relaxed text-sm">
-                Mubawab, Yakeey — elles publient. Elles indexent. Elles disparaissent.
-                Aucun accompagnement. Aucune expertise. Aucune responsabilité
-                sur le résultat.
+                {t("about.section2_col1_desc")}
               </p>
             </FadeIn>
 
@@ -294,12 +293,10 @@ export default function AProposPage() {
                 <Handshake size={22} style={{ color: "rgba(139,26,46,0.85)" }} />
               </div>
               <h3 className="font-display font-bold text-white text-xl mb-4">
-                Les agences traditionnelles vous dépassent.
+                {t("about.section2_col2_title")}
               </h3>
               <p className="text-white/50 leading-relaxed text-sm">
-                Pas de données. Pas de transparence sur le marché.
-                Des honoraires sans justification. Un suivi qui dépend
-                de l'humeur de l'agent.
+                {t("about.section2_col2_desc")}
               </p>
             </FadeIn>
 
@@ -313,12 +310,10 @@ export default function AProposPage() {
                 <Gem size={22} style={{ color: "#C0392B" }} />
               </div>
               <h3 className="font-display font-bold text-white text-xl mb-4">
-                WeHome : la troisième voie.
+                {t("about.section2_col3_title")}
               </h3>
               <p className="text-white/65 leading-relaxed text-sm">
-                Des agents experts, formés, engagés sur la performance.
-                Des données marché accessibles et lisibles. Une technologie
-                qui sert le client — pas qui le remplace.
+                {t("about.section2_col3_desc")}
               </p>
               <div
                 className="mt-8 h-0.5 w-16 rounded-full"
@@ -335,12 +330,12 @@ export default function AProposPage() {
       <section className="bg-white py-28 md:py-40">
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-8">
           <FadeIn className="max-w-2xl mb-20">
-            <Overline>Notre philosophie</Overline>
+            <Overline>{t("about.pillars_overline")}</Overline>
             <h2
               className="font-display font-bold text-foreground leading-tight"
               style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}
             >
-              L'actif d'abord. Toujours.
+              {t("about.pillars_title")}
             </h2>
           </FadeIn>
 
@@ -348,20 +343,20 @@ export default function AProposPage() {
             {[
               {
                 icon: Users,
-                title: "Expertise humaine",
-                body: "Nos agents ne sont pas des vendeurs. Ce sont des conseillers immobiliers — sélectionnés pour leur connaissance du marché casablancais, formés à l'écoute, et évalués sur la satisfaction client. La technologie les assiste. Elle ne les remplace jamais.",
+                title: t("about.pillar1_title"),
+                body: t("about.pillar1_body"),
                 delay: 0,
               },
               {
                 icon: BarChart2,
-                title: "Données & Transparence",
-                body: "Nous vous donnons accès à ce que vous méritez de savoir : les prix réels du marché, les tendances par quartier, les délais de vente moyens, les comparables. Vous prenez vos décisions avec la bonne information — pas avec des arguments commerciaux.",
+                title: t("about.pillar2_title"),
+                body: t("about.pillar2_body"),
                 delay: 0.12,
               },
               {
                 icon: Cpu,
-                title: "Technologie au service",
-                body: "Notre CRM, notre plateforme, notre marketing data-driven — ces outils existent pour une seule raison : mieux servir le bien et le client. Pas pour faire de l'effet. Pas pour remplacer l'humain. Pour lui donner les moyens d'être excellent.",
+                title: t("about.pillar3_title"),
+                body: t("about.pillar3_body"),
                 delay: 0.24,
               },
             ].map(({ icon: Icon, title, body, delay }) => (
@@ -388,12 +383,12 @@ export default function AProposPage() {
       <section className="py-28 md:py-40" style={{ background: "#f7f6f5" }}>
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-8">
           <FadeIn className="max-w-2xl mb-20">
-            <Overline>Un écosystème pensé pour l'actif</Overline>
+            <Overline>{t("about.ecosystem_overline")}</Overline>
             <h2
               className="font-display font-bold text-foreground leading-tight"
               style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}
             >
-              Trois expertises.<br />Une vision.
+              {t("about.ecosystem_title_line1")}<br />{t("about.ecosystem_title_line2")}
             </h2>
           </FadeIn>
 
@@ -402,24 +397,24 @@ export default function AProposPage() {
               {
                 icon: Home,
                 brand: "WeHome",
-                sub: "Résidentiel",
-                body: "L'accompagnement complet pour l'achat, la vente, et la location de votre bien. Du premier contact jusqu'à la remise des clés.",
-                cta: { label: "Voir nos biens", href: "/biens" },
+                sub: t("about.eco1_sub"),
+                body: t("about.eco1_body"),
+                cta: { label: t("about.eco1_cta"), href: "/biens" },
                 delay: 0,
               },
               {
                 icon: Building2,
                 brand: "WeOffice",
-                sub: "Commercial",
-                body: "Bureaux, locaux commerciaux, baux longue durée. Pour les entreprises qui comprennent que leur espace de travail est un actif stratégique.",
+                sub: t("about.eco2_sub"),
+                body: t("about.eco2_body"),
                 cta: null,
                 delay: 0.12,
               },
               {
                 icon: Palette,
                 brand: "WeDesign",
-                sub: "Architecture & Staging",
-                body: "Valorisez votre bien avant de le mettre sur le marché. Architecture d'intérieur, home staging, mise en valeur photographique.",
+                sub: t("about.eco3_sub"),
+                body: t("about.eco3_body"),
                 cta: null,
                 delay: 0.24,
               },
@@ -451,7 +446,7 @@ export default function AProposPage() {
                       {cta.label} →
                     </Link>
                   ) : (
-                    <p className="text-xs text-muted-foreground/60 italic">Bientôt disponible</p>
+                    <p className="text-xs text-muted-foreground/60 italic">{t("about.eco_soon")}</p>
                   )}
                 </div>
               </FadeIn>
@@ -466,24 +461,23 @@ export default function AProposPage() {
       <section className="bg-white py-28 md:py-40">
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-8">
           <FadeIn className="max-w-2xl mb-6">
-            <Overline>Les personnes derrière la vision</Overline>
+            <Overline>{t("about.team_intro_overline")}</Overline>
             <h2
               className="font-display font-bold text-foreground leading-tight"
               style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}
             >
-              Une équipe. Un standard.
+              {t("about.team_intro_title")}
             </h2>
           </FadeIn>
 
           <FadeIn delay={0.1} className="mb-20">
             <p className="text-muted-foreground leading-relaxed max-w-2xl" style={{ fontSize: "1.05rem" }}>
-              Chez WeHome, nous croyons que la qualité d'une agence se mesure à la qualité des personnes
-              qui la composent. Voici ceux qui portent cette vision.
+              {t("about.team_intro_body")}
             </p>
           </FadeIn>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
-            {TEAM.map(({ name, title, photo, bio }, i) => (
+            {TEAM.map(({ name, title, photo, bioKey }, i) => (
               <FadeIn key={name} delay={i * 0.1}>
                 <div className="group flex flex-col">
                   {/* Photo */}
@@ -503,7 +497,7 @@ export default function AProposPage() {
                   <p className="text-sm font-semibold mt-1 mb-3" style={{ color: "var(--primary, #8B1A2E)" }}>
                     {title}
                   </p>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{bio}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{t(bioKey)}</p>
                 </div>
               </FadeIn>
             ))}
@@ -521,12 +515,12 @@ export default function AProposPage() {
               className="font-display font-bold text-white leading-tight"
               style={{ fontSize: "clamp(2rem, 4.5vw, 3.2rem)" }}
             >
-              Ce que nous vous promettons.
+              {t("about.commitments_promise_title")}
             </h2>
           </FadeIn>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-0">
-            {COMMITMENTS.map(({ n, text }, i) => (
+            {COMMITMENTS.map(({ n, key }, i) => (
               <FadeIn key={n} delay={i * 0.08}>
                 <div className="flex items-start gap-6 py-7 border-b border-white/[0.07] group">
                   <span
@@ -539,7 +533,7 @@ export default function AProposPage() {
                     className="text-white/60 leading-relaxed group-hover:text-white/90 transition-colors duration-300"
                     style={{ fontSize: "1rem" }}
                   >
-                    {text}
+                    {t(key)}
                   </p>
                 </div>
               </FadeIn>
@@ -581,13 +575,13 @@ export default function AProposPage() {
               className="font-display font-bold text-white leading-tight mb-5"
               style={{ fontSize: "clamp(2.4rem, 6vw, 4.5rem)", textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}
             >
-              L'immobilier mérite mieux.
+              {t("about.closing_title")}
             </h2>
             <p
               className="text-xl md:text-2xl font-light mb-12 tracking-wide"
               style={{ color: "rgba(255,255,255,0.7)", textShadow: "0 1px 8px rgba(0,0,0,0.4)" }}
             >
-              Travaillons ensemble.
+              {t("about.closing_subtitle")}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -596,13 +590,13 @@ export default function AProposPage() {
                 className="px-9 py-4 rounded-2xl font-bold text-base text-white shadow-xl hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
                 style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 8px 32px rgba(139,26,46,0.45)" }}
               >
-                Parler à un agent
+                {t("about.closing_cta_agent")}
               </Link>
               <Link
                 href="/biens"
                 className="px-9 py-4 rounded-2xl font-bold text-base text-white border-2 border-white/60 hover:bg-white hover:text-foreground hover:-translate-y-1 transition-all duration-300"
               >
-                Découvrir nos biens
+                {t("about.closing_cta_biens")}
               </Link>
             </div>
           </FadeIn>

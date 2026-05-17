@@ -2,12 +2,14 @@ import { useParams, Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Phone, Mail, Loader2, Building2, ArrowLeft, ExternalLink } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { fetchAgentBySlug, fetchAgentProperties, mapSupabaseProperty } from "@/lib/data";
 import { PropertyCard } from "@/components/home/PropertyCard";
 
 export default function AgentProfilePage() {
+  const { t } = useTranslation();
   const params = useParams<{ slug: string }>();
 
   const { data: agent, isLoading: agentLoading } = useQuery({
@@ -49,9 +51,9 @@ export default function AgentProfilePage() {
         <Navbar />
         <main className="flex-grow pt-24 flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-3xl font-display font-bold text-foreground mb-4">Agent introuvable</h1>
+            <h1 className="text-3xl font-display font-bold text-foreground mb-4">{t("agents.agent_not_found")}</h1>
             <Link href="/agents" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-colors">
-              <ArrowLeft size={18} />Tous les agents
+              <ArrowLeft size={18} />{t("agents.all_agents")}
             </Link>
           </div>
         </main>
@@ -66,7 +68,7 @@ export default function AgentProfilePage() {
       <main className="flex-grow pt-24 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link href="/agents" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium mb-8 transition-colors">
-            <ArrowLeft size={18} />Tous les agents
+            <ArrowLeft size={18} />{t("agents.all_agents")}
           </Link>
 
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
@@ -83,7 +85,7 @@ export default function AgentProfilePage() {
               </div>
               <div className="flex-1">
                 <h1 className="text-3xl font-display font-bold text-foreground">{agent.prenom} {agent.nom}</h1>
-                <p className="text-primary font-semibold mt-1">Agent WeHome</p>
+                <p className="text-primary font-semibold mt-1">{t("agents.wehome_agent")}</p>
                 {agent.specialites && agent.specialites.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-3">
                     {agent.specialites.map((s) => (
@@ -107,7 +109,7 @@ export default function AgentProfilePage() {
                   )}
                   <a href={`mailto:${agent.email}`}
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border text-foreground/70 font-semibold text-sm hover:bg-secondary transition-colors">
-                    <Mail size={16} />Email
+                    <Mail size={16} />{t("agents.email")}
                   </a>
                 </div>
               </div>
@@ -117,13 +119,13 @@ export default function AgentProfilePage() {
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-display font-bold text-foreground">
-                Biens de {agent.prenom}
+                {t("agents.properties_of", { name: agent.prenom })}
                 <span className="text-lg font-medium text-muted-foreground ml-3">({properties.length})</span>
               </h2>
               {properties.length > 0 && (
                 <Link href={`/biens?agent=${agent.id}`}
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline">
-                  Voir tout <ExternalLink size={14} />
+                  {t("agents.see_all")} <ExternalLink size={14} />
                 </Link>
               )}
             </div>
@@ -132,7 +134,7 @@ export default function AgentProfilePage() {
             ) : properties.length === 0 ? (
               <div className="text-center py-16 bg-card border border-dashed border-border rounded-2xl">
                 <Building2 size={36} className="text-muted-foreground mx-auto mb-3" />
-                <p className="font-semibold text-foreground">Aucun bien disponible pour le moment.</p>
+                <p className="font-semibold text-foreground">{t("agents.no_properties_yet")}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

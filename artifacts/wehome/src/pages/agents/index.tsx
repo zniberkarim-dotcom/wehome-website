@@ -2,11 +2,13 @@ import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Users, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { fetchAgents } from "@/lib/data";
 
 export default function AgentsPage() {
+  const { t } = useTranslation();
   const { data: agents = [], isLoading } = useQuery({
     queryKey: ["agents"],
     queryFn: fetchAgents,
@@ -20,9 +22,9 @@ export default function AgentsPage() {
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
             <div className="flex items-center gap-3 mb-2">
               <Users size={28} className="text-primary" />
-              <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground">Notre équipe d'agents</h1>
+              <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground">{t("agents.page_title")}</h1>
             </div>
-            <p className="text-muted-foreground text-lg">Des professionnels de l'immobilier à votre service.</p>
+            <p className="text-muted-foreground text-lg">{t("agents.page_subtitle")}</p>
           </motion.div>
 
           {isLoading ? (
@@ -32,7 +34,7 @@ export default function AgentsPage() {
           ) : agents.length === 0 ? (
             <div className="text-center py-20">
               <Users size={40} className="text-muted-foreground mx-auto mb-4" />
-              <p className="text-lg font-semibold text-foreground">Aucun agent disponible pour le moment.</p>
+              <p className="text-lg font-semibold text-foreground">{t("agents.no_agents")}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -55,7 +57,7 @@ export default function AgentsPage() {
                         <h2 className="text-xl font-display font-bold text-foreground group-hover:text-primary transition-colors">
                           {agent.prenom} {agent.nom}
                         </h2>
-                        <p className="text-sm text-muted-foreground mt-1">Agent WeHome</p>
+                        <p className="text-sm text-muted-foreground mt-1">{t("agents.wehome_agent")}</p>
                         {agent.specialites && agent.specialites.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 mt-3">
                             {agent.specialites.slice(0, 3).map((s) => (
@@ -64,7 +66,7 @@ export default function AgentsPage() {
                           </div>
                         )}
                         <div className="mt-4 pt-4 border-t border-border/60">
-                          <span className="text-sm font-semibold text-primary group-hover:underline">Voir le profil →</span>
+                          <span className="text-sm font-semibold text-primary group-hover:underline">{t("agents.view_profile")}</span>
                         </div>
                       </div>
                     </div>

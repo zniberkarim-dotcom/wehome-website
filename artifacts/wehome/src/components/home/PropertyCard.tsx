@@ -1,5 +1,6 @@
 import { MapPin, Bed, Bath, Square, ArrowRight, Sofa, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
 import { formatMAD } from "@/lib/utils";
 import { useState, useCallback } from "react";
 import type { Property } from "@/lib/data";
@@ -12,6 +13,7 @@ interface PropertyCardProps {
 }
 
 export function PropertyCard({ property }: PropertyCardProps) {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [failedIndexes, setFailedIndexes] = useState<Set<number>>(new Set());
   const [, navigate] = useLocation();
@@ -86,11 +88,11 @@ export function PropertyCard({ property }: PropertyCardProps) {
           <span className={`px-3 py-1 text-white text-xs font-bold rounded-lg shadow-sm ${
             property.transaction === "Location" ? "bg-foreground" : "bg-primary"
           }`}>
-            {property.transaction}
+            {property.transaction === "Location" ? t("card.transaction_rent") : t("card.transaction_sale")}
           </span>
           {property.furnished && (
             <span className="px-3 py-1 bg-primary/80 text-white text-xs font-bold rounded-lg shadow-sm">
-              Meublé
+              {t("card.furnished")}
             </span>
           )}
         </div>
@@ -139,10 +141,10 @@ export function PropertyCard({ property }: PropertyCardProps) {
           <h3 className="text-2xl font-display font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
             {hasPrice ? (
               <>
-                {formatMAD(property.price)}{property.isRental ? <span className="text-base font-medium text-muted-foreground">/mois</span> : ""}
+                {formatMAD(property.price)}{property.isRental ? <span className="text-base font-medium text-muted-foreground">{t("card.per_month")}</span> : ""}
               </>
             ) : (
-              <span className="text-lg">{property.priceLabel || "Prix sur demande"}</span>
+              <span className="text-lg">{property.priceLabel || t("card.price_on_request")}</span>
             )}
           </h3>
           {hasPrice && property.priceLabel && (
@@ -168,28 +170,28 @@ export function PropertyCard({ property }: PropertyCardProps) {
               <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
                 <Bed size={18} style={{ color: "#8B1A2E" }} />
                 <span className="text-xs font-bold text-foreground">{property.beds}</span>
-                <span className="text-[10px] text-muted-foreground">Ch.</span>
+                <span className="text-[10px] text-muted-foreground">{t("card.stat_bedrooms_short")}</span>
               </div>
             )}
             {showRooms && (
               <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
                 <Bed size={18} style={{ color: "#8B1A2E" }} />
                 <span className="text-xs font-bold text-foreground">{property.rooms}</span>
-                <span className="text-[10px] text-muted-foreground">Pces.</span>
+                <span className="text-[10px] text-muted-foreground">{t("card.stat_rooms_short")}</span>
               </div>
             )}
             {showSalons && (
               <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
                 <Sofa size={18} style={{ color: "#8B1A2E" }} />
                 <span className="text-xs font-bold text-foreground">{property.salons}</span>
-                <span className="text-[10px] text-muted-foreground">Sal.</span>
+                <span className="text-[10px] text-muted-foreground">{t("card.stat_salons_short")}</span>
               </div>
             )}
             {showBaths && (
               <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
                 <Bath size={18} style={{ color: "#8B1A2E" }} />
                 <span className="text-xs font-bold text-foreground">{property.baths}</span>
-                <span className="text-[10px] text-muted-foreground">SdB</span>
+                <span className="text-[10px] text-muted-foreground">{t("card.stat_baths_short")}</span>
               </div>
             )}
             <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
@@ -202,7 +204,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
 
         <div className="pt-4 mt-2">
           <Link href={`/bien/${property.id}`} className="w-full py-3 rounded-xl bg-secondary hover:bg-primary hover:text-white text-secondary-foreground font-semibold flex items-center justify-center gap-2 transition-all duration-300 group/btn">
-            Voir les détails
+            {t("card.see_details")}
             <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
           </Link>
         </div>

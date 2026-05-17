@@ -3,6 +3,7 @@ import { useSearch, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { SlidersHorizontal, X, ChevronLeft, ChevronRight, Search, User, LayoutList, Map } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PropertyCard } from "@/components/home/PropertyCard";
@@ -21,33 +22,40 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
-const SORT_OPTIONS = [
-  { value: "recent",    label: "Plus récent" },
-  { value: "prix_asc",  label: "Prix croissant" },
-  { value: "prix_desc", label: "Prix décroissant" },
-  { value: "surface",   label: "Surface" },
+const SORT_KEYS = [
+  { value: "recent",    labelKey: "biens.sort_recent" },
+  { value: "prix_asc",  labelKey: "biens.sort_price_asc" },
+  { value: "prix_desc", labelKey: "biens.sort_price_desc" },
+  { value: "surface",   labelKey: "biens.sort_surface" },
 ];
 
 const ROOM_COUNT_OPTIONS = [1, 2, 3, 4, 5] as const;
 const SDB_COUNT_OPTIONS = [1, 2, 3, 4] as const;
-const ETAT_OPTIONS = ["Neuf", "Bon état", "À rénover"] as const;
-const FEATURE_OPTIONS = [
-  "Cuisine équipée",
-  "Climatisation",
-  "Chauffage",
-  "Ascenseur",
-  "Concierge",
-  "Gardien",
-  "Sécurité 24/7",
-  "Balcon",
-  "Terrasse",
-  "Jardin",
-  "Piscine",
-  "Parking",
-  "Garage",
-  "Vue mer",
-  "Vue dégagée",
-] as const;
+
+/** Backend values (kept as-is in DB) paired with i18n keys for display.
+ *  Toggle state continues to use the FR backend value — only the label is translated. */
+const ETAT_OPTIONS: { value: string; labelKey: string }[] = [
+  { value: "Neuf",       labelKey: "biens.condition_new" },
+  { value: "Bon état",   labelKey: "biens.condition_good" },
+  { value: "À rénover",  labelKey: "biens.condition_renovate" },
+];
+const FEATURE_OPTIONS: { value: string; labelKey: string }[] = [
+  { value: "Cuisine équipée", labelKey: "biens.feature_kitchen" },
+  { value: "Climatisation",   labelKey: "biens.feature_ac" },
+  { value: "Chauffage",       labelKey: "biens.feature_heating" },
+  { value: "Ascenseur",       labelKey: "biens.feature_elevator" },
+  { value: "Concierge",       labelKey: "biens.feature_concierge" },
+  { value: "Gardien",         labelKey: "biens.feature_doorman" },
+  { value: "Sécurité 24/7",   labelKey: "biens.feature_security" },
+  { value: "Balcon",          labelKey: "biens.feature_balcony" },
+  { value: "Terrasse",        labelKey: "biens.feature_terrace" },
+  { value: "Jardin",          labelKey: "biens.feature_garden" },
+  { value: "Piscine",         labelKey: "biens.feature_pool" },
+  { value: "Parking",         labelKey: "biens.feature_parking" },
+  { value: "Garage",          labelKey: "biens.feature_garage" },
+  { value: "Vue mer",         labelKey: "biens.feature_sea_view" },
+  { value: "Vue dégagée",     labelKey: "biens.feature_clear_view" },
+];
 
 // ── Filter panel (desktop sidebar + mobile sheet) ─────────────────────────────
 
@@ -68,6 +76,7 @@ function FilterPanel({
   params: FilterParams;
   onUpdate: (next: FilterParams) => void;
 }) {
+  const { t } = useTranslation();
   function set(partial: Partial<FilterParams>) {
     onUpdate({ ...params, ...partial, page: undefined });
   }
@@ -88,15 +97,15 @@ function FilterPanel({
   return (
     <div className="space-y-6">
       {/* Transaction */}
-      <FilterGroup label="Transaction">
+      <FilterGroup label={t("biens.transaction")}>
         <div className="flex gap-2">
           {([
-            { label: "Tout",    value: undefined          },
-            { label: "Acheter", value: "Vente" as const   },
-            { label: "Louer",   value: "Location" as const},
+            { labelKey: "biens.transaction_all",  value: undefined          },
+            { labelKey: "biens.transaction_buy",  value: "Vente" as const   },
+            { labelKey: "biens.transaction_rent", value: "Location" as const},
           ] as const).map((opt) => (
             <button
-              key={opt.label}
+              key={opt.labelKey}
               onClick={() => set({ transaction: opt.value })}
               className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
                 params.transaction === opt.value
@@ -104,17 +113,17 @@ function FilterPanel({
                   : "bg-muted text-muted-foreground hover:bg-muted/80"
               }`}
             >
-              {opt.label}
+              {t(opt.labelKey)}
             </button>
           ))}
         </div>
       </FilterGroup>
 
       {/* Ville / Quartier */}
-      <FilterGroup label="Ville / Quartier">
+      <FilterGroup label={t("biens.city_quartier")}>
         <input
           type="text"
-          placeholder="Casablanca, Maarif…"
+          placeholder={t("biens.city_placeholder")}
           value={params.city ?? ""}
           onChange={(e) => set({ city: e.target.value || undefined })}
           className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
@@ -123,8 +132,8 @@ function FilterPanel({
 
       {/* Type de bien — multi-select */}
       <FilterGroup
-        label="Type de bien"
-        hint={params.types?.length ? `${params.types.length} sélectionné${params.types.length > 1 ? "s" : ""}` : "Plusieurs choix possibles"}
+        label={t("biens.property_type")}
+        hint={params.types?.length ? t("biens.selected", { count: params.types.length }) : t("biens.multiple_choices")}
       >
         <div className="flex flex-wrap gap-1.5">
           {PROPERTY_TYPES.map((t) => {
@@ -147,13 +156,13 @@ function FilterPanel({
       </FilterGroup>
 
       {/* Budget — typed min/max */}
-      <FilterGroup label="Budget (MAD)">
+      <FilterGroup label={t("biens.budget_mad")}>
         <div className="grid grid-cols-2 gap-2">
           <input
             type="number"
             inputMode="numeric"
             min={0}
-            placeholder="Min"
+            placeholder={t("biens.min")}
             value={params.prix_min ?? ""}
             onChange={(e) => set({ prix_min: e.target.value ? Number(e.target.value) : undefined })}
             className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
@@ -162,7 +171,7 @@ function FilterPanel({
             type="number"
             inputMode="numeric"
             min={0}
-            placeholder="Max"
+            placeholder={t("biens.max")}
             value={params.prix_max ?? ""}
             onChange={(e) => set({ prix_max: e.target.value ? Number(e.target.value) : undefined })}
             className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
@@ -171,13 +180,13 @@ function FilterPanel({
       </FilterGroup>
 
       {/* Surface min / max — typed */}
-      <FilterGroup label="Surface (m²)">
+      <FilterGroup label={t("biens.surface_m2")}>
         <div className="grid grid-cols-2 gap-2">
           <input
             type="number"
             inputMode="numeric"
             min={0}
-            placeholder="Min"
+            placeholder={t("biens.min")}
             value={params.surface_min ?? ""}
             onChange={(e) => set({ surface_min: e.target.value ? Number(e.target.value) : undefined })}
             className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
@@ -186,7 +195,7 @@ function FilterPanel({
             type="number"
             inputMode="numeric"
             min={0}
-            placeholder="Max"
+            placeholder={t("biens.max")}
             value={params.surface_max ?? ""}
             onChange={(e) => set({ surface_max: e.target.value ? Number(e.target.value) : undefined })}
             className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
@@ -195,7 +204,7 @@ function FilterPanel({
       </FilterGroup>
 
       {/* Chambres — multi-select */}
-      <FilterGroup label="Chambres" hint="Plusieurs choix possibles">
+      <FilterGroup label={t("biens.bedrooms")} hint={t("biens.multiple_choices")}>
         <div className="grid grid-cols-5 gap-1.5">
           {ROOM_COUNT_OPTIONS.map((n) => {
             const active = params.chambres?.includes(n) ?? false;
@@ -217,7 +226,7 @@ function FilterPanel({
       </FilterGroup>
 
       {/* Salles de bains — multi-select */}
-      <FilterGroup label="Salles de bains" hint="Plusieurs choix possibles">
+      <FilterGroup label={t("biens.bathrooms")} hint={t("biens.multiple_choices")}>
         <div className="grid grid-cols-4 gap-1.5">
           {SDB_COUNT_OPTIONS.map((n) => {
             const active = params.sdb?.includes(n) ?? false;
@@ -239,21 +248,21 @@ function FilterPanel({
       </FilterGroup>
 
       {/* État du bien — multi-select */}
-      <FilterGroup label="État du bien">
+      <FilterGroup label={t("biens.condition")}>
         <div className="flex flex-wrap gap-1.5">
           {ETAT_OPTIONS.map((s) => {
-            const active = params.etat?.includes(s) ?? false;
+            const active = params.etat?.includes(s.value) ?? false;
             return (
               <button
-                key={s}
-                onClick={() => set({ etat: toggleInArray(params.etat, s) })}
+                key={s.value}
+                onClick={() => set({ etat: toggleInArray(params.etat, s.value) })}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
                   active
                     ? "bg-primary text-white border-primary"
                     : "bg-muted/50 text-muted-foreground border-border hover:bg-muted/80"
                 }`}
               >
-                {s}
+                {t(s.labelKey)}
               </button>
             );
           })}
@@ -262,23 +271,23 @@ function FilterPanel({
 
       {/* Équipements — multi-select */}
       <FilterGroup
-        label="Équipements"
-        hint={params.features?.length ? `${params.features.length} sélectionné${params.features.length > 1 ? "s" : ""}` : "Plusieurs choix possibles"}
+        label={t("biens.features")}
+        hint={params.features?.length ? t("biens.selected", { count: params.features.length }) : t("biens.multiple_choices")}
       >
         <div className="flex flex-wrap gap-1.5">
           {FEATURE_OPTIONS.map((f) => {
-            const active = params.features?.includes(f) ?? false;
+            const active = params.features?.includes(f.value) ?? false;
             return (
               <button
-                key={f}
-                onClick={() => set({ features: toggleInArray(params.features, f) })}
+                key={f.value}
+                onClick={() => set({ features: toggleInArray(params.features, f.value) })}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
                   active
                     ? "bg-primary text-white border-primary"
                     : "bg-muted/50 text-muted-foreground border-border hover:bg-muted/80"
                 }`}
               >
-                {f}
+                {t(f.labelKey)}
               </button>
             );
           })}
@@ -287,7 +296,7 @@ function FilterPanel({
 
       {/* Meublé */}
       <div className="flex items-center justify-between">
-        <Label className="text-sm font-medium cursor-pointer">Meublé uniquement</Label>
+        <Label className="text-sm font-medium cursor-pointer">{t("biens.furnished_only")}</Label>
         <Switch
           checked={!!params.is_furnished}
           onCheckedChange={(checked) => set({ is_furnished: checked || undefined })}
@@ -301,7 +310,7 @@ function FilterPanel({
           className="w-full py-2.5 rounded-xl border border-border text-sm text-muted-foreground hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
         >
           <X size={14} />
-          Réinitialiser les filtres
+          {t("biens.reset_filters")}
         </button>
       )}
     </div>
@@ -398,6 +407,7 @@ function Pagination({
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function BiensPage() {
+  const { t } = useTranslation();
   const search = useSearch();
   const [, navigate] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -454,7 +464,7 @@ export default function BiensPage() {
                 <SheetTrigger asChild>
                   <button className="lg:hidden flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:border-primary transition-colors">
                     <SlidersHorizontal size={16} />
-                    Filtres
+                    {t("biens.filters_button")}
                     {activeFilterCount > 0 && (
                       <span className="w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center">
                         {activeFilterCount}
@@ -463,7 +473,7 @@ export default function BiensPage() {
                   </button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-80 overflow-y-auto">
-                  <p className="font-display font-bold text-lg mb-6">Filtres</p>
+                  <p className="font-display font-bold text-lg mb-6">{t("biens.filters_title")}</p>
                   <FilterPanel
                     params={params}
                     onUpdate={(next) => { updateParams(next); setMobileOpen(false); }}
@@ -474,11 +484,11 @@ export default function BiensPage() {
               <div className="flex items-center gap-2 flex-wrap">
                 <p className="text-sm font-semibold text-foreground">
                   {isLoading ? (
-                    <span className="text-muted-foreground">Recherche…</span>
+                    <span className="text-muted-foreground">{t("biens.searching")}</span>
                   ) : (
                     <>
                       <span className="text-primary font-bold">{total}</span>{" "}
-                      {total === 1 ? "bien trouvé" : "biens trouvés"}
+                      {t("biens.found", { count: total })}
                       {params.city && (
                         <span className="text-muted-foreground font-normal"> · {params.city}</span>
                       )}
@@ -504,7 +514,7 @@ export default function BiensPage() {
               <div className="hidden sm:flex items-center border border-border rounded-lg overflow-hidden h-9">
                 <button
                   onClick={() => setViewMode("list")}
-                  title="Vue liste"
+                  title={t("biens.list_view")}
                   className={`w-9 h-9 flex items-center justify-center transition-colors ${
                     viewMode === "list"
                       ? "bg-primary text-white"
@@ -515,7 +525,7 @@ export default function BiensPage() {
                 </button>
                 <button
                   onClick={() => setViewMode("map")}
-                  title="Vue carte"
+                  title={t("biens.map_view")}
                   className={`w-9 h-9 flex items-center justify-center transition-colors border-l border-border ${
                     viewMode === "map"
                       ? "bg-primary text-white"
@@ -533,8 +543,8 @@ export default function BiensPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {SORT_OPTIONS.map((o) => (
-                      <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    {SORT_KEYS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>{t(o.labelKey)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -548,7 +558,7 @@ export default function BiensPage() {
             {/* Desktop sidebar */}
             <aside className="hidden lg:block w-64 shrink-0">
               <div className="sticky top-36 bg-card border border-border rounded-2xl p-5 shadow-sm">
-                <p className="font-display font-bold text-base mb-5">Filtres</p>
+                <p className="font-display font-bold text-base mb-5">{t("biens.filters_title")}</p>
                 <FilterPanel params={params} onUpdate={updateParams} />
               </div>
             </aside>
@@ -576,8 +586,8 @@ export default function BiensPage() {
                       <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
                         <Search size={28} className="text-muted-foreground" />
                       </div>
-                      <h2 className="text-xl font-display font-bold text-foreground mb-2">Aucun résultat</h2>
-                      <p className="text-muted-foreground">Essayez d'élargir vos critères de recherche.</p>
+                      <h2 className="text-xl font-display font-bold text-foreground mb-2">{t("biens.no_results")}</h2>
+                      <p className="text-muted-foreground">{t("biens.broaden_search")}</p>
                     </motion.div>
                   )}
                 </motion.div>
@@ -598,7 +608,7 @@ export default function BiensPage() {
                     </div>
                   ) : isError ? (
                     <div className="text-center py-24">
-                      <p className="text-muted-foreground">Erreur lors du chargement. Veuillez réessayer.</p>
+                      <p className="text-muted-foreground">{t("biens.load_error")}</p>
                     </div>
                   ) : properties.length === 0 ? (
                     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center py-24">
@@ -606,19 +616,19 @@ export default function BiensPage() {
                         <Search size={28} className="text-muted-foreground" />
                       </div>
                       <h2 className="text-xl font-display font-bold text-foreground mb-2">
-                        {activeFilterCount > 0 ? "Aucun résultat" : "Aucun bien disponible"}
+                        {activeFilterCount > 0 ? t("biens.no_results") : t("biens.no_properties")}
                       </h2>
                       <p className="text-muted-foreground max-w-sm mx-auto">
                         {activeFilterCount > 0
-                          ? "Essayez d'élargir vos critères de recherche."
-                          : "Revenez bientôt ou contactez-nous directement."}
+                          ? t("biens.broaden_search")
+                          : t("biens.come_back_soon")}
                       </p>
                       {activeFilterCount > 0 && (
                         <button
                           onClick={() => updateParams({ sort: params.sort })}
                           className="mt-6 px-6 py-2.5 rounded-full border border-border text-sm font-medium hover:border-primary hover:text-primary transition-colors"
                         >
-                          Réinitialiser les filtres
+                          {t("biens.reset_filters")}
                         </button>
                       )}
                     </motion.div>
