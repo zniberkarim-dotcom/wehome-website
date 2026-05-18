@@ -1,80 +1,20 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { BarChart3, Globe, Coins, Check, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { submitNetworkApplication } from "@/lib/data";
 
+// Zone names (Maarif, Racine, …) stay in Latin script across all locales
 const ZONES = ["Maarif", "Racine", "Ain Diab", "CIL", "Hay Riad", "Autre"];
-const PROFILE_TYPES = [
-  "Agent indépendant",
-  "Samsar",
-  "Conseiller patrimonial",
-  "Autre",
-];
 
-const ADVANTAGES = [
-  {
-    icon: <BarChart3 size={28} />,
-    title: "CRM Professionnel Gratuit",
-    desc: "Gérez vos leads, suivez vos transactions et organisez votre pipeline depuis un seul outil.",
-  },
-  {
-    icon: <Globe size={28} />,
-    title: "Votre Fiche Agent sur wehome.ma",
-    desc: "Votre profil professionnel visible par des milliers d'acheteurs et vendeurs chaque mois.",
-  },
-  {
-    icon: <Coins size={28} />,
-    title: "Leads & Commissions",
-    desc: "Recevez des leads qualifiés correspondant à vos zones et gagnez des commissions sur chaque transaction.",
-  },
-];
-
-const TIERS = [
-  {
-    name: "Network",
-    active: false,
-    condition: null,
-    perks: [
-      "CRM WeHome gratuit",
-      "Fiche agent sur wehome.ma",
-      "Accès au portefeuille WeHome",
-      "Leads entrants partagés",
-      "Commission 30%",
-    ],
-  },
-  {
-    name: "Network Pro",
-    active: true,
-    condition: "3+ transactions / an",
-    perks: [
-      "Tout ce qu'inclut Network",
-      "Leads qualifiés prioritaires",
-      "Co-marketing réseaux sociaux WeHome",
-      "Accompagnement transactions",
-      "Commission 40%",
-    ],
-  },
-  {
-    name: "Network Elite",
-    active: false,
-    condition: "6+ transactions / an",
-    perks: [
-      "Tout ce qu'inclut Network Pro",
-      "Leads exclusifs sur vos zones",
-      "Branding co-signé WeHome",
-      "Accès deals off-market",
-      "Support dédié WeHome",
-      "Commission 50%",
-    ],
-  },
-];
-
-const STATS = [
-  { value: "+50", label: "Agents partenaires" },
-  { value: "+200", label: "Biens en portefeuille" },
-  { value: "3 villes", label: "Casablanca · Rabat · Marrakech" },
+// Profile types: backend stores the FR value, only the labelKey is translated
+const PROFILE_TYPES: { value: string; labelKey: string }[] = [
+  { value: "Agent indépendant",      labelKey: "network.profile_independent" },
+  { value: "Samsar",                 labelKey: "network.profile_samsar" },
+  { value: "Conseiller patrimonial", labelKey: "network.profile_advisor" },
+  { value: "Autre",                  labelKey: "network.profile_other" },
 ];
 
 interface FormState {
@@ -100,7 +40,27 @@ const emptyForm: FormState = {
 };
 
 export default function NetworkPage() {
+  const { t } = useTranslation();
   const formRef = useRef<HTMLElement>(null);
+
+  // Build derived arrays from i18n at render time so they update with language changes.
+  const ADVANTAGES = [
+    { icon: <BarChart3 size={28} />, title: t("network.adv1_title"), desc: t("network.adv1_desc") },
+    { icon: <Globe size={28} />,     title: t("network.adv2_title"), desc: t("network.adv2_desc") },
+    { icon: <Coins size={28} />,     title: t("network.adv3_title"), desc: t("network.adv3_desc") },
+  ];
+
+  const TIERS = [
+    { name: t("network.tier1_name"), active: false, condition: null,                       perks: t("network.tier1_perks", { returnObjects: true }) as string[] },
+    { name: t("network.tier2_name"), active: true,  condition: t("network.tier2_cond"),    perks: t("network.tier2_perks", { returnObjects: true }) as string[] },
+    { name: t("network.tier3_name"), active: false, condition: t("network.tier3_cond"),    perks: t("network.tier3_perks", { returnObjects: true }) as string[] },
+  ];
+
+  const STATS = [
+    { value: "+50",  label: t("network.stat_agents") },
+    { value: "+200", label: t("network.stat_biens") },
+    { value: t("network.stat_villes_value"), label: t("network.stat_villes_label") },
+  ];
   const [form, setForm] = useState<FormState>(emptyForm);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -123,7 +83,7 @@ export default function NetworkPage() {
     e.preventDefault();
     setError(null);
     if (!form.first_name || !form.last_name || !form.phone || !form.profile_type || !form.property_count) {
-      setError("Veuillez remplir tous les champs obligatoires.");
+      setError(t("network.err_required"));
       return;
     }
     setLoading(true);
@@ -141,7 +101,7 @@ export default function NetworkPage() {
       setSuccess(true);
       setForm(emptyForm);
     } catch {
-      setError("Une erreur est survenue. Veuillez réessayer ou nous contacter directement.");
+      setError(t("network.err_generic"));
     } finally {
       setLoading(false);
     }
@@ -196,24 +156,23 @@ export default function NetworkPage() {
               }}
             >
               <span style={{ color: "#C0392B", fontSize: "7px", verticalAlign: "middle", marginRight: "8px" }}>◆</span>
-              Programme Partenaires
+              {t("network.badge")}
             </span>
 
             <h1
               className="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.1] tracking-tight mb-6"
               style={{ color: "#FFFFFF", textShadow: "0 2px 16px rgba(0,0,0,0.5)" }}
             >
-              Rejoignez<br />
-              <span style={{ color: "#C0392B" }}>WeHome</span> Network
+              {t("network.hero_title_line1")}<br />
+              <span style={{ color: "#C0392B" }}>WeHome</span> {t("network.hero_title_line2")}
             </h1>
 
             <p
               className="text-lg md:text-xl max-w-2xl mx-auto font-medium mb-10"
               style={{ color: "rgba(255,255,255,0.8)", textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}
             >
-              Le premier réseau d'agents et conseillers immobiliers de Casablanca.
-              Accédez à des leads qualifiés, un CRM professionnel et une visibilité digitale —
-              <span style={{ color: "rgba(255,255,255,0.95)", fontWeight: 600 }}> gratuitement.</span>
+              {t("network.hero_subtitle_part1")}
+              <span style={{ color: "rgba(255,255,255,0.95)", fontWeight: 600 }}> {t("network.hero_subtitle_part2")}</span>
             </p>
 
             <button
@@ -224,7 +183,7 @@ export default function NetworkPage() {
                 boxShadow: "0 8px 32px rgba(139,26,46,0.4)",
               }}
             >
-              Rejoindre le Network
+              {t("network.hero_cta")}
             </button>
           </motion.div>
         </div>
@@ -241,10 +200,10 @@ export default function NetworkPage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
-              Ce que vous obtenez
+              {t("network.advantages_title")}
             </h2>
             <p className="text-white/50 text-lg max-w-xl mx-auto">
-              Tout ce qu'il faut pour développer votre activité immobilière à Casablanca.
+              {t("network.advantages_subtitle")}
             </p>
           </motion.div>
 
@@ -287,10 +246,10 @@ export default function NetworkPage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
-              Trois niveaux de partenariat
+              {t("network.tiers_title")}
             </h2>
             <p className="text-white/50 text-lg max-w-xl mx-auto">
-              Commencez gratuitement. Évoluez au rythme de vos transactions.
+              {t("network.tiers_subtitle")}
             </p>
           </motion.div>
 
@@ -321,7 +280,7 @@ export default function NetworkPage() {
                     className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold text-white"
                     style={{ background: "#8B1A2E" }}
                   >
-                    Recommandé
+                    {t("network.tier_recommended")}
                   </span>
                 )}
                 <div>
@@ -333,7 +292,7 @@ export default function NetworkPage() {
                   </h3>
                   {tier.condition && (
                     <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
-                      Condition : {tier.condition}
+                      {t("network.tier_condition", { cond: tier.condition })}
                     </p>
                   )}
                 </div>
@@ -368,7 +327,7 @@ export default function NetworkPage() {
                         }
                   }
                 >
-                  Rejoindre
+                  {t("network.tier_join")}
                 </button>
               </motion.div>
             ))}
@@ -412,10 +371,10 @@ export default function NetworkPage() {
           >
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
-                Rejoindre le réseau
+                {t("network.form_title")}
               </h2>
               <p className="text-white/50">
-                Notre équipe valide chaque demande sous 48h.
+                {t("network.form_subtitle")}
               </p>
             </div>
 
@@ -431,10 +390,10 @@ export default function NetworkPage() {
                   <Check size={32} style={{ color: "#C0392B" }} />
                 </div>
                 <h3 className="text-2xl font-display font-bold text-white mb-3">
-                  Demande reçue !
+                  {t("network.success_title")}
                 </h3>
                 <p className="text-white/60 leading-relaxed">
-                  Votre demande a bien été reçue. Notre équipe vous contacte sous 48h pour valider votre accès.
+                  {t("network.success_body")}
                 </p>
               </div>
             ) : (
@@ -447,13 +406,13 @@ export default function NetworkPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-2">
-                      Prénom <span style={{ color: "#C0392B" }}>*</span>
+                      {t("network.f_first_name")} <span style={{ color: "#C0392B" }}>*</span>
                     </label>
                     <input
                       type="text"
                       value={form.first_name}
                       onChange={(e) => setField("first_name", e.target.value)}
-                      placeholder="Youssef"
+                      placeholder={t("network.f_first_name_placeholder")}
                       className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder:text-white/20 outline-none transition-all duration-200 focus:ring-1"
                       style={{
                         background: "rgba(255,255,255,0.06)",
@@ -465,13 +424,13 @@ export default function NetworkPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-2">
-                      Nom <span style={{ color: "#C0392B" }}>*</span>
+                      {t("network.f_last_name")} <span style={{ color: "#C0392B" }}>*</span>
                     </label>
                     <input
                       type="text"
                       value={form.last_name}
                       onChange={(e) => setField("last_name", e.target.value)}
-                      placeholder="Benali"
+                      placeholder={t("network.f_last_name_placeholder")}
                       className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder:text-white/20 outline-none transition-all duration-200"
                       style={{
                         background: "rgba(255,255,255,0.06)",
@@ -487,13 +446,13 @@ export default function NetworkPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-2">
-                      Téléphone (WhatsApp) <span style={{ color: "#C0392B" }}>*</span>
+                      {t("network.f_phone_wa")} <span style={{ color: "#C0392B" }}>*</span>
                     </label>
                     <input
                       type="tel"
                       value={form.phone}
                       onChange={(e) => setField("phone", e.target.value)}
-                      placeholder="+212 6XX XXX XXX"
+                      placeholder={t("network.f_phone_placeholder")}
                       className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder:text-white/20 outline-none transition-all duration-200"
                       style={{
                         background: "rgba(255,255,255,0.06)",
@@ -505,13 +464,13 @@ export default function NetworkPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-2">
-                      Email
+                      {t("network.f_email")}
                     </label>
                     <input
                       type="email"
                       value={form.email}
                       onChange={(e) => setField("email", e.target.value)}
-                      placeholder="vous@exemple.com"
+                      placeholder={t("network.f_email_placeholder")}
                       className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder:text-white/20 outline-none transition-all duration-200"
                       style={{
                         background: "rgba(255,255,255,0.06)",
@@ -526,7 +485,7 @@ export default function NetworkPage() {
                 {/* Profil */}
                 <div>
                   <label className="block text-sm font-medium text-white/70 mb-2">
-                    Type de profil <span style={{ color: "#C0392B" }}>*</span>
+                    {t("network.f_profile")} <span style={{ color: "#C0392B" }}>*</span>
                   </label>
                   <select
                     value={form.profile_type}
@@ -540,9 +499,9 @@ export default function NetworkPage() {
                     onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(139,26,46,0.6)")}
                     onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
                   >
-                    <option value="" style={{ background: "#1a1a1a" }}>Sélectionner...</option>
-                    {PROFILE_TYPES.map((t) => (
-                      <option key={t} value={t} style={{ background: "#1a1a1a" }}>{t}</option>
+                    <option value="" style={{ background: "#1a1a1a" }}>{t("network.f_select")}</option>
+                    {PROFILE_TYPES.map((p) => (
+                      <option key={p.value} value={p.value} style={{ background: "#1a1a1a" }}>{t(p.labelKey)}</option>
                     ))}
                   </select>
                 </div>
@@ -550,7 +509,7 @@ export default function NetworkPage() {
                 {/* Zones */}
                 <div>
                   <label className="block text-sm font-medium text-white/70 mb-3">
-                    Zones de travail (Casablanca)
+                    {t("network.f_zones")}
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {ZONES.map((zone) => {
@@ -581,7 +540,7 @@ export default function NetworkPage() {
                 {/* Nombre de biens */}
                 <div>
                   <label className="block text-sm font-medium text-white/70 mb-2">
-                    Nombre de biens disponibles actuellement <span style={{ color: "#C0392B" }}>*</span>
+                    {t("network.f_property_count")} <span style={{ color: "#C0392B" }}>*</span>
                   </label>
                   <select
                     value={form.property_count}
@@ -595,23 +554,23 @@ export default function NetworkPage() {
                     onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(139,26,46,0.6)")}
                     onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
                   >
-                    <option value="" style={{ background: "#1a1a1a" }}>Sélectionner...</option>
-                    <option value="1-3" style={{ background: "#1a1a1a" }}>1 – 3 biens</option>
-                    <option value="4-10" style={{ background: "#1a1a1a" }}>4 – 10 biens</option>
-                    <option value="10+" style={{ background: "#1a1a1a" }}>10+ biens</option>
+                    <option value="" style={{ background: "#1a1a1a" }}>{t("network.f_select")}</option>
+                    <option value="1-3"  style={{ background: "#1a1a1a" }}>{t("network.property_1_3")}</option>
+                    <option value="4-10" style={{ background: "#1a1a1a" }}>{t("network.property_4_10")}</option>
+                    <option value="10+"  style={{ background: "#1a1a1a" }}>{t("network.property_10p")}</option>
                   </select>
                 </div>
 
                 {/* Message */}
                 <div>
                   <label className="block text-sm font-medium text-white/70 mb-2">
-                    Message (optionnel)
+                    {t("network.f_message")}
                   </label>
                   <textarea
                     rows={4}
                     value={form.message}
                     onChange={(e) => setField("message", e.target.value)}
-                    placeholder="Parlez-nous de votre activité, vos spécialités..."
+                    placeholder={t("network.f_message_placeholder")}
                     className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder:text-white/20 outline-none resize-none transition-all duration-200"
                     style={{
                       background: "rgba(255,255,255,0.06)",
@@ -640,10 +599,10 @@ export default function NetworkPage() {
                   {loading ? (
                     <>
                       <Loader2 size={18} className="animate-spin" />
-                      Envoi en cours...
+                      {t("network.submitting")}
                     </>
                   ) : (
-                    "Rejoindre WeHome Network"
+                    t("network.submit")
                   )}
                 </button>
               </form>

@@ -1,9 +1,12 @@
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { LegalPage, P, UL, H3, type LegalSection } from "@/components/legal/LegalPage";
 
-const SECTIONS: LegalSection[] = [
+function getSections(t: (key: string) => string): LegalSection[] {
+  return [
   {
     id: "definition",
-    title: "Qu'est-ce qu'un cookie ?",
+    title: t("legal.cookies_s1_title"),
     content: (
       <>
         <P>
@@ -17,7 +20,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "categories",
-    title: "Catégories de cookies utilisées",
+    title: t("legal.cookies_s2_title"),
     content: (
       <>
         <H3>1. Cookies strictement nécessaires</H3>
@@ -58,7 +61,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "duree",
-    title: "Durée de conservation",
+    title: t("legal.cookies_s3_title"),
     content: (
       <>
         <P>
@@ -74,7 +77,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "gestion",
-    title: "Comment gérer les cookies ?",
+    title: t("legal.cookies_s4_title"),
     content: (
       <>
         <P>Vous pouvez à tout moment configurer votre navigateur pour&nbsp;:</P>
@@ -109,7 +112,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "consentement",
-    title: "Votre consentement",
+    title: t("legal.cookies_s5_title"),
     content: (
       <>
         <P>
@@ -123,7 +126,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "contact",
-    title: "Contact",
+    title: t("legal.cookies_s6_title"),
     content: (
       <>
         <P>
@@ -137,15 +140,18 @@ const SECTIONS: LegalSection[] = [
       </>
     ),
   },
-];
+  ];
+}
 
 export default function CookiesPage() {
+  const { t, i18n } = useTranslation();
+  const sections = useMemo(() => getSections(t), [i18n.language, t]);
   return (
     <LegalPage
-      title="Politique des cookies"
-      subtitle="Cette politique explique l'utilisation des cookies et technologies similaires sur wehome.ma, et la manière dont vous pouvez les gérer."
+      title={t("legal.cookies_title")}
+      subtitle={t("legal.cookies_subtitle")}
       lastUpdated="13 mai 2026"
-      sections={SECTIONS}
+      sections={sections}
     />
   );
 }

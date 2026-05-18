@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import {
   Globe, Tag, ShieldCheck, ChevronDown, CheckCircle2, Loader2, ArrowRight,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { submitPartenairesWaitlist } from "@/lib/data";
@@ -37,27 +38,16 @@ function Overline({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ─── FAQ data ─────────────────────────────────────────────────────────────────
+// ─── FAQ data — Q/A keys translated via i18next ─────────────────────────────
 
 const FAQ = [
-  {
-    q: "Est-ce que je garde mes commissions ?",
-    a: "Oui. WeHome ne prend pas de commission sur vos transactions. Le modèle partenaire est basé sur un abonnement mensuel — les détails seront communiqués aux membres de la liste en priorité.",
-  },
-  {
-    q: "Est-ce que mes concurrents voient mes listings ?",
-    a: "Vos listings sont visibles aux acheteurs sur la plateforme. Les autres agences voient les biens disponibles mais pas vos contacts clients. C'est exactement le modèle MLS — la transparence au service du marché, pas de la concurrence.",
-  },
-  {
-    q: "Dans quelles villes le réseau sera-t-il disponible ?",
-    a: "Le lancement commence à Casablanca, Rabat, Marrakech et Tanger. L'expansion nationale suit selon la demande des partenaires.",
-  },
-  {
-    q: "Quand le réseau sera-t-il lancé ?",
-    a: "Nous ciblons un lancement réseau dans les 12 prochains mois. Les agences sur liste d'attente seront les premières informées et bénéficieront de conditions préférentielles.",
-  },
+  { qKey: "partenaires.faq_1_q", aKey: "partenaires.faq_1_a" },
+  { qKey: "partenaires.faq_2_q", aKey: "partenaires.faq_2_a" },
+  { qKey: "partenaires.faq_3_q", aKey: "partenaires.faq_3_a" },
+  { qKey: "partenaires.faq_4_q", aKey: "partenaires.faq_4_a" },
 ];
 
+// City names stay in Latin script across all locales (only the placeholder is translated).
 const VILLES = [
   "Casablanca", "Rabat", "Marrakech", "Tanger", "Agadir",
   "Fès", "Meknès", "Oujda", "Kénitra", "Témara", "Autre",
@@ -66,6 +56,7 @@ const VILLES = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function PartenairesPage() {
+  const { t } = useTranslation();
   const formRef = useRef<HTMLDivElement>(null);
   const scrollToForm = () =>
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -88,11 +79,11 @@ export default function PartenairesPage() {
 
   const validate = () => {
     const e: Record<string, string> = {};
-    if (!nom.trim()) e.nom = "Entrez votre nom";
-    if (!nomAgence.trim()) e.nomAgence = "Entrez le nom de votre agence";
-    if (!ville) e.ville = "Sélectionnez votre ville";
-    if (!telephone.trim()) e.telephone = "Entrez votre téléphone";
-    if (!email.trim() || !email.includes("@")) e.email = "Entrez un email valide";
+    if (!nom.trim()) e.nom = t("partenaires.err_name");
+    if (!nomAgence.trim()) e.nomAgence = t("partenaires.err_agency");
+    if (!ville) e.ville = t("partenaires.err_city");
+    if (!telephone.trim()) e.telephone = t("partenaires.err_phone");
+    if (!email.trim() || !email.includes("@")) e.email = t("partenaires.err_email");
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -113,7 +104,7 @@ export default function PartenairesPage() {
       setSuccess(true);
       setTimeout(() => formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
     } catch {
-      setSubmitError("Une erreur est survenue. Veuillez réessayer ou nous contacter directement.");
+      setSubmitError(t("partenaires.err_generic"));
     } finally {
       setLoading(false);
     }
@@ -146,7 +137,7 @@ export default function PartenairesPage() {
             style={{ background: "rgba(139,26,46,0.25)", border: "1px solid rgba(139,26,46,0.5)" }}
           >
             <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#C0392B" }} />
-            <span className="text-xs font-bold tracking-widest text-white/80 uppercase">Bientôt disponible</span>
+            <span className="text-xs font-bold tracking-widest text-white/80 uppercase">{t("partenaires.hero_badge")}</span>
           </motion.div>
 
           <motion.h1
@@ -156,7 +147,7 @@ export default function PartenairesPage() {
             className="font-display font-bold text-white leading-[1.08] tracking-tight mb-7"
             style={{ fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)", textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}
           >
-            Le premier réseau<br className="hidden sm:block" /> immobilier partagé du Maroc.
+            {t("partenaires.hero_title_line1")}<br className="hidden sm:block" /> {t("partenaires.hero_title_line2")}
           </motion.h1>
 
           <motion.p
@@ -166,9 +157,7 @@ export default function PartenairesPage() {
             className="text-base md:text-lg font-light leading-relaxed mb-10 max-w-2xl mx-auto"
             style={{ color: "rgba(255,255,255,0.70)" }}
           >
-            WeHome invite les meilleures agences du pays à rejoindre une plateforme commune —
-            des listings partagés, des standards communs, une visibilité nationale.
-            Le MLS marocain se construit maintenant.
+            {t("partenaires.hero_subtitle")}
           </motion.p>
 
           <motion.button
@@ -179,7 +168,7 @@ export default function PartenairesPage() {
             className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl font-bold text-base text-white hover:-translate-y-1 transition-all duration-300"
             style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 8px 32px rgba(139,26,46,0.5)" }}
           >
-            Rejoindre la liste d'attente
+            {t("partenaires.hero_cta")}
             <ArrowRight size={18} />
           </motion.button>
         </div>
@@ -191,33 +180,18 @@ export default function PartenairesPage() {
       <section className="bg-white py-24 md:py-32">
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-8">
           <FadeIn className="max-w-2xl mb-16">
-            <Overline>Ce que vous obtenez</Overline>
+            <Overline>{t("partenaires.what_overline")}</Overline>
             <h2 className="font-display font-bold text-foreground leading-tight"
               style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}>
-              Rejoindre WeHome,<br />c'est rejoindre un standard.
+              {t("partenaires.what_title_line1")}<br />{t("partenaires.what_title_line2")}
             </h2>
           </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              {
-                icon: Globe,
-                title: "Visibilité nationale",
-                body: "Vos biens exposés à l'audience de WeHome dans tout le Maroc — acheteurs locaux, investisseurs nationaux, diaspora marocaine à l'étranger.",
-                delay: 0,
-              },
-              {
-                icon: Tag,
-                title: "Vos listings, votre marque",
-                body: "Vous gardez votre nom, votre logo, vos contacts. WeHome amplifie votre reach, pas votre identité. Votre marque reste la vôtre.",
-                delay: 0.1,
-              },
-              {
-                icon: ShieldCheck,
-                title: "Standards partagés",
-                body: "Des biens vérifiés, mandatés, photographiés. Un réseau qui protège la qualité — et donc la confiance des acheteurs dans toutes les agences membres.",
-                delay: 0.2,
-              },
+              { icon: Globe,       title: t("partenaires.what1_title"), body: t("partenaires.what1_body"), delay: 0 },
+              { icon: Tag,         title: t("partenaires.what2_title"), body: t("partenaires.what2_body"), delay: 0.1 },
+              { icon: ShieldCheck, title: t("partenaires.what3_title"), body: t("partenaires.what3_body"), delay: 0.2 },
             ].map(({ icon: Icon, title, body, delay }) => (
               <FadeIn key={title} delay={delay}>
                 <div className="flex flex-col gap-5 p-8 rounded-3xl border border-border/60 hover:border-primary/25 hover:shadow-xl transition-all duration-400 h-full">
@@ -241,12 +215,12 @@ export default function PartenairesPage() {
       <section className="py-20 md:py-28" style={{ background: "#f7f6f5" }} ref={formRef}>
         <div className="max-w-xl mx-auto px-4 sm:px-6">
           <FadeIn className="text-center mb-10">
-            <Overline>Liste d'attente</Overline>
+            <Overline>{t("partenaires.waitlist_overline")}</Overline>
             <h2 className="font-display font-bold text-foreground text-3xl md:text-4xl mb-3">
-              Réservez votre place.
+              {t("partenaires.waitlist_title")}
             </h2>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Les premières agences partenaires bénéficieront de conditions préférentielles<br className="hidden sm:block" /> et d'un accès prioritaire au lancement.
+              {t("partenaires.waitlist_subtitle")}
             </p>
           </FadeIn>
 
@@ -266,17 +240,16 @@ export default function PartenairesPage() {
                     </motion.div>
                   </div>
                   <h3 className="font-display font-bold text-foreground text-2xl mb-3">
-                    Merci {prenom}. Vous êtes sur la liste.
+                    {t("partenaires.success_title", { name: prenom })}
                   </h3>
                   <p className="text-muted-foreground leading-relaxed mb-7 text-sm max-w-sm mx-auto">
-                    Nous vous contacterons en priorité lors du lancement du réseau WeHome.
-                    Bienvenue dans l'aventure.
+                    {t("partenaires.success_body")}
                   </p>
                   <Link
                     href="/"
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-foreground/70 border border-border/50 hover:border-border hover:text-foreground transition-colors"
                   >
-                    Retour à l'accueil
+                    {t("partenaires.back_home")}
                   </Link>
                 </motion.div>
               ) : (
@@ -290,13 +263,13 @@ export default function PartenairesPage() {
                   {/* Nom */}
                   <div>
                     <label className="block text-xs font-bold tracking-wider uppercase text-foreground/60 mb-2">
-                      Nom et prénom <span style={{ color: "var(--primary)" }}>*</span>
+                      {t("partenaires.f_name")} <span style={{ color: "var(--primary)" }}>*</span>
                     </label>
                     <input
                       type="text"
                       value={nom}
                       onChange={(e) => setNom(e.target.value)}
-                      placeholder="Karim Zniber"
+                      placeholder={t("partenaires.f_name_placeholder")}
                       className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                     />
                     {errors.nom && <p className="text-xs text-destructive mt-1.5">{errors.nom}</p>}
@@ -305,13 +278,13 @@ export default function PartenairesPage() {
                   {/* Nom agence */}
                   <div>
                     <label className="block text-xs font-bold tracking-wider uppercase text-foreground/60 mb-2">
-                      Nom de l'agence <span style={{ color: "var(--primary)" }}>*</span>
+                      {t("partenaires.f_agency")} <span style={{ color: "var(--primary)" }}>*</span>
                     </label>
                     <input
                       type="text"
                       value={nomAgence}
                       onChange={(e) => setNomAgence(e.target.value)}
-                      placeholder="Immo Premium Casablanca"
+                      placeholder={t("partenaires.f_agency_placeholder")}
                       className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                     />
                     {errors.nomAgence && <p className="text-xs text-destructive mt-1.5">{errors.nomAgence}</p>}
@@ -320,7 +293,7 @@ export default function PartenairesPage() {
                   {/* Ville */}
                   <div>
                     <label className="block text-xs font-bold tracking-wider uppercase text-foreground/60 mb-2">
-                      Ville <span style={{ color: "var(--primary)" }}>*</span>
+                      {t("partenaires.f_city")} <span style={{ color: "var(--primary)" }}>*</span>
                     </label>
                     <div className="relative">
                       <select
@@ -328,7 +301,7 @@ export default function PartenairesPage() {
                         onChange={(e) => setVille(e.target.value)}
                         className="w-full px-4 py-3.5 rounded-xl border border-border/60 bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium appearance-none"
                       >
-                        <option value="">Sélectionner une ville...</option>
+                        <option value="">{t("partenaires.f_city_placeholder")}</option>
                         {VILLES.map((v) => <option key={v} value={v}>{v}</option>)}
                       </select>
                       <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
@@ -340,26 +313,26 @@ export default function PartenairesPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-bold tracking-wider uppercase text-foreground/60 mb-2">
-                        Téléphone <span style={{ color: "var(--primary)" }}>*</span>
+                        {t("partenaires.f_phone")} <span style={{ color: "var(--primary)" }}>*</span>
                       </label>
                       <input
                         type="tel"
                         value={telephone}
                         onChange={(e) => setTelephone(e.target.value)}
-                        placeholder="+212 6XX XXX XXX"
+                        placeholder={t("partenaires.f_phone_placeholder")}
                         className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                       />
                       {errors.telephone && <p className="text-xs text-destructive mt-1.5">{errors.telephone}</p>}
                     </div>
                     <div>
                       <label className="block text-xs font-bold tracking-wider uppercase text-foreground/60 mb-2">
-                        Email professionnel <span style={{ color: "var(--primary)" }}>*</span>
+                        {t("partenaires.f_email")} <span style={{ color: "var(--primary)" }}>*</span>
                       </label>
                       <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="contact@monagence.ma"
+                        placeholder={t("partenaires.f_email_placeholder")}
                         className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                       />
                       {errors.email && <p className="text-xs text-destructive mt-1.5">{errors.email}</p>}
@@ -377,11 +350,11 @@ export default function PartenairesPage() {
                     style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 4px 20px rgba(139,26,46,0.25)" }}
                   >
                     {loading ? <Loader2 size={18} className="animate-spin" /> : <ArrowRight size={18} />}
-                    {loading ? "Envoi en cours..." : "Rejoindre la liste d'attente"}
+                    {loading ? t("partenaires.submitting") : t("partenaires.submit")}
                   </button>
 
                   <p className="text-center text-xs text-muted-foreground/60 pt-1">
-                    Aucun engagement. Conditions préférentielles réservées aux premiers inscrits.
+                    {t("partenaires.disclaimer")}
                   </p>
                 </motion.form>
               )}
@@ -397,12 +370,12 @@ export default function PartenairesPage() {
         <div className="max-w-3xl mx-auto px-6 sm:px-10 lg:px-8">
           <FadeIn className="text-center mb-14">
             <h2 className="font-display font-bold text-foreground text-3xl md:text-4xl">
-              Questions fréquentes
+              {t("partenaires.faq_title")}
             </h2>
           </FadeIn>
 
           <div className="space-y-3">
-            {FAQ.map(({ q, a }, i) => (
+            {FAQ.map(({ qKey, aKey }, i) => (
               <FadeIn key={i} delay={i * 0.06}>
                 <div className="border border-border/60 rounded-2xl overflow-hidden">
                   <button
@@ -410,7 +383,7 @@ export default function PartenairesPage() {
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                     className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left hover:bg-secondary/30 transition-colors"
                   >
-                    <span className="font-semibold text-foreground text-sm leading-snug">{q}</span>
+                    <span className="font-semibold text-foreground text-sm leading-snug">{t(qKey)}</span>
                     <motion.div
                       animate={{ rotate: openFaq === i ? 180 : 0 }}
                       transition={{ duration: 0.25 }}
@@ -428,7 +401,7 @@ export default function PartenairesPage() {
                         transition={{ duration: 0.28, ease: "easeInOut" }}
                         className="overflow-hidden"
                       >
-                        <p className="px-6 pb-5 text-muted-foreground text-sm leading-[1.75] border-t border-border/40 pt-4">{a}</p>
+                        <p className="px-6 pb-5 text-muted-foreground text-sm leading-[1.75] border-t border-border/40 pt-4">{t(aKey)}</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -448,16 +421,16 @@ export default function PartenairesPage() {
             className="font-display font-bold text-white leading-tight mb-4"
             style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)" }}
           >
-            Le marché immobilier marocain<br />a besoin d'un standard commun.
+            {t("partenaires.closing_title_line1")}<br />{t("partenaires.closing_title_line2")}
           </h2>
-          <p className="text-white/50 text-lg mb-10">Construisons-le ensemble.</p>
+          <p className="text-white/50 text-lg mb-10">{t("partenaires.closing_subtitle")}</p>
           <button
             onClick={scrollToForm}
             className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl font-bold text-base text-white hover:-translate-y-1 transition-all duration-300"
             style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 8px 32px rgba(139,26,46,0.45)" }}
           >
             <ArrowRight size={18} />
-            Rejoindre la liste d'attente
+            {t("partenaires.hero_cta")}
           </button>
         </FadeIn>
       </section>

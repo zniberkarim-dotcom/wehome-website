@@ -1,9 +1,14 @@
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { LegalPage, P, UL, H3, Todo, type LegalSection } from "@/components/legal/LegalPage";
 
-const SECTIONS: LegalSection[] = [
+/** Section titles are translated; section bodies remain in French
+ *  because the French version is legally authoritative (loi 53-05). */
+function getSections(t: (key: string) => string): LegalSection[] {
+  return [
   {
     id: "editeur",
-    title: "Éditeur du site",
+    title: t("legal.mentions_s1_title"),
     content: (
       <>
         <P>
@@ -26,7 +31,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "publication",
-    title: "Directeur de la publication",
+    title: t("legal.mentions_s2_title"),
     content: (
       <>
         <P>
@@ -41,7 +46,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "hebergeur",
-    title: "Hébergeur du site",
+    title: t("legal.mentions_s3_title"),
     content: (
       <>
         <P>Le site est hébergé par&nbsp;:</P>
@@ -58,7 +63,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "propriete-intellectuelle",
-    title: "Propriété intellectuelle",
+    title: t("legal.mentions_s4_title"),
     content: (
       <>
         <P>
@@ -75,7 +80,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "liens-hypertextes",
-    title: "Liens hypertextes",
+    title: t("legal.mentions_s5_title"),
     content: (
       <>
         <P>
@@ -89,7 +94,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "donnees-personnelles",
-    title: "Données personnelles",
+    title: t("legal.mentions_s6_title"),
     content: (
       <>
         <P>
@@ -108,7 +113,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "droit-applicable",
-    title: "Droit applicable et juridiction compétente",
+    title: t("legal.mentions_s7_title"),
     content: (
       <>
         <P>
@@ -117,15 +122,18 @@ const SECTIONS: LegalSection[] = [
       </>
     ),
   },
-];
+  ];
+}
 
 export default function MentionsLegalesPage() {
+  const { t, i18n } = useTranslation();
+  const sections = useMemo(() => getSections(t), [i18n.language, t]);
   return (
     <LegalPage
-      title="Mentions légales"
-      subtitle="Conformément aux dispositions de la loi n° 53-05 relative à l'échange électronique de données juridiques, nous mettons à votre disposition les informations suivantes."
+      title={t("legal.mentions_title")}
+      subtitle={t("legal.mentions_subtitle")}
       lastUpdated="13 mai 2026"
-      sections={SECTIONS}
+      sections={sections}
     />
   );
 }

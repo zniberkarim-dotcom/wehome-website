@@ -204,11 +204,14 @@ const SECTIONS: LegalSection[] = [
   },
 ];
 
+import { useTranslation } from "react-i18next";
+
 export default function ConditionsPage() {
+  const { t } = useTranslation();
   return (
     <LegalPage
-      title="Conditions générales d'utilisation"
-      subtitle="Les présentes conditions définissent les règles d'utilisation de la plateforme wehome.ma. Merci de les lire attentivement avant toute navigation ou inscription."
+      title={t("legal.conditions_title")}
+      subtitle={t("legal.conditions_subtitle")}
       lastUpdated="13 mai 2026"
       sections={SECTIONS}
     />

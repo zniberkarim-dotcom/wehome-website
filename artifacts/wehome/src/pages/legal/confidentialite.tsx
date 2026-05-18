@@ -203,11 +203,14 @@ const SECTIONS: LegalSection[] = [
   },
 ];
 
+import { useTranslation } from "react-i18next";
+
 export default function ConfidentialitePage() {
+  const { t } = useTranslation();
   return (
     <LegalPage
-      title="Politique de confidentialité"
-      subtitle="Cette politique décrit comment WeHome collecte, utilise et protège vos données personnelles, conformément à la loi n° 09-08 et aux recommandations de la CNDP."
+      title={t("legal.confidentialite_title")}
+      subtitle={t("legal.confidentialite_subtitle")}
       lastUpdated="13 mai 2026"
       sections={SECTIONS}
     />

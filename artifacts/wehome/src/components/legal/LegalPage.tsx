@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, AlertTriangle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
@@ -18,7 +19,16 @@ interface Props {
 }
 
 export function LegalPage({ title, subtitle, lastUpdated, sections }: Props) {
+  const { t, i18n } = useTranslation();
   const [activeId, setActiveId] = useState<string>(sections[0]?.id ?? "");
+  const lang = i18n.language;
+  // EN/ZH visitors see a "French version prevails" disclaimer at top of legal pages.
+  const prevailingNotice =
+    lang === "en"
+      ? t("legal.prevailing_notice_en")
+      : lang === "zh"
+      ? t("legal.prevailing_notice_zh")
+      : "";
 
   // Highlight the section currently in view
   useEffect(() => {
@@ -51,7 +61,7 @@ export function LegalPage({ title, subtitle, lastUpdated, sections }: Props) {
             transition={{ duration: 0.4 }}
           >
             <p className="text-xs font-bold uppercase tracking-wide text-primary mb-3">
-              Informations légales
+              {t("legal.overline")}
             </p>
             <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground leading-tight">
               {title}
@@ -62,8 +72,14 @@ export function LegalPage({ title, subtitle, lastUpdated, sections }: Props) {
               </p>
             )}
             <p className="text-xs text-muted-foreground/80 mt-5">
-              Dernière mise à jour : <span className="font-semibold">{lastUpdated}</span>
+              {t("legal.last_updated")} <span className="font-semibold">{lastUpdated}</span>
             </p>
+            {prevailingNotice && (
+              <div className="mt-6 inline-flex items-start gap-2 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 max-w-3xl">
+                <AlertTriangle size={16} className="shrink-0 mt-0.5" />
+                <p className="text-xs md:text-sm leading-relaxed">{prevailingNotice}</p>
+              </div>
+            )}
           </motion.div>
         </div>
       </section>
@@ -75,7 +91,7 @@ export function LegalPage({ title, subtitle, lastUpdated, sections }: Props) {
             {/* ToC */}
             <aside className="lg:sticky lg:top-28 lg:self-start">
               <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-3">
-                Sommaire
+                {t("legal.toc")}
               </p>
               <nav>
                 <ol className="space-y-1">
