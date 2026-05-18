@@ -488,7 +488,11 @@ export async function submitAppointment(appt: {
   if (error) throw error;
 }
 
-/** Save a network partner application */
+/** Save a network partner application.
+ *  NB: there is no dedicated `network_partners` table yet — we mirror the
+ *  application into the existing `leads` table so the sales team sees them
+ *  immediately. When a real partners module is built, this function can be
+ *  redirected to that table without changing callers. */
 export async function submitNetworkApplication(data: {
   first_name: string;
   last_name: string;
@@ -499,9 +503,24 @@ export async function submitNetworkApplication(data: {
   property_count: string;
   message?: string;
 }): Promise<void> {
-  const { error } = await supabase.from("network_partners").insert({
-    ...data,
-    status: "Pending",
+  const fullName = `${data.first_name} ${data.last_name}`.trim();
+  const noteBody = [
+    `[CANDIDATURE NETWORK]`,
+    `Profil : ${data.profile_type}`,
+    `Zones : ${data.zones.join(", ") || "—"}`,
+    `Volume biens : ${data.property_count}`,
+    data.message?.trim() ? `\nMessage :\n${data.message.trim()}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const { error } = await supabase.from("leads").insert({
+    name: fullName,
+    phone: data.phone,
+    email: data.email,
+    notes: noteBody,
+    source: "Network — Candidature",
+    status: "New",
     created_at: new Date().toISOString(),
   });
   if (error) throw error;
