@@ -28,6 +28,7 @@ import FinancementPage from "@/pages/financement";
 import FavorisPage from "@/pages/favoris";
 import PublierPage from "@/pages/publier";
 import PartenairesPage from "@/pages/partenaires";
+import ContactPage from "@/pages/contact";
 // Legal
 import MentionsLegalesPage from "@/pages/legal/mentions-legales";
 import ConditionsPage from "@/pages/legal/conditions";
@@ -113,7 +114,7 @@ function Router() {
       <Route path="/conditions" component={ConditionsPage} />
       <Route path="/confidentialite" component={ConfidentialitePage} />
       <Route path="/cookies" component={CookiesPage} />
-      <Route path="/contact" component={HomePage} />
+      <Route path="/contact" component={ContactPage} />
 
       {/* Espace Agent portal */}
       <Route path="/espace-agent" component={EspaceAgentPage} />

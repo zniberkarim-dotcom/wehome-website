@@ -41,7 +41,6 @@ export function Footer() {
               <li><Link href="/contact" className="hover:text-primary transition-colors">{t("footer.contact")}</Link></li>
               <li><Link href="/a-propos" className="hover:text-primary transition-colors">{t("footer.about")}</Link></li>
               <li><Link href="/network" className="hover:text-primary transition-colors">{t("footer.join_network")}</Link></li>
-              <li><Link href="/media" className="hover:text-primary transition-colors">{t("footer.media")}</Link></li>
             </ul>
           </div>
 

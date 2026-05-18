@@ -440,7 +440,11 @@ export async function submitLead(lead: {
   if (error) throw error;
 }
 
-/** Save a visit appointment */
+/** Save a visit appointment.
+ *  NB: there is no dedicated `appointments` table yet — we mirror the RDV
+ *  into the existing `leads` table so the sales team sees them immediately
+ *  in /espace-agent/dashboard/leads. When a real appointments module is built,
+ *  this function can be redirected to that table without changing callers. */
 export async function submitAppointment(appt: {
   property_id: string;
   property_title: string;
@@ -452,9 +456,33 @@ export async function submitAppointment(appt: {
   appointment_time: string;  // HH:MM
   notes?: string;
 }): Promise<void> {
-  const { error } = await supabase.from("appointments").insert({
-    ...appt,
-    status: "pending",
+  const dateFr = (() => {
+    try {
+      return new Date(`${appt.appointment_date}T${appt.appointment_time}:00`).toLocaleString("fr-FR", {
+        dateStyle: "full",
+        timeStyle: "short",
+      });
+    } catch {
+      return `${appt.appointment_date} à ${appt.appointment_time}`;
+    }
+  })();
+
+  const noteBody = [
+    `[RDV demandé] ${dateFr}`,
+    `Bien : ${appt.property_title}${appt.agent_name ? ` · Agent : ${appt.agent_name}` : ""}`,
+    appt.notes?.trim() ? `\n${appt.notes.trim()}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const { error } = await supabase.from("leads").insert({
+    name: appt.visitor_name,
+    phone: appt.visitor_phone,
+    email: appt.visitor_email ?? null,
+    notes: noteBody,
+    source: "RDV — Visite",
+    status: "New",
+    property_reference: appt.property_id,
     created_at: new Date().toISOString(),
   });
   if (error) throw error;

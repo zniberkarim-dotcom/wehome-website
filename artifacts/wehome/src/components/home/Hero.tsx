@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Search, MapPin, Home as HomeIcon, DollarSign, ChevronDown, SlidersHorizontal } from "lucide-react";
+import { Search, MapPin, Home as HomeIcon, DollarSign, ChevronDown, SlidersHorizontal, Sparkles, ArrowRight, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { PROPERTY_TYPES, buildSearchUrl } from "@/lib/data";
 
@@ -148,6 +148,10 @@ export function Hero() {
             ))}
           </div>
 
+          {activeTab === "vendre" ? (
+            <VendreCta t={t} />
+          ) : (
+          <>
           {/* Main search row */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             <div className="md:col-span-4 relative group">
@@ -318,8 +322,62 @@ export function Hero() {
               </motion.div>
             )}
           </AnimatePresence>
+          </>
+          )}
         </motion.div>
       </div>
     </section>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * "Vendre" tab — replaces the search UI with a clear publish-flow CTA.
+ * Drives visitors from search-intent confusion to the actual /publier form.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+function VendreCta({ t }: { t: (key: string) => string }) {
+  const fallback = (key: string, def: string) => {
+    const val = t(key);
+    return val === key ? def : val;
+  };
+  return (
+    <div className="text-center py-6 md:py-10">
+      <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wide mb-5">
+        <Sparkles size={14} />
+        {fallback("hero.vendre_badge", "Gratuit · 100 % en ligne")}
+      </div>
+      <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground leading-tight">
+        {fallback("hero.vendre_title", "Publiez votre bien en 3 minutes")}
+      </h2>
+      <p className="text-base text-muted-foreground mt-3 max-w-xl mx-auto leading-relaxed">
+        {fallback(
+          "hero.vendre_sub",
+          "Décrivez votre bien, ajoutez vos photos, c'est tout. Notre équipe valide votre annonce sous 24 h et la diffuse à notre réseau d'acheteurs qualifiés."
+        )}
+      </p>
+
+      <div className="flex flex-wrap items-center justify-center gap-2 mt-5">
+        <Pill icon={<ShieldCheck size={14} />} label={fallback("hero.vendre_pill_expert", "Validation expert")} />
+        <Pill icon={<Clock size={14} />} label={fallback("hero.vendre_pill_24h", "Mise en ligne sous 24 h")} />
+        <Pill icon={<CheckCircle2 size={14} />} label={fallback("hero.vendre_pill_free", "100 % gratuit")} />
+      </div>
+
+      <Link
+        href="/publier"
+        className="inline-flex items-center gap-2 mt-7 px-7 py-3.5 rounded-full font-bold bg-primary text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
+      >
+        {fallback("hero.vendre_cta", "Publier mon annonce")}
+        <ArrowRight size={18} />
+      </Link>
+    </div>
+  );
+}
+
+function Pill({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 bg-muted/60 text-foreground/75 rounded-full px-3 py-1 text-[11px] font-semibold">
+      {icon}
+      {label}
+    </span>
   );
 }
