@@ -45,8 +45,9 @@ export function LanguageSwitcher({ onDark = false }: Props) {
         aria-label={`Language: ${LANG_META[current].native}`}
         style={onDark ? { textShadow: "0 1px 4px rgba(0,0,0,0.35)" } : undefined}
       >
+        {/* Closed state: Globe + lang code only (flag emoji is omitted because
+            Windows renders 🇫🇷 as the letters "FR", which would duplicate the label). */}
         <Globe size={14} />
-        <span className="text-base leading-none" aria-hidden>{LANG_META[current].flag}</span>
         <span className="font-semibold">{LANG_META[current].label}</span>
         <ChevronDown
           size={13}
