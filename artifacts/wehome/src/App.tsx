@@ -29,6 +29,7 @@ import FavorisPage from "@/pages/favoris";
 import PublierPage from "@/pages/publier";
 import PartenairesPage from "@/pages/partenaires";
 import ContactPage from "@/pages/contact";
+import ServicesProPage from "@/pages/services-pro";
 // Legal
 import MentionsLegalesPage from "@/pages/legal/mentions-legales";
 import ConditionsPage from "@/pages/legal/conditions";
@@ -108,6 +109,8 @@ function Router() {
       <Route path="/financement" component={FinancementPage} />
       <Route path="/favoris" component={FavorisPage} />
       <Route path="/partenaires" component={PartenairesPage} />
+      <Route path="/services-pro" component={ServicesProPage} />
+      <Route path="/services" component={ServicesProPage} />
 
       {/* Legal */}
       <Route path="/mentions-legales" component={MentionsLegalesPage} />
