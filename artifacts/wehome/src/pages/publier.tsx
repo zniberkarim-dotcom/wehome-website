@@ -20,6 +20,10 @@ import {
   Phone,
   ArrowRight,
   AlertCircle,
+  Wand2,
+  Box,
+  TrendingUp,
+  Zap,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
@@ -219,6 +223,53 @@ export default function PublierPage() {
             <Pill icon={<Clock size={14} />} label={t("publier.pill_24h")} />
             <Pill icon={<CheckCircle2 size={14} />} label={t("publier.pill_free")} />
           </div>
+        </div>
+      </section>
+
+      {/* ─── Service Pro upsell banner ─────────────────────────────────── */}
+      <section className="py-8 md:py-10 bg-gradient-to-br from-amber-50 via-orange-50/40 to-rose-50/30 border-b border-amber-100/60">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="relative bg-white rounded-3xl shadow-xl shadow-amber-900/5 border border-amber-200/50 overflow-hidden"
+          >
+            <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-amber-200/40 to-rose-200/40 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -left-16 -bottom-16 w-56 h-56 bg-gradient-to-tr from-primary/10 to-amber-200/30 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative grid lg:grid-cols-[1fr_auto] gap-6 p-6 md:p-8 items-center">
+              <div>
+                <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide mb-3 shadow-sm">
+                  <Sparkles size={12} />
+                  {t("publier.upsell_badge", "Service Pro WeHome")}
+                </div>
+                <h3 className="text-xl md:text-2xl font-display font-bold text-foreground leading-tight">
+                  {t("publier.upsell_title_part1", "Tu veux que ton annonce")}{" "}
+                  <span className="text-primary">{t("publier.upsell_title_part2", "performe vraiment")}</span>{" "}?
+                </h3>
+                <p className="text-sm md:text-base text-muted-foreground mt-2 leading-relaxed max-w-2xl">
+                  {t("publier.upsell_subtitle", "Photos retouchées par IA, home staging virtuel, immersion 3D et conseils pro — vends ou loue 2 à 3× plus vite.")}{" "}
+                  <strong className="text-foreground">{t("publier.upsell_price", "À partir de 1 990 MAD.")}</strong>
+                </p>
+
+                <div className="flex flex-wrap gap-2 mt-4">
+                  <FeatureChip icon={<Wand2 size={12} />} label={t("publier.upsell_feat_ai", "Photos IA")} />
+                  <FeatureChip icon={<Sofa size={12} />} label={t("publier.upsell_feat_staging", "Home staging virtuel")} />
+                  <FeatureChip icon={<Box size={12} />} label={t("publier.upsell_feat_3d", "Visite 3D")} />
+                  <FeatureChip icon={<TrendingUp size={12} />} label={t("publier.upsell_feat_diffusion", "Diffusion premium")} />
+                </div>
+              </div>
+
+              <Link
+                href="/services-pro"
+                className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold bg-foreground text-background shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all whitespace-nowrap"
+              >
+                {t("publier.upsell_cta", "Découvrir les packs")}
+                <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -570,6 +621,15 @@ function Pill({ icon, label }: { icon: React.ReactNode; label: string }) {
   );
 }
 
+function FeatureChip({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 bg-foreground/5 text-foreground/75 rounded-full px-2.5 py-1 text-[11px] font-semibold">
+      <span className="text-primary">{icon}</span>
+      {label}
+    </span>
+  );
+}
+
 function FormSection({
   number,
   title,
@@ -717,6 +777,57 @@ function SuccessState({ onPublishAnother }: { onPublishAnother: () => void }) {
           {t("publier.success_whatsapp")}
         </a>
       </p>
+
+      {/* ─── Service Pro upsell — post-publication ─────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.3 }}
+        className="relative mt-10 rounded-3xl overflow-hidden border border-amber-200/60 bg-gradient-to-br from-amber-50 via-orange-50/60 to-rose-50/40 text-left"
+      >
+        <div className="absolute -right-16 -top-16 w-56 h-56 bg-gradient-to-br from-amber-300/30 to-rose-300/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative p-6 md:p-8">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 shrink-0 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white flex items-center justify-center shadow-lg">
+              <Zap size={22} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="inline-flex items-center gap-1.5 bg-white/70 backdrop-blur-sm text-amber-700 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide mb-2">
+                {t("publier.success_upsell_badge", "Prochaine étape")}
+              </div>
+              <h3 className="text-xl md:text-2xl font-display font-bold text-foreground leading-tight">
+                {t("publier.success_upsell_title", "Booste ton annonce avec Service Pro")}
+              </h3>
+              <p className="text-sm md:text-base text-muted-foreground mt-2 leading-relaxed">
+                {t(
+                  "publier.success_upsell_subtitle",
+                  "Tu viens de publier — fais-toi vendre ou louer 2 à 3× plus vite avec nos packs Pro : photos retouchées par IA, home staging virtuel, visite 3D, et diffusion premium sur tous les portails."
+                )}
+              </p>
+
+              <div className="flex flex-wrap gap-2 mt-4">
+                <FeatureChip icon={<Wand2 size={12} />} label={t("publier.upsell_feat_ai", "Photos IA")} />
+                <FeatureChip icon={<Sofa size={12} />} label={t("publier.upsell_feat_staging", "Home staging virtuel")} />
+                <FeatureChip icon={<Box size={12} />} label={t("publier.upsell_feat_3d", "Visite 3D")} />
+                <FeatureChip icon={<TrendingUp size={12} />} label={t("publier.upsell_feat_diffusion", "Diffusion premium")} />
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 mt-5">
+                <Link
+                  href="/services-pro"
+                  className="group inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full font-bold bg-foreground text-background shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                >
+                  {t("publier.success_upsell_cta", "Découvrir les packs Pro")}
+                  <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+                <span className="text-xs text-muted-foreground sm:self-center">
+                  {t("publier.success_upsell_price_hint", "À partir de 1 990 MAD — sans engagement")}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
         <Link
