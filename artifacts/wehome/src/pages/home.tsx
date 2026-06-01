@@ -5,6 +5,7 @@ import { StatsBar } from "@/components/home/StatsBar";
 import { FeaturedProperties } from "@/components/home/FeaturedProperties";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { Services } from "@/components/home/Services";
+import { BeforeAfter } from "@/components/home/BeforeAfter";
 import { PepiteDuMois } from "@/components/home/PepiteDuMois";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { CtaSection } from "@/components/home/CtaSection";
@@ -19,6 +20,7 @@ export default function HomePage() {
         <FeaturedProperties />
         <HowItWorks />
         <Services />
+        <BeforeAfter />
         <PepiteDuMois />
         <WhyChooseUs />
         <CtaSection />
