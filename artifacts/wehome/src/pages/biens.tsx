@@ -557,9 +557,11 @@ export default function BiensPage() {
           <div className="flex gap-8">
             {/* Desktop sidebar */}
             <aside className="hidden lg:block w-64 shrink-0">
-              <div className="sticky top-36 bg-card border border-border rounded-2xl p-5 shadow-sm">
-                <p className="font-display font-bold text-base mb-5">{t("biens.filters_title")}</p>
-                <FilterPanel params={params} onUpdate={updateParams} />
+              <div className="sticky top-24 bg-card border border-border rounded-2xl shadow-sm flex flex-col max-h-[calc(100vh-7rem)]">
+                <p className="font-display font-bold text-base px-5 pt-5 pb-3 border-b border-border/40 shrink-0">{t("biens.filters_title")}</p>
+                <div className="overflow-y-auto px-5 py-4 flex-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-border/60 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
+                  <FilterPanel params={params} onUpdate={updateParams} />
+                </div>
               </div>
             </aside>
 

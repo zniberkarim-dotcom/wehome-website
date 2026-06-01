@@ -1,18 +1,43 @@
-import { useState } from "react";
-import { Search, MapPin, Home as HomeIcon, DollarSign, ChevronDown, SlidersHorizontal, Sparkles, ArrowRight, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+  Search,
+  MapPin,
+  Home as HomeIcon,
+  DollarSign,
+  ChevronDown,
+  SlidersHorizontal,
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  Clock,
+  CheckCircle2,
+  Bath,
+  Maximize,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { PROPERTY_TYPES, buildSearchUrl } from "@/lib/data";
 
-const PRICE_RANGES: { i18nKey: string; value: string; prix_min?: number; prix_max?: number }[] = [
-  { i18nKey: "price_ranges.any",        value: "" },
-  { i18nKey: "price_ranges.under_500k", value: "0-500k", prix_max: 500000 },
-  { i18nKey: "price_ranges.500k_1m",    value: "500k-1m", prix_min: 500000, prix_max: 1000000 },
-  { i18nKey: "price_ranges.1m_3m",      value: "1m-3m",   prix_min: 1000000, prix_max: 3000000 },
-  { i18nKey: "price_ranges.3m_5m",      value: "3m-5m",   prix_min: 3000000, prix_max: 5000000 },
-  { i18nKey: "price_ranges.over_5m",    value: "5m+",     prix_min: 5000000 },
+const SALE_PRICE_RANGES: { i18nKey: string; fallback: string; value: string; prix_min?: number; prix_max?: number }[] = [
+  { i18nKey: "price_ranges.any",         fallback: "Tout prix",            value: "" },
+  { i18nKey: "price_ranges.under_500k",  fallback: "Moins de 500 000 MAD", value: "0-500k", prix_max: 500000 },
+  { i18nKey: "price_ranges.500k_1m",     fallback: "500 000 - 1M MAD",     value: "500k-1m", prix_min: 500000, prix_max: 1000000 },
+  { i18nKey: "price_ranges.1m_3m",       fallback: "1M - 3M MAD",          value: "1m-3m",   prix_min: 1000000, prix_max: 3000000 },
+  { i18nKey: "price_ranges.3m_5m",       fallback: "3M - 5M MAD",          value: "3m-5m",   prix_min: 3000000, prix_max: 5000000 },
+  { i18nKey: "price_ranges.over_5m",     fallback: "Plus de 5M MAD",       value: "5m+",     prix_min: 5000000 },
 ];
+
+const RENT_PRICE_RANGES: { i18nKey: string; fallback: string; value: string; prix_min?: number; prix_max?: number }[] = [
+  { i18nKey: "price_ranges.rent_any",       fallback: "Tout loyer",            value: "" },
+  { i18nKey: "price_ranges.rent_under_5k",  fallback: "Moins de 5 000 MAD",    value: "0-5k",   prix_max: 5000 },
+  { i18nKey: "price_ranges.rent_5k_10k",    fallback: "5 000 - 10 000 MAD",    value: "5k-10k", prix_min: 5000,  prix_max: 10000 },
+  { i18nKey: "price_ranges.rent_10k_20k",   fallback: "10 000 - 20 000 MAD",   value: "10k-20k",prix_min: 10000, prix_max: 20000 },
+  { i18nKey: "price_ranges.rent_20k_30k",   fallback: "20 000 - 30 000 MAD",   value: "20k-30k",prix_min: 20000, prix_max: 30000 },
+  { i18nKey: "price_ranges.rent_over_30k",  fallback: "Plus de 30 000 MAD",    value: "30k+",   prix_min: 30000 },
+];
+
+const POPULAR_CITIES = ["Casablanca", "Rabat", "Marrakech", "Tanger", "Agadir", "Fès"];
 
 const FEATURES_LIST = [
   { key: "Parking",       i18nKey: "features.parking" },
@@ -21,20 +46,46 @@ const FEATURES_LIST = [
   { key: "Gardien",       i18nKey: "features.doorman" },
   { key: "Terrasse",      i18nKey: "features.terrace" },
   { key: "Climatisation", i18nKey: "features.ac" },
+  { key: "Jardin",        i18nKey: "features.garden" },
+  { key: "Balcon",        i18nKey: "features.balcony" },
+  { key: "Garage",        i18nKey: "features.garage" },
+  { key: "Vue mer",       i18nKey: "features.sea_view" },
 ];
 
 export function Hero() {
   const { t } = useTranslation();
+  const fallback = (key: string, def: string) => {
+    const val = t(key);
+    return val === key ? def : val;
+  };
+
   const [activeTab, setActiveTab] = useState<"acheter" | "louer" | "vendre">("acheter");
   const [city, setCity] = useState("");
   const [type, setType] = useState("");
   const [priceRange, setPriceRange] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
+
+  // Advanced fields
   const [surfaceMin, setSurfaceMin] = useState("");
+  const [surfaceMax, setSurfaceMax] = useState("");
   const [chambresMin, setChambresMin] = useState<number | undefined>(undefined);
+  const [sdbMin, setSdbMin] = useState<number | undefined>(undefined);
   const [isFurnished, setIsFurnished] = useState(false);
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+  const [customPrixMin, setCustomPrixMin] = useState("");
+  const [customPrixMax, setCustomPrixMax] = useState("");
+
   const [, navigate] = useLocation();
+
+  const isRent = activeTab === "louer";
+  const priceRanges = isRent ? RENT_PRICE_RANGES : SALE_PRICE_RANGES;
+
+  // Reset price preset when toggling between Acheter ↔ Louer to avoid mismatched ranges
+  useEffect(() => {
+    setPriceRange("");
+    setCustomPrixMin("");
+    setCustomPrixMax("");
+  }, [activeTab]);
 
   const toggleFeature = (key: string) => {
     setSelectedFeatures((prev) =>
@@ -42,22 +93,39 @@ export function Hero() {
     );
   };
 
+  const hasActiveFilters =
+    !!city || !!type || !!priceRange || !!surfaceMin || !!surfaceMax ||
+    chambresMin !== undefined || sdbMin !== undefined || isFurnished ||
+    selectedFeatures.length > 0 || !!customPrixMin || !!customPrixMax;
+
+  const resetAll = () => {
+    setCity(""); setType(""); setPriceRange("");
+    setSurfaceMin(""); setSurfaceMax("");
+    setChambresMin(undefined); setSdbMin(undefined);
+    setIsFurnished(false); setSelectedFeatures([]);
+    setCustomPrixMin(""); setCustomPrixMax("");
+  };
+
   const handleSearch = () => {
     if (activeTab === "vendre") {
       navigate("/publier");
       return;
     }
-    const range = PRICE_RANGES.find((r) => r.value === priceRange);
-    // Hero is single-select for simplicity; /biens page exposes full multi-select.
-    // We emit arrays of length 1 so the URL stays in the new shape.
+    const range = priceRanges.find((r) => r.value === priceRange);
+    // Custom budget overrides the preset range
+    const finalPrixMin = customPrixMin ? Number(customPrixMin) : range?.prix_min;
+    const finalPrixMax = customPrixMax ? Number(customPrixMax) : range?.prix_max;
+
     const url = buildSearchUrl({
       transaction: activeTab === "acheter" ? "Vente" : "Location",
       city: city.trim() || undefined,
       types: type ? [type] : undefined,
-      prix_min: range?.prix_min,
-      prix_max: range?.prix_max,
+      prix_min: finalPrixMin,
+      prix_max: finalPrixMax,
       surface_min: surfaceMin ? Number(surfaceMin) : undefined,
+      surface_max: surfaceMax ? Number(surfaceMax) : undefined,
       chambres: chambresMin ? [chambresMin] : undefined,
+      sdb: sdbMin ? [sdbMin] : undefined,
       is_furnished: isFurnished || undefined,
       features: selectedFeatures.length > 0 ? selectedFeatures : undefined,
     });
@@ -152,6 +220,29 @@ export function Hero() {
             <VendreCta t={t} />
           ) : (
           <>
+          {/* Quick-select cities */}
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground/50 mr-1">
+              {fallback("hero.popular_cities", "Villes populaires")}
+            </span>
+            {POPULAR_CITIES.map((c) => {
+              const active = city.toLowerCase() === c.toLowerCase();
+              return (
+                <button
+                  key={c}
+                  onClick={() => setCity(active ? "" : c)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all ${
+                    active
+                      ? "bg-primary text-white border-primary shadow-md"
+                      : "bg-white/60 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
+                  }`}
+                >
+                  {c}
+                </button>
+              );
+            })}
+          </div>
+
           {/* Main search row */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             <div className="md:col-span-4 relative group">
@@ -178,8 +269,8 @@ export function Hero() {
                 className="w-full pl-12 pr-8 py-4 rounded-2xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-foreground font-medium appearance-none"
               >
                 <option value="">{t("hero.type_placeholder")}</option>
-                {PROPERTY_TYPES.map((t) => (
-                  <option key={t} value={t}>{t}</option>
+                {PROPERTY_TYPES.map((tt) => (
+                  <option key={tt} value={tt}>{tt}</option>
                 ))}
               </select>
             </div>
@@ -191,10 +282,11 @@ export function Hero() {
               <select
                 value={priceRange}
                 onChange={(e) => setPriceRange(e.target.value)}
-                className="w-full pl-12 pr-8 py-4 rounded-2xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-foreground font-medium appearance-none"
+                disabled={!!customPrixMin || !!customPrixMax}
+                className="w-full pl-12 pr-8 py-4 rounded-2xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 text-foreground font-medium appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {PRICE_RANGES.map((r) => (
-                  <option key={r.value} value={r.value}>{t(r.i18nKey)}</option>
+                {priceRanges.map((r) => (
+                  <option key={r.value} value={r.value}>{fallback(r.i18nKey, r.fallback)}</option>
                 ))}
               </select>
             </div>
@@ -223,13 +315,9 @@ export function Hero() {
                 className={`transition-transform duration-300 ${showAdvanced ? "rotate-180" : ""}`}
               />
             </button>
-            {(city || type || priceRange || surfaceMin || chambresMin || isFurnished || selectedFeatures.length > 0) && (
+            {hasActiveFilters && (
               <button
-                onClick={() => {
-                  setCity(""); setType(""); setPriceRange("");
-                  setSurfaceMin(""); setChambresMin(undefined);
-                  setIsFurnished(false); setSelectedFeatures([]);
-                }}
+                onClick={resetAll}
                 className="text-xs text-muted-foreground hover:text-destructive transition-colors"
               >
                 {t("hero.reset")}
@@ -247,37 +335,119 @@ export function Hero() {
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="overflow-hidden"
               >
-                <div className="pt-5 border-t border-border/40 mt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Surface min */}
+                <div className="pt-5 border-t border-border/40 mt-4 space-y-6">
+
+                  {/* Custom budget row */}
                   <div>
-                    <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider">{t("hero.surface_min")}</label>
-                    <input
-                      type="number"
-                      value={surfaceMin}
-                      onChange={(e) => setSurfaceMin(e.target.value)}
-                      placeholder={t("hero.surface_min_placeholder")}
-                      min={0}
-                      className="w-full px-4 py-3 rounded-xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
-                    />
+                    <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider">
+                      {fallback("hero.custom_budget", "Budget personnalisé (MAD)")}
+                      {isRent && (
+                        <span className="ml-1.5 text-[10px] font-medium text-muted-foreground normal-case tracking-normal">
+                          {fallback("hero.per_month", "· par mois")}
+                        </span>
+                      )}
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        value={customPrixMin}
+                        onChange={(e) => setCustomPrixMin(e.target.value)}
+                        placeholder={fallback("hero.budget_min_placeholder", isRent ? "Min — ex: 5000" : "Min — ex: 800000")}
+                        min={0}
+                        className="w-full px-4 py-3 rounded-xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                      />
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        value={customPrixMax}
+                        onChange={(e) => setCustomPrixMax(e.target.value)}
+                        placeholder={fallback("hero.budget_max_placeholder", isRent ? "Max — ex: 15000" : "Max — ex: 2500000")}
+                        min={0}
+                        className="w-full px-4 py-3 rounded-xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                      />
+                    </div>
+                    {(!!customPrixMin || !!customPrixMax) && (
+                      <p className="text-[11px] text-amber-700 mt-1.5 flex items-center gap-1">
+                        <Sparkles size={10} />
+                        {fallback("hero.custom_budget_active", "Budget personnalisé activé · la fourchette est ignorée")}
+                      </p>
+                    )}
                   </div>
 
-                  {/* Chambres min */}
-                  <div>
-                    <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider">{t("hero.bedrooms_min")}</label>
-                    <div className="flex gap-2">
-                      {[undefined, 1, 2, 3, 4].map((n) => (
-                        <button
-                          key={n ?? "any"}
-                          onClick={() => setChambresMin(n)}
-                          className={`flex-1 py-3 rounded-xl text-sm font-semibold border transition-all duration-200 ${
-                            chambresMin === n
-                              ? "bg-primary text-white border-primary shadow-md"
-                              : "bg-white/50 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
-                          }`}
-                        >
-                          {n === undefined ? t("hero.bedrooms_any") : `${n}+`}
-                        </button>
-                      ))}
+                  {/* Surface row */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider flex items-center gap-1.5">
+                        <Maximize size={11} />
+                        {t("hero.surface_min")}
+                      </label>
+                      <input
+                        type="number"
+                        value={surfaceMin}
+                        onChange={(e) => setSurfaceMin(e.target.value)}
+                        placeholder={t("hero.surface_min_placeholder")}
+                        min={0}
+                        className="w-full px-4 py-3 rounded-xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider flex items-center gap-1.5">
+                        <Maximize size={11} />
+                        {fallback("hero.surface_max", "Surface max (m²)")}
+                      </label>
+                      <input
+                        type="number"
+                        value={surfaceMax}
+                        onChange={(e) => setSurfaceMax(e.target.value)}
+                        placeholder={fallback("hero.surface_max_placeholder", "ex: 200")}
+                        min={0}
+                        className="w-full px-4 py-3 rounded-xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Chambres + SDB */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider">{t("hero.bedrooms_min")}</label>
+                      <div className="flex gap-2">
+                        {[undefined, 1, 2, 3, 4].map((n) => (
+                          <button
+                            key={n ?? "any"}
+                            onClick={() => setChambresMin(n)}
+                            className={`flex-1 py-3 rounded-xl text-sm font-semibold border transition-all duration-200 ${
+                              chambresMin === n
+                                ? "bg-primary text-white border-primary shadow-md"
+                                : "bg-white/50 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
+                            }`}
+                          >
+                            {n === undefined ? t("hero.bedrooms_any") : `${n}+`}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider flex items-center gap-1.5">
+                        <Bath size={11} />
+                        {fallback("hero.bathrooms_min", "Salles de bain min")}
+                      </label>
+                      <div className="flex gap-2">
+                        {[undefined, 1, 2, 3].map((n) => (
+                          <button
+                            key={`sdb-${n ?? "any"}`}
+                            onClick={() => setSdbMin(n)}
+                            className={`flex-1 py-3 rounded-xl text-sm font-semibold border transition-all duration-200 ${
+                              sdbMin === n
+                                ? "bg-primary text-white border-primary shadow-md"
+                                : "bg-white/50 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
+                            }`}
+                          >
+                            {n === undefined ? fallback("hero.bathrooms_any", "Tout") : `${n}+`}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
@@ -300,7 +470,7 @@ export function Hero() {
                   </div>
 
                   {/* Features / Équipements */}
-                  <div className="md:col-span-3">
+                  <div>
                     <label className="block text-xs font-semibold text-foreground/70 mb-3 uppercase tracking-wider">{t("hero.features")}</label>
                     <div className="flex flex-wrap gap-2">
                       {FEATURES_LIST.map((f) => (
@@ -313,7 +483,7 @@ export function Hero() {
                               : "bg-white/50 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
                           }`}
                         >
-                          {t(f.i18nKey)}
+                          {fallback(f.i18nKey, f.key)}
                         </button>
                       ))}
                     </div>
