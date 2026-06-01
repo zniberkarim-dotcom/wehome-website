@@ -31,6 +31,7 @@ const SORT_KEYS = [
 
 const ROOM_COUNT_OPTIONS = [1, 2, 3, 4, 5] as const;
 const SDB_COUNT_OPTIONS = [1, 2, 3, 4] as const;
+const SALONS_COUNT_OPTIONS = [1, 2, 3, 4] as const;
 
 /** Backend values (kept as-is in DB) paired with i18n keys for display.
  *  Toggle state continues to use the FR backend value — only the label is translated. */
@@ -89,6 +90,7 @@ function FilterPanel({
     params.surface_min ?? params.surface_max,
     params.chambres?.length,
     params.sdb?.length,
+    params.salons?.length,
     params.etat?.length,
     params.is_furnished,
     params.features?.length,
@@ -234,6 +236,28 @@ function FilterPanel({
               <button
                 key={n}
                 onClick={() => set({ sdb: toggleInArray(params.sdb, n) })}
+                className={`py-2 rounded-xl text-xs font-bold border transition-colors ${
+                  active
+                    ? "bg-primary text-white border-primary"
+                    : "bg-muted/50 text-foreground/80 border-border hover:bg-muted/80"
+                }`}
+              >
+                {n === 4 ? "4+" : n}
+              </button>
+            );
+          })}
+        </div>
+      </FilterGroup>
+
+      {/* Salons — multi-select */}
+      <FilterGroup label={t("biens.salons", "Salons")} hint={t("biens.multiple_choices")}>
+        <div className="grid grid-cols-4 gap-1.5">
+          {SALONS_COUNT_OPTIONS.map((n) => {
+            const active = params.salons?.includes(n) ?? false;
+            return (
+              <button
+                key={`salon-${n}`}
+                onClick={() => set({ salons: toggleInArray(params.salons, n) })}
                 className={`py-2 rounded-xl text-xs font-bold border transition-colors ${
                   active
                     ? "bg-primary text-white border-primary"

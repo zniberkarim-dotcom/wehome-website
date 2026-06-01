@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   Bath,
   Maximize,
+  Sofa,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, Link } from "wouter";
@@ -70,6 +71,7 @@ export function Hero() {
   const [surfaceMax, setSurfaceMax] = useState("");
   const [chambresMin, setChambresMin] = useState<number | undefined>(undefined);
   const [sdbMin, setSdbMin] = useState<number | undefined>(undefined);
+  const [salonsMin, setSalonsMin] = useState<number | undefined>(undefined);
   const [isFurnished, setIsFurnished] = useState(false);
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [customPrixMin, setCustomPrixMin] = useState("");
@@ -95,13 +97,13 @@ export function Hero() {
 
   const hasActiveFilters =
     !!city || !!type || !!priceRange || !!surfaceMin || !!surfaceMax ||
-    chambresMin !== undefined || sdbMin !== undefined || isFurnished ||
-    selectedFeatures.length > 0 || !!customPrixMin || !!customPrixMax;
+    chambresMin !== undefined || sdbMin !== undefined || salonsMin !== undefined ||
+    isFurnished || selectedFeatures.length > 0 || !!customPrixMin || !!customPrixMax;
 
   const resetAll = () => {
     setCity(""); setType(""); setPriceRange("");
     setSurfaceMin(""); setSurfaceMax("");
-    setChambresMin(undefined); setSdbMin(undefined);
+    setChambresMin(undefined); setSdbMin(undefined); setSalonsMin(undefined);
     setIsFurnished(false); setSelectedFeatures([]);
     setCustomPrixMin(""); setCustomPrixMax("");
   };
@@ -126,6 +128,7 @@ export function Hero() {
       surface_max: surfaceMax ? Number(surfaceMax) : undefined,
       chambres: chambresMin ? [chambresMin] : undefined,
       sdb: sdbMin ? [sdbMin] : undefined,
+      salons: salonsMin ? [salonsMin] : undefined,
       is_furnished: isFurnished || undefined,
       features: selectedFeatures.length > 0 ? selectedFeatures : undefined,
     });
@@ -448,6 +451,29 @@ export function Hero() {
                           </button>
                         ))}
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Salons min */}
+                  <div>
+                    <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider flex items-center gap-1.5">
+                      <Sofa size={11} />
+                      {fallback("hero.salons_min", "Salons min")}
+                    </label>
+                    <div className="flex gap-2 max-w-md">
+                      {[undefined, 1, 2, 3].map((n) => (
+                        <button
+                          key={`salon-${n ?? "any"}`}
+                          onClick={() => setSalonsMin(n)}
+                          className={`flex-1 py-3 rounded-xl text-sm font-semibold border transition-all duration-200 ${
+                            salonsMin === n
+                              ? "bg-primary text-white border-primary shadow-md"
+                              : "bg-white/50 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
+                          }`}
+                        >
+                          {n === undefined ? fallback("hero.salons_any", "Tout") : `${n}+`}
+                        </button>
+                      ))}
                     </div>
                   </div>
 

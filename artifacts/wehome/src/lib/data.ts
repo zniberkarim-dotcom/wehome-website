@@ -48,6 +48,8 @@ export interface FilterParams {
   chambres?: number[];
   /** Multi-select bathroom counts. 4 means "4 or more". */
   sdb?: number[];
+  /** Multi-select living-room counts (salons). 4 means "4 or more". */
+  salons?: number[];
   /** Multi-select condition. e.g. ["Neuf", "Bon état"] */
   etat?: string[];
   is_furnished?: boolean;
@@ -109,6 +111,7 @@ export function parseFilterParams(search: string): FilterParams {
     surface_max: p.get("surface_max") ? Number(p.get("surface_max")) : undefined,
     chambres,
     sdb: parseNumList(p.get("sdb")),
+    salons: parseNumList(p.get("salons")),
     etat: parseStrList(p.get("etat")),
     is_furnished: p.get("meuble") === "1" ? true : undefined,
     features: parseStrList(p.get("equip")),
@@ -131,6 +134,7 @@ export function buildSearchUrl(params: FilterParams): string {
   if (params.surface_max) p.set("surface_max", String(params.surface_max));
   if (params.chambres?.length) p.set("chambres", params.chambres.join(","));
   if (params.sdb?.length) p.set("sdb", params.sdb.join(","));
+  if (params.salons?.length) p.set("salons", params.salons.join(","));
   if (params.etat?.length) p.set("etat", params.etat.join(","));
   if (params.is_furnished) p.set("meuble", "1");
   if (params.features?.length) p.set("equip", params.features.join(","));
@@ -353,6 +357,17 @@ export async function fetchProperties(
     const hasMax = wanted.has(4);
     results = results.filter((p) => {
       const n = p.baths ?? 0;
+      if (n <= 0) return false;
+      return wanted.has(n) || (hasMax && n >= 4);
+    });
+  }
+
+  // Client-side: salons (multi-select, 4 means "4 or more")
+  if (params?.salons?.length) {
+    const wanted = new Set(params.salons);
+    const hasMax = wanted.has(4);
+    results = results.filter((p) => {
+      const n = p.salons ?? 0;
       if (n <= 0) return false;
       return wanted.has(n) || (hasMax && n >= 4);
     });
