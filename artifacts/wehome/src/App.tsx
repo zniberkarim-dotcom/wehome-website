@@ -30,6 +30,7 @@ import PublierPage from "@/pages/publier";
 import PartenairesPage from "@/pages/partenaires";
 import ContactPage from "@/pages/contact";
 import ServicesProPage from "@/pages/services-pro";
+import WeOfficePage from "@/pages/weoffice";
 // Legal
 import MentionsLegalesPage from "@/pages/legal/mentions-legales";
 import ConditionsPage from "@/pages/legal/conditions";
@@ -111,6 +112,9 @@ function Router() {
       <Route path="/partenaires" component={PartenairesPage} />
       <Route path="/services-pro" component={ServicesProPage} />
       <Route path="/services" component={ServicesProPage} />
+      <Route path="/weoffice" component={WeOfficePage} />
+      <Route path="/entreprises" component={WeOfficePage} />
+      <Route path="/bureaux" component={WeOfficePage} />
 
       {/* Legal */}
       <Route path="/mentions-legales" component={MentionsLegalesPage} />

@@ -36,6 +36,7 @@ export function Footer() {
               <li><Link href="/louer" className="hover:text-primary transition-colors">{t("footer.rent_property")}</Link></li>
               <li><Link href="/publier" className="hover:text-primary transition-colors">{t("footer.sell_property")}</Link></li>
               <li><Link href="/services-pro" className="hover:text-primary transition-colors">{t("footer.services_pro", "Services Pro pour particuliers")}</Link></li>
+              <li><Link href="/weoffice" className="hover:text-primary transition-colors">{t("footer.weoffice", "WeOffice — Bureaux & entreprises")}</Link></li>
               <li><Link href="/estimer" className="hover:text-primary transition-colors">{t("footer.estimate_property")}</Link></li>
               <li><Link href="/financement" className="hover:text-primary transition-colors">{t("footer.financing_calc")}</Link></li>
               <li><Link href="/agents" className="hover:text-primary transition-colors">{t("footer.find_agent")}</Link></li>

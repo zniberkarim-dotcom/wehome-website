@@ -6,6 +6,7 @@ import { FeaturedProperties } from "@/components/home/FeaturedProperties";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { Services } from "@/components/home/Services";
 import { BeforeAfter } from "@/components/home/BeforeAfter";
+import { Ecosystem } from "@/components/home/Ecosystem";
 import { PepiteDuMois } from "@/components/home/PepiteDuMois";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { CtaSection } from "@/components/home/CtaSection";
@@ -21,6 +22,7 @@ export default function HomePage() {
         <HowItWorks />
         <Services />
         <BeforeAfter />
+        <Ecosystem />
         <PepiteDuMois />
         <WhyChooseUs />
         <CtaSection />
