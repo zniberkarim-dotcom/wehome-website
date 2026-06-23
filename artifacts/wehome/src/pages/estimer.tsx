@@ -418,11 +418,13 @@ export default function EstimerPage() {
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                       <Link
-                        href="/biens"
+                        href={quartier && quartier !== "Autre" ? `/biens?ville=${encodeURIComponent(quartier)}` : "/biens"}
                         className="px-7 py-3 rounded-xl font-bold text-sm text-white hover:-translate-y-0.5 transition-all duration-200"
                         style={{ background: "var(--primary, #8B1A2E)" }}
                       >
-                        {t("estimer.success_see_biens")} {quartier}
+                        {quartier && quartier !== "Autre"
+                          ? `${t("estimer.success_see_biens")} ${quartier}`
+                          : t("estimer.success_see_biens_generic", "Voir les biens disponibles")}
                       </Link>
                       <Link
                         href="/"

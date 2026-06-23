@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import {
   Calculator,
@@ -9,12 +9,20 @@ import {
   ArrowRight,
   Info,
   AlertCircle,
+  Loader2,
+  CheckCircle2,
+  X,
+  Phone,
+  Mail,
+  User as UserIcon,
+  Briefcase,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MortgageCalculator } from "@/components/financement/MortgageCalculator";
 import { formatMAD } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 /* ────────────────────────────────────────────────────────────────────────────
  * Capacité d'emprunt — calcul inverse
@@ -301,6 +309,7 @@ const PARTNER_KEYS = [
 
 export default function FinancementPage() {
   const { t } = useTranslation();
+  const [leadModalCtx, setLeadModalCtx] = useState<"mortgage" | "capacity" | null>(null);
   return (
     <div className="min-h-screen flex flex-col bg-[#f6f5f3]">
       <Navbar />
@@ -356,6 +365,18 @@ export default function FinancementPage() {
                 </div>
               </div>
               <MortgageCalculator compact />
+
+              <button
+                type="button"
+                onClick={() => setLeadModalCtx("mortgage")}
+                className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm bg-primary text-white shadow-md shadow-primary/20 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+              >
+                <Sparkles size={14} />
+                {t("financement.lead_cta_mortgage", "Être mis en relation avec un partenaire bancaire")}
+              </button>
+              <p className="text-[11px] text-muted-foreground text-center mt-1.5">
+                {t("financement.lead_cta_hint", "Gratuit · Réponse sous 24h · Sans engagement")}
+              </p>
             </motion.div>
 
             {/* Right: Borrowing capacity */}
@@ -375,6 +396,18 @@ export default function FinancementPage() {
                 </div>
               </div>
               <CapacityCalculator />
+
+              <button
+                type="button"
+                onClick={() => setLeadModalCtx("capacity")}
+                className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm bg-foreground text-background shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
+              >
+                <Sparkles size={14} />
+                {t("financement.lead_cta_capacity", "Valider ma capacité avec un expert bancaire")}
+              </button>
+              <p className="text-[11px] text-muted-foreground text-center mt-1.5">
+                {t("financement.lead_cta_hint", "Gratuit · Réponse sous 24h · Sans engagement")}
+              </p>
             </motion.div>
 
           </div>
@@ -435,6 +468,326 @@ export default function FinancementPage() {
       </section>
 
       <Footer />
+
+      <FinancementLeadModal
+        open={leadModalCtx !== null}
+        context={leadModalCtx}
+        onClose={() => setLeadModalCtx(null)}
+      />
     </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * Lead capture modal — opened from the calculators' CTA.
+ * Submits to Supabase `leads` table with source identifying the calculator.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+const PROFILE_OPTIONS = [
+  { value: "Salarié CDI",          labelKey: "financement.modal_profile_cdi",     fallback: "Salarié CDI" },
+  { value: "Salarié CDD / Stage",  labelKey: "financement.modal_profile_cdd",     fallback: "Salarié CDD / Stage" },
+  { value: "Profession libérale",  labelKey: "financement.modal_profile_liberal", fallback: "Profession libérale" },
+  { value: "Chef d'entreprise",    labelKey: "financement.modal_profile_chef",    fallback: "Chef d'entreprise" },
+  { value: "MRE",                  labelKey: "financement.modal_profile_mre",     fallback: "Marocain résident à l'étranger" },
+  { value: "Autre",                labelKey: "financement.modal_profile_other",   fallback: "Autre" },
+];
+
+function FinancementLeadModal({
+  open,
+  context,
+  onClose,
+}: {
+  open: boolean;
+  context: "mortgage" | "capacity" | null;
+  onClose: () => void;
+}) {
+  const { t } = useTranslation();
+  const fallback = (key: string, def: string) => {
+    const val = t(key);
+    return val === key ? def : val;
+  };
+
+  const [nom, setNom] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [email, setEmail] = useState("");
+  const [profile, setProfile] = useState("");
+  const [budget, setBudget] = useState("");
+  const [message, setMessage] = useState("");
+
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  // Lock body scroll while modal open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [open]);
+
+  // Reset form on close
+  useEffect(() => {
+    if (!open) {
+      const timer = setTimeout(() => {
+        setNom(""); setTelephone(""); setEmail("");
+        setProfile(""); setBudget(""); setMessage("");
+        setSuccess(false); setSubmitError(null);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
+
+  const contextLabel = context === "mortgage"
+    ? fallback("financement.modal_ctx_mortgage", "Simulation mensualité")
+    : fallback("financement.modal_ctx_capacity", "Capacité d'emprunt");
+
+  const isValid = (): string | null => {
+    if (!nom.trim()) return fallback("financement.modal_err_name", "Merci d'indiquer votre nom.");
+    if (!/^[+\d][\d\s-]{6,}$/.test(telephone)) return fallback("financement.modal_err_phone", "Téléphone invalide.");
+    if (!/^\S+@\S+\.\S+$/.test(email)) return fallback("financement.modal_err_email", "Email invalide.");
+    if (!profile) return fallback("financement.modal_err_profile", "Merci de choisir votre profil.");
+    return null;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitError(null);
+    const v = isValid();
+    if (v) { setSubmitError(v); return; }
+
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.from("leads").insert({
+        name: nom.trim(),
+        phone: telephone.trim(),
+        email: email.trim(),
+        notes: [
+          `Outil : ${contextLabel}`,
+          `Profil : ${profile}`,
+          budget ? `Budget visé : ${budget} MAD` : null,
+          message ? `Message : ${message}` : null,
+        ].filter(Boolean).join("\n"),
+        source: `Financement — ${contextLabel}`,
+        status: "New",
+        created_at: new Date().toISOString(),
+      });
+      if (error) throw error;
+      setSuccess(true);
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error
+          ? `${fallback("financement.modal_err_prefix", "Erreur :")} ${err.message}`
+          : fallback("financement.modal_err_generic", "Une erreur est survenue. Réessayez.")
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 12 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-border/40 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-foreground/5 hover:bg-foreground/10 flex items-center justify-center text-foreground/60 hover:text-foreground transition-colors z-10"
+              aria-label={fallback("financement.modal_close", "Fermer")}
+            >
+              <X size={16} />
+            </button>
+
+            {success ? (
+              /* ── Success ── */
+              <div className="p-8 md:p-10 text-center">
+                <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center text-primary mb-5">
+                  <CheckCircle2 size={32} />
+                </div>
+                <h2 className="text-2xl font-display font-bold text-foreground">
+                  {fallback("financement.modal_success_title", "Demande reçue.")}
+                </h2>
+                <p className="text-sm text-muted-foreground mt-3 leading-relaxed max-w-sm mx-auto">
+                  {fallback(
+                    "financement.modal_success_body",
+                    "Notre partenaire bancaire vous contacte sous 24h pour étudier votre dossier en toute confidentialité."
+                  )}
+                </p>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="mt-6 px-6 py-2.5 rounded-full font-semibold text-sm bg-foreground text-background hover:-translate-y-0.5 transition-all"
+                >
+                  {fallback("financement.modal_close_cta", "Fermer")}
+                </button>
+              </div>
+            ) : (
+              /* ── Form ── */
+              <>
+                <div className="p-6 md:p-8 border-b border-border/40">
+                  <div className="inline-flex items-center gap-1.5 bg-primary/10 text-primary rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider mb-3">
+                    <Sparkles size={11} />
+                    {contextLabel}
+                  </div>
+                  <h2 className="text-xl md:text-2xl font-display font-bold text-foreground leading-tight">
+                    {fallback("financement.modal_title", "Être contacté par un partenaire bancaire")}
+                  </h2>
+                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                    {fallback(
+                      "financement.modal_subtitle",
+                      "Laissez vos coordonnées : un expert bancaire vous appelle sous 24h pour étudier votre dossier."
+                    )}
+                  </p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-4">
+                  <ModalField label={fallback("financement.modal_name", "Nom complet")} required icon={<UserIcon size={14} />}>
+                    <ModalInput value={nom} onChange={setNom} placeholder={fallback("financement.modal_name_placeholder", "Prénom Nom")} />
+                  </ModalField>
+
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <ModalField label={fallback("financement.modal_phone", "Téléphone")} required icon={<Phone size={14} />}>
+                      <ModalInput type="tel" value={telephone} onChange={setTelephone} placeholder="+212 6 XX XX XX XX" />
+                    </ModalField>
+                    <ModalField label={fallback("financement.modal_email", "Email")} required icon={<Mail size={14} />}>
+                      <ModalInput type="email" value={email} onChange={setEmail} placeholder="vous@email.ma" />
+                    </ModalField>
+                  </div>
+
+                  <ModalField label={fallback("financement.modal_profile_label", "Profil professionnel")} required icon={<Briefcase size={14} />}>
+                    <select
+                      value={profile}
+                      onChange={(e) => setProfile(e.target.value)}
+                      className="w-full px-3 py-3 rounded-xl bg-muted/40 border border-border focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium transition-all appearance-none"
+                    >
+                      <option value="">{fallback("financement.modal_profile_placeholder", "Choisir...")}</option>
+                      {PROFILE_OPTIONS.map((p) => (
+                        <option key={p.value} value={p.value}>{fallback(p.labelKey, p.fallback)}</option>
+                      ))}
+                    </select>
+                  </ModalField>
+
+                  <ModalField label={fallback("financement.modal_budget", "Budget visé (MAD) — optionnel")}>
+                    <ModalInput
+                      type="number"
+                      inputMode="numeric"
+                      value={budget}
+                      onChange={setBudget}
+                      placeholder={fallback("financement.modal_budget_placeholder", "Ex: 1 500 000")}
+                    />
+                  </ModalField>
+
+                  <ModalField label={fallback("financement.modal_message", "Message — optionnel")}>
+                    <textarea
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder={fallback("financement.modal_message_placeholder", "Détails utiles : type de bien, délai, situation particulière...")}
+                      rows={3}
+                      className="w-full px-3 py-3 rounded-xl bg-muted/40 border border-border focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all resize-none"
+                    />
+                  </ModalField>
+
+                  {submitError && (
+                    <div className="rounded-xl bg-destructive/5 border border-destructive/30 p-3 flex items-start gap-2 text-xs text-destructive">
+                      <AlertCircle size={14} className="shrink-0 mt-0.5" />
+                      {submitError}
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full py-3.5 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 bg-primary shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0"
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 size={18} className="animate-spin" />
+                        {fallback("financement.modal_submitting", "Envoi...")}
+                      </>
+                    ) : (
+                      <>
+                        {fallback("financement.modal_submit", "Recevoir un appel sous 24h")}
+                        <ArrowRight size={18} />
+                      </>
+                    )}
+                  </button>
+
+                  <p className="text-[10px] text-muted-foreground text-center leading-relaxed">
+                    {fallback(
+                      "financement.modal_consent",
+                      "En validant, vous acceptez d'être recontacté par WeHome et nos partenaires bancaires. Données confidentielles, jamais revendues."
+                    )}
+                  </p>
+                </form>
+              </>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function ModalField({
+  label,
+  required,
+  icon,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  icon?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-foreground/70 mb-1.5">
+        {icon && <span className="text-primary/70">{icon}</span>}
+        {label}
+        {required && <span className="text-destructive">*</span>}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+function ModalInput({
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+  inputMode,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  type?: string;
+  inputMode?: "text" | "numeric" | "decimal" | "tel" | "email";
+}) {
+  return (
+    <input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      inputMode={inputMode}
+      className="w-full px-3 py-3 rounded-xl bg-muted/40 border border-border focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium transition-all"
+    />
   );
 }
