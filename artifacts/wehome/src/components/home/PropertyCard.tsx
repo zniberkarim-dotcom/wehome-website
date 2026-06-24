@@ -82,6 +82,22 @@ export function PropertyCard({ property }: PropertyCardProps) {
         ))}
 
         <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+          {/* Lifecycle badge — only when not "Disponible" (the default state has no badge to avoid noise) */}
+          {property.status === "Réservé" && (
+            <span className="px-3 py-1 bg-amber-500 text-white text-[11px] font-bold rounded-lg shadow-md tracking-wide uppercase">
+              {t("card.status_reserved", "Réservé")}
+            </span>
+          )}
+          {property.status === "Sous compromis" && (
+            <span className="px-3 py-1 bg-orange-600 text-white text-[11px] font-bold rounded-lg shadow-md tracking-wide uppercase">
+              {t("card.status_under_offer", "Sous compromis")}
+            </span>
+          )}
+          {property.isPepite && (
+            <span className="px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[11px] font-bold rounded-lg shadow-md tracking-wide uppercase flex items-center gap-1">
+              ★ {t("card.status_pepite", "Pépite")}
+            </span>
+          )}
           <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg shadow-sm">
             {property.type}
           </span>

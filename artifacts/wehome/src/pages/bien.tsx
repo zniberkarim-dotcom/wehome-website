@@ -311,6 +311,15 @@ export default function BienPage() {
               )}
 
               <div className="absolute top-6 left-6 flex flex-col gap-2 z-20">
+                {property.status === "Réservé" && (
+                  <span className="px-4 py-1.5 bg-amber-500 text-white text-sm font-bold rounded-lg shadow-md uppercase tracking-wide">Réservé</span>
+                )}
+                {property.status === "Sous compromis" && (
+                  <span className="px-4 py-1.5 bg-orange-600 text-white text-sm font-bold rounded-lg shadow-md uppercase tracking-wide">Sous compromis</span>
+                )}
+                {property.isPepite && (
+                  <span className="px-4 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold rounded-lg shadow-md uppercase tracking-wide flex items-center gap-1.5">★ Pépite du mois</span>
+                )}
                 <span className="px-4 py-1.5 bg-white/90 backdrop-blur-sm text-foreground text-sm font-bold rounded-lg shadow-sm">{property.type}</span>
                 <span className={`px-4 py-1.5 text-white text-sm font-bold rounded-lg shadow-sm ${property.transaction === "Location" ? "bg-foreground" : "bg-primary"}`}>
                   {property.transaction}

@@ -7,12 +7,14 @@ import {
   ChevronDown, AlertCircle, CheckCircle2, Loader2, ExternalLink,
 } from "lucide-react";
 import { PortalLayout } from "@/components/espace-agent/PortalLayout";
+import { PropertyPublishWizard } from "@/components/espace-agent/PropertyPublishWizard";
 import { useAuth } from "@/hooks/useAuth";
 import {
   fetchPortalProperties, createPortalProperty, archivePortalProperty,
   uploadPortalPropertyPhoto, type PortalProperty,
 } from "@/lib/agent-portal";
 import { PROPERTY_TYPES } from "@/lib/data";
+import { Sparkles } from "lucide-react";
 
 // ── Status helpers ────────────────────────────────────────────────────────────
 
@@ -309,6 +311,7 @@ function NewBienModal({ agentId, onClose, onSuccess }: {
 export default function PortalBiensPage() {
   const { agent } = useAuth();
   const [showNewModal, setShowNewModal] = useState(false);
+  const [showAiWizard, setShowAiWizard] = useState(false);
   const qc = useQueryClient();
 
   const { data: properties = [], isLoading } = useQuery({
@@ -337,16 +340,27 @@ export default function PortalBiensPage() {
               {activeCount} actif{activeCount !== 1 ? "s" : ""} · {limit - activeCount} slot{limit - activeCount !== 1 ? "s" : ""} disponible{limit - activeCount !== 1 ? "s" : ""}
             </p>
           </div>
-          <button
-            onClick={() => setShowNewModal(true)}
-            disabled={activeCount >= limit}
-            title={activeCount >= limit ? "Limite de votre plan atteinte" : undefined}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-white disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 transition-all"
-            style={{ background: "#C0392B" }}
-          >
-            <Plus size={18} />
-            Publier un bien
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowAiWizard(true)}
+              disabled={activeCount >= limit}
+              title={activeCount >= limit ? "Limite de votre plan atteinte" : "Publier avec l'IA — recommandé"}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-white disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 transition-all shadow-lg shadow-orange-500/30"
+              style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 50%, #E11D48 100%)" }}
+            >
+              <Sparkles size={17} />
+              Publier avec IA
+            </button>
+            <button
+              onClick={() => setShowNewModal(true)}
+              disabled={activeCount >= limit}
+              title={activeCount >= limit ? "Limite de votre plan atteinte" : "Saisie manuelle classique"}
+              className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-foreground/80 border border-border bg-white hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              <Plus size={16} />
+              Saisie manuelle
+            </button>
+          </div>
         </div>
 
         {/* Quota bar */}
@@ -386,12 +400,12 @@ export default function PortalBiensPage() {
               Soumettez votre premier listing pour commencer à recevoir des leads qualifiés.
             </p>
             <button
-              onClick={() => setShowNewModal(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white"
-              style={{ background: "#C0392B" }}
+              onClick={() => setShowAiWizard(true)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 transition-all"
+              style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 50%, #E11D48 100%)" }}
             >
-              <Plus size={17} />
-              Publier mon premier bien
+              <Sparkles size={17} />
+              Publier mon premier bien avec IA
             </button>
           </div>
         ) : (
@@ -460,13 +474,24 @@ export default function PortalBiensPage() {
         )}
       </div>
 
-      {/* New bien modal */}
+      {/* Legacy manual modal */}
       <AnimatePresence>
         {showNewModal && agent && (
           <NewBienModal
             agentId={agent.id}
             onClose={() => setShowNewModal(false)}
             onSuccess={() => setShowNewModal(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* AI wizard */}
+      <AnimatePresence>
+        {showAiWizard && agent && (
+          <PropertyPublishWizard
+            agentId={agent.id}
+            onClose={() => setShowAiWizard(false)}
+            onSuccess={() => setShowAiWizard(false)}
           />
         )}
       </AnimatePresence>

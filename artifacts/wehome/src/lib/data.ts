@@ -30,7 +30,28 @@ export interface Property {
   lat?: number;
   lng?: number;
   address?: string;
+  /** Lifecycle status (synced from CRM). Defaults to "Disponible" when null/missing. */
+  status?: PropertyStatus;
+  /** Manual Pépite du Mois flag set from the CRM. */
+  isPepite?: boolean;
 }
+
+/** Lifecycle status — mirrors the CRM PropertyStatus type. */
+export type PropertyStatus =
+  | "Disponible"
+  | "Réservé"
+  | "Sous compromis"
+  | "Loué"
+  | "Vendu"
+  | "Retiré"
+  | "Archivé";
+
+/** Statuses that should appear in public listings (active inventory). */
+export const ACTIVE_PROPERTY_STATUSES: PropertyStatus[] = [
+  "Disponible",
+  "Réservé",
+  "Sous compromis",
+];
 
 // ── Filter params (URL ↔ query state) ────────────────────────────────────────
 
@@ -202,6 +223,8 @@ export interface SupabaseProperty {
   owner: { name?: string; phone?: string; email?: string } | null;
   photo_status: string | null;
   published: boolean;
+  /** CRM-controlled flag: when true, this property surfaces as the Pépite du Mois. */
+  is_pepite?: boolean | null;
   created_at: string;
   // Optional newer columns (may be null if not yet added to DB)
   is_new?: boolean | null;
@@ -274,6 +297,8 @@ export function mapSupabaseProperty(p: SupabaseProperty, index: number): Propert
     lat: p.lat ?? undefined,
     lng: p.lng ?? undefined,
     address: p.address ?? undefined,
+    status: (p.status as PropertyStatus | undefined) ?? "Disponible",
+    isPepite: p.is_pepite === true,
   };
 }
 
@@ -300,6 +325,13 @@ export async function fetchProperties(
   if (!params?.agent_id) {
     query = query.eq("photo_status", "✅ Photos OK");
   }
+
+  // ── Lifecycle filter ────────────────────────────────────────────────────
+  // Hide Vendu / Loué / Retiré / Archivé from public listings.
+  // Accept rows with NULL status (legacy data) — treat as Disponible.
+  query = query.or(
+    `status.is.null,status.in.(${ACTIVE_PROPERTY_STATUSES.map((s) => `"${s}"`).join(",")})`
+  );
 
   // Server-side exact filters
   if (params?.transaction) query = query.eq("transaction", params.transaction);
@@ -420,13 +452,25 @@ export async function fetchProperty(id: string): Promise<Property | null> {
   return mapSupabaseProperty(data as SupabaseProperty, 0);
 }
 
-/** Fetch latest 3 published properties for the homepage */
+/** Fetch latest 3 published properties for the homepage.
+ *
+ *  Order:
+ *    1. CRM-flagged `is_pepite = true` first (editorial choice)
+ *    2. Then newest published
+ *
+ *  Filters: only active inventory (Disponible / Réservé / Sous compromis).
+ *  Sold/Loué/Archivé never surface on the home page.
+ */
 export async function fetchFeaturedProperties(): Promise<Property[]> {
   const { data, error } = await supabase
     .from("properties")
     .select("*")
     .eq("published", true)
     .eq("photo_status", "✅ Photos OK")
+    .or(
+      `status.is.null,status.in.(${ACTIVE_PROPERTY_STATUSES.map((s) => `"${s}"`).join(",")})`
+    )
+    .order("is_pepite", { ascending: false, nullsFirst: false })
     .order("created_at", { ascending: false })
     .limit(3);
 
