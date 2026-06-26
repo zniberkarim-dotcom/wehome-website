@@ -135,9 +135,16 @@ export default function WeOfficePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
+                {/* Brand logo — large standalone stamp */}
+                <img
+                  src={`${import.meta.env.BASE_URL}images/weoffice-logo.png`}
+                  alt="WeOffice"
+                  className="h-10 md:h-12 w-auto mb-6 opacity-95"
+                  loading="eager"
+                />
                 <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider mb-5 border border-white/20">
                   <Building2 size={14} className="text-blue-300" />
-                  {fallback("weoffice.hero_badge", "WeOffice · Pôle immobilier d'entreprise")}
+                  {fallback("weoffice.hero_badge", "Pôle immobilier d'entreprise")}
                 </div>
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-[1.1] tracking-tight">
                   {fallback("weoffice.hero_title_part1", "Vos bureaux,")}{" "}

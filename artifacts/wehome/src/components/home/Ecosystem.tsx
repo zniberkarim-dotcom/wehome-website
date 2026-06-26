@@ -160,21 +160,39 @@ function BrandCard({
       <div className={`absolute -top-16 -right-16 w-48 h-48 ${styles.blob} rounded-full blur-3xl pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity`} />
 
       <div className="relative">
-        {/* Icon + Badge */}
-        <div className="flex items-center justify-between mb-5">
-          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${styles.iconBg} ${styles.iconText} shadow-lg`}>
-            {styles.icon}
+        {/* Logo bar (full width for branded logos) OR icon square (for WeHome) */}
+        {styles.logoSrc ? (
+          <div className="flex items-start justify-between mb-5 gap-3">
+            <div className="flex-1 h-14 rounded-2xl bg-black flex items-center justify-center px-4 shadow-lg">
+              {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+              <img
+                src={styles.logoSrc}
+                alt={`Logo ${fallback(brand.titleKey, brand.titleFallback)}`}
+                className="max-h-9 w-auto object-contain"
+              />
+            </div>
+            <span className={`shrink-0 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${styles.badge}`}>
+              {fallback(brand.badgeKey, brand.badgeFallback)}
+            </span>
           </div>
-          <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${styles.badge}`}>
-            {fallback(brand.badgeKey, brand.badgeFallback)}
-          </span>
-        </div>
+        ) : (
+          <div className="flex items-center justify-between mb-5">
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${styles.iconBg} ${styles.iconText} shadow-lg`}>
+              {styles.icon}
+            </div>
+            <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${styles.badge}`}>
+              {fallback(brand.badgeKey, brand.badgeFallback)}
+            </span>
+          </div>
+        )}
 
-        {/* Title + tagline */}
-        <h3 className={`text-2xl font-display font-bold leading-tight ${styles.title}`}>
-          {fallback(brand.titleKey, brand.titleFallback)}
-        </h3>
-        <p className={`text-sm mt-2 leading-relaxed ${styles.tagline}`}>
+        {/* Title + tagline — title hidden when logo is shown (logo already contains brand name) */}
+        {!styles.logoSrc && (
+          <h3 className={`text-2xl font-display font-bold leading-tight ${styles.title}`}>
+            {fallback(brand.titleKey, brand.titleFallback)}
+          </h3>
+        )}
+        <p className={`text-sm leading-relaxed ${styles.tagline} ${styles.logoSrc ? "" : "mt-2"}`}>
           {fallback(brand.taglineKey, brand.taglineFallback)}
         </p>
 
@@ -216,8 +234,17 @@ function BrandCard({
   );
 }
 
-/* Per-brand styles — gives each brand its identity. */
-const STYLES = {
+/* Per-brand styles — gives each brand its identity.
+ *  logoSrc is set for brands with a real logo asset on disk (in /public/images/).
+ *  When set, BrandCard renders the logo on a black bar instead of the Lucide icon. */
+const STYLES: Record<Brand["id"], {
+  border: string; bg: string; blob: string;
+  iconBg: string; iconText: string; icon: React.ReactNode;
+  logoSrc?: string;
+  badge: string; title: string; tagline: string;
+  bullet: string; bulletDot: string;
+  ctaPrimary: string; ctaSecondary: string;
+}> = {
   wehome: {
     border: "border-primary/20",
     bg: "bg-gradient-to-br from-primary/5 via-rose-50/40 to-background",
@@ -240,6 +267,7 @@ const STYLES = {
     iconBg: "bg-gradient-to-br from-slate-900 to-slate-700",
     iconText: "text-white",
     icon: <Building2 size={24} />,
+    logoSrc: `${import.meta.env.BASE_URL}images/weoffice-logo.png`,
     badge: "bg-slate-900/10 text-slate-900",
     title: "text-foreground",
     tagline: "text-muted-foreground",
@@ -255,6 +283,7 @@ const STYLES = {
     iconBg: "bg-gradient-to-br from-amber-500 to-orange-500",
     iconText: "text-white",
     icon: <Palette size={24} />,
+    logoSrc: `${import.meta.env.BASE_URL}images/wedesign-logo.png`,
     badge: "bg-amber-500/10 text-amber-700",
     title: "text-foreground",
     tagline: "text-muted-foreground",
@@ -263,4 +292,4 @@ const STYLES = {
     ctaPrimary: "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md hover:shadow-lg",
     ctaSecondary: "border-2 border-amber-500/30 text-amber-700 hover:border-amber-500",
   },
-} as const;
+};
