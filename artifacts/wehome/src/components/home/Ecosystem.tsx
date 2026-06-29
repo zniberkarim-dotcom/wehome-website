@@ -162,12 +162,12 @@ function BrandCard({
       className={`relative rounded-3xl border ${styles.border} bg-white flex flex-col group hover:-translate-y-1 hover:shadow-2xl transition-all overflow-hidden`}
     >
       {/* ── HERO zone — branded dark/colorful banner with logo or icon+name ── */}
-      <div className={`relative h-36 ${styles.heroBg} flex items-center justify-center px-6 overflow-hidden`}>
+      <div className={`relative h-44 ${styles.heroBg} flex items-center justify-center px-5 overflow-hidden`}>
         {/* Decorative blob inside the hero */}
-        <div className={`absolute -top-12 -right-12 w-40 h-40 ${styles.heroBlob} rounded-full blur-3xl pointer-events-none`} />
+        <div className={`absolute -top-12 -right-12 w-48 h-48 ${styles.heroBlob} rounded-full blur-3xl pointer-events-none`} />
 
         {/* Badge — top-right overlay */}
-        <span className={`absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${styles.badge}`}>
+        <span className={`absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${styles.badge} z-10`}>
           {fallback(brand.badgeKey, brand.badgeFallback)}
         </span>
 
@@ -177,13 +177,13 @@ function BrandCard({
           <img
             src={styles.logoSrc}
             alt={`Logo ${brandName}`}
-            className="relative max-h-14 w-auto object-contain"
+            className="relative h-24 md:h-28 w-auto max-w-[85%] object-contain"
             onError={() => setImgLoadError(true)}
           />
         ) : (
           <div className="relative flex items-center gap-3 text-white">
             <span className="opacity-90">{styles.icon}</span>
-            <span className="text-3xl font-display font-bold tracking-tight">{brandName}</span>
+            <span className="text-3xl md:text-4xl font-display font-bold tracking-tight">{brandName}</span>
           </div>
         )}
       </div>
