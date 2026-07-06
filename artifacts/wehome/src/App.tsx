@@ -70,15 +70,11 @@ function RealtimeSync() {
   useEffect(() => {
     const channel = supabase
       .channel("properties-sync")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "properties" },
-        () => {
-          qc.invalidateQueries({ queryKey: ["properties"] });
-          qc.invalidateQueries({ queryKey: ["featured-properties"] });
-          qc.invalidateQueries({ queryKey: ["property"] });
-        }
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "properties" }, () => {
+        qc.invalidateQueries({ queryKey: ["properties"] });
+        qc.invalidateQueries({ queryKey: ["featured-properties"] });
+        qc.invalidateQueries({ queryKey: ["property"] });
+      })
       .subscribe();
 
     return () => {
@@ -91,7 +87,9 @@ function RealtimeSync() {
 
 function RedirectTo({ to }: { to: string }) {
   const [, navigate] = useLocation();
-  useEffect(() => { navigate(to, { replace: true }); }, []);
+  useEffect(() => {
+    navigate(to, { replace: true });
+  }, []);
   return null;
 }
 

@@ -37,16 +37,16 @@ import {
 
 /** DB values paired with i18n keys — toggle state continues to use the FR backend value. */
 const FEATURES_LIST: { value: string; labelKey: string }[] = [
-  { value: "Parking",        labelKey: "publier.feature_parking" },
-  { value: "Piscine",        labelKey: "publier.feature_pool" },
-  { value: "Ascenseur",      labelKey: "publier.feature_elevator" },
-  { value: "Gardien",        labelKey: "publier.feature_doorman" },
-  { value: "Terrasse",       labelKey: "publier.feature_terrace" },
-  { value: "Jardin",         labelKey: "publier.feature_garden" },
-  { value: "Climatisation",  labelKey: "publier.feature_ac" },
-  { value: "Balcon",         labelKey: "publier.feature_balcony" },
-  { value: "Garage",         labelKey: "publier.feature_garage" },
-  { value: "Cave",           labelKey: "publier.feature_cellar" },
+  { value: "Parking", labelKey: "publier.feature_parking" },
+  { value: "Piscine", labelKey: "publier.feature_pool" },
+  { value: "Ascenseur", labelKey: "publier.feature_elevator" },
+  { value: "Gardien", labelKey: "publier.feature_doorman" },
+  { value: "Terrasse", labelKey: "publier.feature_terrace" },
+  { value: "Jardin", labelKey: "publier.feature_garden" },
+  { value: "Climatisation", labelKey: "publier.feature_ac" },
+  { value: "Balcon", labelKey: "publier.feature_balcony" },
+  { value: "Garage", labelKey: "publier.feature_garage" },
+  { value: "Cave", labelKey: "publier.feature_cellar" },
 ];
 
 const whatsappVendre = `https://wa.me/212653535156?text=${encodeURIComponent(
@@ -87,9 +87,7 @@ export default function PublierPage() {
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   const toggleFeature = (key: string) => {
-    setFeatures((prev) =>
-      prev.includes(key) ? prev.filter((f) => f !== key) : [...prev, key]
-    );
+    setFeatures((prev) => (prev.includes(key) ? prev.filter((f) => f !== key) : [...prev, key]));
   };
 
   const handleFiles = async (files: FileList | null) => {
@@ -137,16 +135,11 @@ export default function PublierPage() {
     if (!ville.trim()) return t("publier.err_city");
     if (!prix || Number(prix) <= 0) return t("publier.err_price");
     if (!surface || Number(surface) <= 0) return t("publier.err_surface");
-    if (!description.trim() || description.trim().length < 30)
-      return t("publier.err_description");
-    if (!vendeurPrenom.trim() || !vendeurNom.trim())
-      return t("publier.err_name");
-    if (!/^\S+@\S+\.\S+$/.test(vendeurEmail))
-      return t("publier.err_email");
-    if (!/^[+\d][\d\s-]{6,}$/.test(vendeurTelephone))
-      return t("publier.err_phone");
-    if (photos.some((p) => p.uploading))
-      return t("publier.err_uploading");
+    if (!description.trim() || description.trim().length < 30) return t("publier.err_description");
+    if (!vendeurPrenom.trim() || !vendeurNom.trim()) return t("publier.err_name");
+    if (!/^\S+@\S+\.\S+$/.test(vendeurEmail)) return t("publier.err_email");
+    if (!/^[+\d][\d\s-]{6,}$/.test(vendeurTelephone)) return t("publier.err_phone");
+    if (photos.some((p) => p.uploading)) return t("publier.err_uploading");
     return null;
   };
 
@@ -246,18 +239,38 @@ export default function PublierPage() {
                 </div>
                 <h3 className="text-xl md:text-2xl font-display font-bold text-foreground leading-tight">
                   {t("publier.upsell_title_part1", "Tu veux que ton annonce")}{" "}
-                  <span className="text-primary">{t("publier.upsell_title_part2", "performe vraiment")}</span>{" "}?
+                  <span className="text-primary">
+                    {t("publier.upsell_title_part2", "performe vraiment")}
+                  </span>{" "}
+                  ?
                 </h3>
                 <p className="text-sm md:text-base text-muted-foreground mt-2 leading-relaxed max-w-2xl">
-                  {t("publier.upsell_subtitle", "Photos retouchées par IA, home staging virtuel, immersion 3D et conseils pro — vends ou loue 2 à 3× plus vite.")}{" "}
-                  <strong className="text-foreground">{t("publier.upsell_price", "À partir de 1 990 MAD.")}</strong>
+                  {t(
+                    "publier.upsell_subtitle",
+                    "Photos retouchées par IA, home staging virtuel, immersion 3D et conseils pro — vends ou loue 2 à 3× plus vite."
+                  )}{" "}
+                  <strong className="text-foreground">
+                    {t("publier.upsell_price", "À partir de 1 990 MAD.")}
+                  </strong>
                 </p>
 
                 <div className="flex flex-wrap gap-2 mt-4">
-                  <FeatureChip icon={<Wand2 size={12} />} label={t("publier.upsell_feat_ai", "Photos IA")} />
-                  <FeatureChip icon={<Sofa size={12} />} label={t("publier.upsell_feat_staging", "Home staging virtuel")} />
-                  <FeatureChip icon={<Box size={12} />} label={t("publier.upsell_feat_3d", "Visite 3D")} />
-                  <FeatureChip icon={<TrendingUp size={12} />} label={t("publier.upsell_feat_diffusion", "Diffusion premium")} />
+                  <FeatureChip
+                    icon={<Wand2 size={12} />}
+                    label={t("publier.upsell_feat_ai", "Photos IA")}
+                  />
+                  <FeatureChip
+                    icon={<Sofa size={12} />}
+                    label={t("publier.upsell_feat_staging", "Home staging virtuel")}
+                  />
+                  <FeatureChip
+                    icon={<Box size={12} />}
+                    label={t("publier.upsell_feat_3d", "Visite 3D")}
+                  />
+                  <FeatureChip
+                    icon={<TrendingUp size={12} />}
+                    label={t("publier.upsell_feat_diffusion", "Diffusion premium")}
+                  />
                 </div>
               </div>
 
@@ -266,7 +279,10 @@ export default function PublierPage() {
                 className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold bg-foreground text-background shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all whitespace-nowrap"
               >
                 {t("publier.upsell_cta", "Découvrir les packs")}
-                <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight
+                  size={16}
+                  className="group-hover:translate-x-0.5 transition-transform"
+                />
               </Link>
             </div>
           </motion.div>
@@ -296,10 +312,10 @@ export default function PublierPage() {
                   {/* Transaction */}
                   <Field label={t("publier.you_want")}>
                     <div className="flex gap-2">
-                      {([
-                        { label: t("publier.sell"),     value: "Vente" as const },
+                      {[
+                        { label: t("publier.sell"), value: "Vente" as const },
                         { label: t("publier.rent_out"), value: "Location" as const },
-                      ]).map((opt) => (
+                      ].map((opt) => (
                         <button
                           type="button"
                           key={opt.value}
@@ -348,13 +364,25 @@ export default function PublierPage() {
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <Field label={transaction === "Location" ? t("publier.price_rent") : t("publier.price_sale")} required icon={<Banknote size={16} />}>
+                    <Field
+                      label={
+                        transaction === "Location"
+                          ? t("publier.price_rent")
+                          : t("publier.price_sale")
+                      }
+                      required
+                      icon={<Banknote size={16} />}
+                    >
                       <Input
                         type="number"
                         inputMode="numeric"
                         value={prix}
                         onChange={setPrix}
-                        placeholder={transaction === "Location" ? t("publier.price_placeholder_rent") : t("publier.price_placeholder_sale")}
+                        placeholder={
+                          transaction === "Location"
+                            ? t("publier.price_placeholder_rent")
+                            : t("publier.price_placeholder_sale")
+                        }
                       />
                     </Field>
                     <Field label={t("publier.surface")} required icon={<Square size={16} />}>
@@ -496,7 +524,10 @@ export default function PublierPage() {
 
                     <p className="text-[11px] text-muted-foreground mt-3 flex items-center gap-1.5">
                       <Camera size={12} />
-                      {t("publier.photo_hint", { current: photos.filter((p) => !!p.url).length, max: MAX_PHOTOS })}
+                      {t("publier.photo_hint", {
+                        current: photos.filter((p) => !!p.url).length,
+                        max: MAX_PHOTOS,
+                      })}
                     </p>
 
                     {uploadError && (
@@ -516,10 +547,18 @@ export default function PublierPage() {
                 >
                   <div className="grid sm:grid-cols-2 gap-4">
                     <Field label={t("publier.first_name")} required>
-                      <Input value={vendeurPrenom} onChange={setVendeurPrenom} placeholder={t("publier.first_name_placeholder")} />
+                      <Input
+                        value={vendeurPrenom}
+                        onChange={setVendeurPrenom}
+                        placeholder={t("publier.first_name_placeholder")}
+                      />
                     </Field>
                     <Field label={t("publier.last_name")} required>
-                      <Input value={vendeurNom} onChange={setVendeurNom} placeholder={t("publier.last_name_placeholder")} />
+                      <Input
+                        value={vendeurNom}
+                        onChange={setVendeurNom}
+                        placeholder={t("publier.last_name_placeholder")}
+                      />
                     </Field>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
@@ -561,9 +600,7 @@ export default function PublierPage() {
                 )}
 
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between pt-2 border-t border-border/50">
-                  <p className="text-xs text-muted-foreground max-w-md">
-                    {t("publier.consent")}
-                  </p>
+                  <p className="text-xs text-muted-foreground max-w-md">{t("publier.consent")}</p>
                   <button
                     type="submit"
                     disabled={submitting}
@@ -648,9 +685,7 @@ function FormSection({
           {number}
         </span>
         <div>
-          <h2 className="text-xl font-display font-bold text-foreground leading-tight">
-            {title}
-          </h2>
+          <h2 className="text-xl font-display font-bold text-foreground leading-tight">{title}</h2>
           {subtitle && <p className="text-sm text-muted-foreground mt-0.5">{subtitle}</p>}
         </div>
       </header>
@@ -764,7 +799,8 @@ function SuccessState({ onPublishAnother }: { onPublishAnother: () => void }) {
         {t("publier.success_title")}
       </h2>
       <p className="text-lg text-muted-foreground mt-4 max-w-xl mx-auto leading-relaxed">
-        {t("publier.success_body_part1")} <strong>{t("publier.success_body_part2")}</strong> {t("publier.success_body_part3")}
+        {t("publier.success_body_part1")} <strong>{t("publier.success_body_part2")}</strong>{" "}
+        {t("publier.success_body_part3")}
       </p>
       <p className="text-sm text-muted-foreground mt-3">
         {t("publier.success_question")}{" "}
@@ -806,10 +842,22 @@ function SuccessState({ onPublishAnother }: { onPublishAnother: () => void }) {
               </p>
 
               <div className="flex flex-wrap gap-2 mt-4">
-                <FeatureChip icon={<Wand2 size={12} />} label={t("publier.upsell_feat_ai", "Photos IA")} />
-                <FeatureChip icon={<Sofa size={12} />} label={t("publier.upsell_feat_staging", "Home staging virtuel")} />
-                <FeatureChip icon={<Box size={12} />} label={t("publier.upsell_feat_3d", "Visite 3D")} />
-                <FeatureChip icon={<TrendingUp size={12} />} label={t("publier.upsell_feat_diffusion", "Diffusion premium")} />
+                <FeatureChip
+                  icon={<Wand2 size={12} />}
+                  label={t("publier.upsell_feat_ai", "Photos IA")}
+                />
+                <FeatureChip
+                  icon={<Sofa size={12} />}
+                  label={t("publier.upsell_feat_staging", "Home staging virtuel")}
+                />
+                <FeatureChip
+                  icon={<Box size={12} />}
+                  label={t("publier.upsell_feat_3d", "Visite 3D")}
+                />
+                <FeatureChip
+                  icon={<TrendingUp size={12} />}
+                  label={t("publier.upsell_feat_diffusion", "Diffusion premium")}
+                />
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 mt-5">
@@ -818,10 +866,16 @@ function SuccessState({ onPublishAnother }: { onPublishAnother: () => void }) {
                   className="group inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full font-bold bg-foreground text-background shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
                 >
                   {t("publier.success_upsell_cta", "Découvrir les packs Pro")}
-                  <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                  <ArrowRight
+                    size={16}
+                    className="group-hover:translate-x-0.5 transition-transform"
+                  />
                 </Link>
                 <span className="text-xs text-muted-foreground sm:self-center">
-                  {t("publier.success_upsell_price_hint", "À partir de 1 990 MAD — sans engagement")}
+                  {t(
+                    "publier.success_upsell_price_hint",
+                    "À partir de 1 990 MAD — sans engagement"
+                  )}
                 </span>
               </div>
             </div>

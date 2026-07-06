@@ -23,9 +23,7 @@ export default function FavorisPage() {
   });
 
   const isLoading = queries.some((q) => q.isLoading);
-  const properties = queries
-    .map((q) => q.data)
-    .filter((p): p is Property => Boolean(p));
+  const properties = queries.map((q) => q.data).filter((p): p is Property => Boolean(p));
   // IDs that resolved to null (deleted/unpublished) — auto-prune
   const missingIds = favoriteIds.filter((id, i) => !queries[i].isLoading && !queries[i].data);
   if (missingIds.length > 0) {
@@ -74,9 +72,7 @@ export default function FavorisPage() {
                 {t("favoris.page_title")}
               </h1>
               <p className="text-muted-foreground mt-2">
-                {count === 0
-                  ? t("favoris.empty_inline")
-                  : t("favoris.count", { count })}
+                {count === 0 ? t("favoris.empty_inline") : t("favoris.count", { count })}
               </p>
             </div>
 
@@ -142,9 +138,7 @@ function EmptyState() {
       <h2 className="text-2xl font-display font-bold text-foreground">
         {t("favoris.empty_title")}
       </h2>
-      <p className="text-muted-foreground mt-3 leading-relaxed">
-        {t("favoris.empty_body")}
-      </p>
+      <p className="text-muted-foreground mt-3 leading-relaxed">{t("favoris.empty_body")}</p>
       <Link
         href="/biens"
         className="inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-full font-bold bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all"

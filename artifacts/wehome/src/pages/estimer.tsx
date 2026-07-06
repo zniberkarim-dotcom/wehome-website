@@ -2,8 +2,18 @@ import { useRef, useState } from "react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ChevronDown, ChevronRight, CheckCircle2, Home, User, Zap,
-  BarChart2, Shield, Clock, ArrowLeft, Loader2, Check,
+  ChevronDown,
+  ChevronRight,
+  CheckCircle2,
+  Home,
+  User,
+  Zap,
+  BarChart2,
+  Shield,
+  Clock,
+  ArrowLeft,
+  Loader2,
+  Check,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
@@ -15,18 +25,29 @@ import { submitEstimationLead } from "@/lib/data";
 // used purely for display. Names/quartiers stay in their original characters.
 
 const TYPE_BIEN: { value: string; labelKey: string }[] = [
-  { value: "Appartement",       labelKey: "estimer.type_apt" },
-  { value: "Villa",             labelKey: "estimer.type_villa" },
-  { value: "Maison",            labelKey: "estimer.type_maison" },
-  { value: "Bureau",            labelKey: "estimer.type_bureau" },
-  { value: "Local commercial",  labelKey: "estimer.type_local" },
-  { value: "Terrain",           labelKey: "estimer.type_terrain" },
+  { value: "Appartement", labelKey: "estimer.type_apt" },
+  { value: "Villa", labelKey: "estimer.type_villa" },
+  { value: "Maison", labelKey: "estimer.type_maison" },
+  { value: "Bureau", labelKey: "estimer.type_bureau" },
+  { value: "Local commercial", labelKey: "estimer.type_local" },
+  { value: "Terrain", labelKey: "estimer.type_terrain" },
 ];
 
 const QUARTIERS = [
-  "Maarif", "Racine", "Gauthier", "CIL", "Ain Diab", "Anfa", "Palmier",
-  "Bourgogne", "Sidi Maârouf", "Bouskoura", "Casa Finance City",
-  "Hay Hassani", "Bernoussi", "Autre",
+  "Maarif",
+  "Racine",
+  "Gauthier",
+  "CIL",
+  "Ain Diab",
+  "Anfa",
+  "Palmier",
+  "Bourgogne",
+  "Sidi Maârouf",
+  "Bouskoura",
+  "Casa Finance City",
+  "Hay Hassani",
+  "Bernoussi",
+  "Autre",
 ];
 
 const CHAMBRES_OPTIONS: { value: string; labelKey?: string }[] = [
@@ -39,34 +60,42 @@ const CHAMBRES_OPTIONS: { value: string; labelKey?: string }[] = [
 ];
 
 const ETAT_OPTIONS: { value: string; labelKey: string; descKey: string }[] = [
-  { value: "Neuf / Récent", labelKey: "estimer.etat_neuf_value",     descKey: "estimer.etat_neuf_desc" },
-  { value: "Bon état",      labelKey: "estimer.etat_bon_value",      descKey: "estimer.etat_bon_desc" },
-  { value: "À rénover",     labelKey: "estimer.etat_renover_value",  descKey: "estimer.etat_renover_desc" },
+  {
+    value: "Neuf / Récent",
+    labelKey: "estimer.etat_neuf_value",
+    descKey: "estimer.etat_neuf_desc",
+  },
+  { value: "Bon état", labelKey: "estimer.etat_bon_value", descKey: "estimer.etat_bon_desc" },
+  {
+    value: "À rénover",
+    labelKey: "estimer.etat_renover_value",
+    descKey: "estimer.etat_renover_desc",
+  },
 ];
 
 const ETAGE_OPTIONS: { value: string; labelKey: string }[] = [
-  { value: "RDC",            labelKey: "estimer.etage_rdc" },
-  { value: "1–3",            labelKey: "estimer.etage_1_3" },
-  { value: "4–6",            labelKey: "estimer.etage_4_6" },
-  { value: "7+",             labelKey: "estimer.etage_7p" },
+  { value: "RDC", labelKey: "estimer.etage_rdc" },
+  { value: "1–3", labelKey: "estimer.etage_1_3" },
+  { value: "4–6", labelKey: "estimer.etage_4_6" },
+  { value: "7+", labelKey: "estimer.etage_7p" },
   { value: "Non applicable", labelKey: "estimer.etage_na" },
 ];
 
 const CARACT_OPTIONS: { value: string; labelKey: string }[] = [
-  { value: "Parking / Garage",   labelKey: "estimer.caract_parking" },
-  { value: "Terrasse / Balcon",  labelKey: "estimer.caract_terrace" },
-  { value: "Vue dégagée",        labelKey: "estimer.caract_view" },
-  { value: "Ascenseur",          labelKey: "estimer.caract_elevator" },
+  { value: "Parking / Garage", labelKey: "estimer.caract_parking" },
+  { value: "Terrasse / Balcon", labelKey: "estimer.caract_terrace" },
+  { value: "Vue dégagée", labelKey: "estimer.caract_view" },
+  { value: "Ascenseur", labelKey: "estimer.caract_elevator" },
   { value: "Gardien / Sécurité", labelKey: "estimer.caract_security" },
-  { value: "Piscine",            labelKey: "estimer.caract_pool" },
-  { value: "Climatisation",      labelKey: "estimer.caract_ac" },
-  { value: "Cuisine équipée",    labelKey: "estimer.caract_kitchen" },
+  { value: "Piscine", labelKey: "estimer.caract_pool" },
+  { value: "Climatisation", labelKey: "estimer.caract_ac" },
+  { value: "Cuisine équipée", labelKey: "estimer.caract_kitchen" },
 ];
 
 const MOTIVATION_OPTIONS: { value: string; labelKey: string }[] = [
   { value: "Dans les 3 prochains mois", labelKey: "estimer.moti_3m" },
   { value: "Dans les 6 prochains mois", labelKey: "estimer.moti_6m" },
-  { value: "J'explore les options",     labelKey: "estimer.moti_explore" },
+  { value: "J'explore les options", labelKey: "estimer.moti_explore" },
   { value: "Je veux louer, pas vendre", labelKey: "estimer.moti_rent" },
 ];
 
@@ -79,12 +108,25 @@ const FAQ_ITEMS = [
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function FadeIn({ children, delay = 0, className = "", from = "bottom" }: { children: React.ReactNode; delay?: number; className?: string; from?: "bottom" | "left" | "right" | "none" }) {
+function FadeIn({
+  children,
+  delay = 0,
+  className = "",
+  from = "bottom",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+  from?: "bottom" | "left" | "right" | "none";
+}) {
   const initial =
-    from === "none" ? { opacity: 0 }
-    : from === "left"  ? { opacity: 0, x: -24 }
-    : from === "right" ? { opacity: 0, x: 24 }
-    : { opacity: 0, y: 24 };
+    from === "none"
+      ? { opacity: 0 }
+      : from === "left"
+        ? { opacity: 0, x: -24 }
+        : from === "right"
+          ? { opacity: 0, x: 24 }
+          : { opacity: 0, y: 24 };
   return (
     <motion.div
       initial={initial}
@@ -99,7 +141,10 @@ function FadeIn({ children, delay = 0, className = "", from = "bottom" }: { chil
 }
 
 function ButtonGroup({
-  options, value, onChange, columns = 3,
+  options,
+  value,
+  onChange,
+  columns = 3,
 }: {
   /** Each option's `value` is the DB value sent to Supabase; `label` is the displayed text. */
   options: { value: string; label: string }[];
@@ -108,7 +153,10 @@ function ButtonGroup({
   columns?: number;
 }) {
   return (
-    <div className={`grid gap-2.5`} style={{ gridTemplateColumns: `repeat(${columns}, minmax(0,1fr))` }}>
+    <div
+      className={`grid gap-2.5`}
+      style={{ gridTemplateColumns: `repeat(${columns}, minmax(0,1fr))` }}
+    >
       {options.map((opt) => (
         <button
           key={opt.value}
@@ -130,7 +178,8 @@ function ButtonGroup({
 function FieldLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return (
     <label className="block text-xs font-bold tracking-wider uppercase text-foreground/60 mb-3">
-      {children}{required && <span className="text-primary ml-1">*</span>}
+      {children}
+      {required && <span className="text-primary ml-1">*</span>}
     </label>
   );
 }
@@ -139,7 +188,8 @@ function FieldLabel({ children, required }: { children: React.ReactNode; require
 export default function EstimerPage() {
   const { t } = useTranslation();
   const formRef = useRef<HTMLDivElement>(null);
-  const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const scrollToForm = () =>
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   // ── Step state ──────────────────────────────────────────────────────────────
   const [step, setStep] = useState(1);
@@ -216,7 +266,7 @@ export default function EstimerPage() {
   };
 
   const toggleCaract = (v: string) =>
-    setCaracteristiques((prev) => prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v]);
+    setCaracteristiques((prev) => (prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v]));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -251,7 +301,7 @@ export default function EstimerPage() {
   const stepVariants = {
     enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 40 : -40 }),
     center: { opacity: 1, x: 0 },
-    exit:  (dir: number) => ({ opacity: 0, x: dir > 0 ? -40 : 40 }),
+    exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -40 : 40 }),
   };
 
   // ── FAQ ─────────────────────────────────────────────────────────────────────
@@ -276,7 +326,13 @@ export default function EstimerPage() {
             className="w-full h-full object-cover object-center"
             loading="eager"
           />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.38) 55%, rgba(0,0,0,0.65) 100%)" }} />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.38) 55%, rgba(0,0,0,0.65) 100%)",
+            }}
+          />
         </div>
 
         <div className="relative z-10 text-center max-w-3xl mx-auto px-4">
@@ -286,7 +342,10 @@ export default function EstimerPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.15 }}
             className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full"
-            style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)" }}
+            style={{
+              background: "rgba(255,255,255,0.1)",
+              border: "1px solid rgba(255,255,255,0.2)",
+            }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
             <span className="text-xs font-semibold tracking-wider text-white/80 uppercase">
@@ -300,9 +359,13 @@ export default function EstimerPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
             className="font-display font-bold text-white leading-[1.1] tracking-tight mb-6"
-            style={{ fontSize: "clamp(2.4rem, 6vw, 4.8rem)", textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}
+            style={{
+              fontSize: "clamp(2.4rem, 6vw, 4.8rem)",
+              textShadow: "0 2px 20px rgba(0,0,0,0.5)",
+            }}
           >
-            {t("estimer.hero_title_line1")}<br className="hidden sm:block" /> {t("estimer.hero_title_line2")}
+            {t("estimer.hero_title_line1")}
+            <br className="hidden sm:block" /> {t("estimer.hero_title_line2")}
           </motion.h1>
 
           {/* Sub */}
@@ -323,7 +386,10 @@ export default function EstimerPage() {
             transition={{ duration: 0.7, delay: 0.56 }}
             onClick={scrollToForm}
             className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl font-bold text-base text-white shadow-2xl hover:-translate-y-1 transition-all duration-300"
-            style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 8px 32px rgba(139,26,46,0.5)" }}
+            style={{
+              background: "var(--primary, #8B1A2E)",
+              boxShadow: "0 8px 32px rgba(139,26,46,0.5)",
+            }}
           >
             {t("estimer.hero_cta")}
             <ChevronDown size={18} />
@@ -339,11 +405,13 @@ export default function EstimerPage() {
             {[
               { icon: Home, text: t("estimer.trust_1") },
               { icon: User, text: t("estimer.trust_2") },
-              { icon: Zap,  text: t("estimer.trust_3") },
+              { icon: Zap, text: t("estimer.trust_3") },
             ].map(({ icon: Icon, text }) => (
               <div key={text} className="flex items-center gap-2">
                 <Icon size={15} style={{ color: "rgba(255,255,255,0.55)" }} />
-                <span className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.6)" }}>{text}</span>
+                <span className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.6)" }}>
+                  {text}
+                </span>
               </div>
             ))}
           </motion.div>
@@ -356,16 +424,13 @@ export default function EstimerPage() {
       <section className="py-20 bg-secondary/30" ref={formRef}>
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <div className="bg-white rounded-3xl shadow-2xl border border-border/40 overflow-hidden">
-
             {/* ── Progress bar ── */}
             {!success && (
               <div className="px-8 pt-8 pb-6">
                 <div className="flex items-center gap-2 mb-3">
                   {[1, 2, 3].map((s) => (
                     <div key={s} className="flex items-center gap-2 flex-1">
-                      <div
-                        className="h-1.5 flex-1 rounded-full overflow-hidden bg-border/40"
-                      >
+                      <div className="h-1.5 flex-1 rounded-full overflow-hidden bg-border/40">
                         <motion.div
                           className="h-full rounded-full"
                           style={{ background: "var(--primary, #8B1A2E)" }}
@@ -380,7 +445,12 @@ export default function EstimerPage() {
                 <p className="text-xs text-muted-foreground font-medium">
                   {t("estimer.step_indicator", {
                     current: step,
-                    name: step === 1 ? t("estimer.step1_name") : step === 2 ? t("estimer.step2_name") : t("estimer.step3_name"),
+                    name:
+                      step === 1
+                        ? t("estimer.step1_name")
+                        : step === 2
+                          ? t("estimer.step2_name")
+                          : t("estimer.step3_name"),
                   })}
                 </p>
               </div>
@@ -398,7 +468,10 @@ export default function EstimerPage() {
                     transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                     className="py-8 text-center"
                   >
-                    <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: "rgba(139,26,46,0.08)" }}>
+                    <div
+                      className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
+                      style={{ background: "rgba(139,26,46,0.08)" }}
+                    >
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
@@ -411,14 +484,20 @@ export default function EstimerPage() {
                       {t("estimer.success_title")}
                     </h2>
                     <p className="text-muted-foreground leading-relaxed mb-8 max-w-sm mx-auto">
-                      {t("estimer.success_body_part1")} <strong>{prenom}</strong>{t("estimer.success_body_part2")}{" "}
-                      <strong>{quartier}</strong> {t("estimer.success_body_part3")}
-                      <br /><br />
+                      {t("estimer.success_body_part1")} <strong>{prenom}</strong>
+                      {t("estimer.success_body_part2")} <strong>{quartier}</strong>{" "}
+                      {t("estimer.success_body_part3")}
+                      <br />
+                      <br />
                       {t("estimer.success_body_part4")}
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                       <Link
-                        href={quartier && quartier !== "Autre" ? `/biens?ville=${encodeURIComponent(quartier)}` : "/biens"}
+                        href={
+                          quartier && quartier !== "Autre"
+                            ? `/biens?ville=${encodeURIComponent(quartier)}`
+                            : "/biens"
+                        }
                         className="px-7 py-3 rounded-xl font-bold text-sm text-white hover:-translate-y-0.5 transition-all duration-200"
                         style={{ background: "var(--primary, #8B1A2E)" }}
                       >
@@ -434,7 +513,6 @@ export default function EstimerPage() {
                       </Link>
                     </div>
                   </motion.div>
-
                 ) : step === 1 ? (
                   /* ── Step 1 ── */
                   <motion.div
@@ -459,7 +537,9 @@ export default function EstimerPage() {
                         onChange={setTypeBien}
                         columns={3}
                       />
-                      {errors.typeBien && <p className="text-xs text-destructive mt-2">{errors.typeBien}</p>}
+                      {errors.typeBien && (
+                        <p className="text-xs text-destructive mt-2">{errors.typeBien}</p>
+                      )}
                     </div>
 
                     {/* Quartier */}
@@ -472,11 +552,20 @@ export default function EstimerPage() {
                           className="w-full px-4 py-3.5 rounded-xl border border-border/60 bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium appearance-none"
                         >
                           <option value="">{t("estimer.f_quartier_placeholder")}</option>
-                          {QUARTIERS.map((q) => <option key={q} value={q}>{q}</option>)}
+                          {QUARTIERS.map((q) => (
+                            <option key={q} value={q}>
+                              {q}
+                            </option>
+                          ))}
                         </select>
-                        <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                        <ChevronDown
+                          size={16}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+                        />
                       </div>
-                      {errors.quartier && <p className="text-xs text-destructive mt-2">{errors.quartier}</p>}
+                      {errors.quartier && (
+                        <p className="text-xs text-destructive mt-2">{errors.quartier}</p>
+                      )}
                     </div>
 
                     {/* Superficie */}
@@ -491,34 +580,47 @@ export default function EstimerPage() {
                           min={1}
                           className="w-full pl-4 pr-14 py-3.5 rounded-xl border border-border/60 bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                         />
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground">m²</span>
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-muted-foreground">
+                          m²
+                        </span>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1.5">{t("estimer.f_superficie_hint")}</p>
-                      {errors.superficie && <p className="text-xs text-destructive mt-1">{errors.superficie}</p>}
+                      <p className="text-xs text-muted-foreground mt-1.5">
+                        {t("estimer.f_superficie_hint")}
+                      </p>
+                      {errors.superficie && (
+                        <p className="text-xs text-destructive mt-1">{errors.superficie}</p>
+                      )}
                     </div>
 
                     {/* Chambres */}
                     <div className="mb-8">
                       <FieldLabel required>{t("estimer.f_chambres")}</FieldLabel>
                       <ButtonGroup
-                        options={CHAMBRES_OPTIONS.map((o) => ({ value: o.value, label: o.labelKey ? t(o.labelKey) : o.value }))}
+                        options={CHAMBRES_OPTIONS.map((o) => ({
+                          value: o.value,
+                          label: o.labelKey ? t(o.labelKey) : o.value,
+                        }))}
                         value={chambres}
                         onChange={setChambres}
                         columns={6}
                       />
-                      {errors.chambres && <p className="text-xs text-destructive mt-2">{errors.chambres}</p>}
+                      {errors.chambres && (
+                        <p className="text-xs text-destructive mt-2">{errors.chambres}</p>
+                      )}
                     </div>
 
                     <button
                       type="button"
                       onClick={goNext}
                       className="w-full py-4 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200"
-                      style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 4px 20px rgba(139,26,46,0.25)" }}
+                      style={{
+                        background: "var(--primary, #8B1A2E)",
+                        boxShadow: "0 4px 20px rgba(139,26,46,0.25)",
+                      }}
                     >
                       {t("estimer.btn_continue")} <ChevronRight size={18} />
                     </button>
                   </motion.div>
-
                 ) : step === 2 ? (
                   /* ── Step 2 ── */
                   <motion.div
@@ -549,24 +651,40 @@ export default function EstimerPage() {
                                 : "border-border/60 hover:border-primary/30"
                             }`}
                           >
-                            <div className={`mt-0.5 w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${etat === value ? "border-primary" : "border-border"}`}>
-                              {etat === value && <div className="w-2 h-2 rounded-full" style={{ background: "var(--primary, #8B1A2E)" }} />}
+                            <div
+                              className={`mt-0.5 w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${etat === value ? "border-primary" : "border-border"}`}
+                            >
+                              {etat === value && (
+                                <div
+                                  className="w-2 h-2 rounded-full"
+                                  style={{ background: "var(--primary, #8B1A2E)" }}
+                                />
+                              )}
                             </div>
                             <div>
-                              <p className={`text-sm font-semibold ${etat === value ? "text-primary" : "text-foreground"}`}>{t(labelKey)}</p>
+                              <p
+                                className={`text-sm font-semibold ${etat === value ? "text-primary" : "text-foreground"}`}
+                              >
+                                {t(labelKey)}
+                              </p>
                               <p className="text-xs text-muted-foreground mt-0.5">{t(descKey)}</p>
                             </div>
                           </button>
                         ))}
                       </div>
-                      {errors.etat && <p className="text-xs text-destructive mt-2">{errors.etat}</p>}
+                      {errors.etat && (
+                        <p className="text-xs text-destructive mt-2">{errors.etat}</p>
+                      )}
                     </div>
 
                     {/* Étage */}
                     <div className="mb-6">
                       <FieldLabel>{t("estimer.f_etage")}</FieldLabel>
                       <ButtonGroup
-                        options={ETAGE_OPTIONS.map((o) => ({ value: o.value, label: t(o.labelKey) }))}
+                        options={ETAGE_OPTIONS.map((o) => ({
+                          value: o.value,
+                          label: t(o.labelKey),
+                        }))}
                         value={etage}
                         onChange={setEtage}
                         columns={5}
@@ -588,8 +706,12 @@ export default function EstimerPage() {
                                 : "border-border/60 text-foreground/70 hover:border-primary/30"
                             }`}
                           >
-                            <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${caracteristiques.includes(c.value) ? "bg-primary border-primary" : "border-border"}`}>
-                              {caracteristiques.includes(c.value) && <Check size={10} className="text-white" />}
+                            <div
+                              className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${caracteristiques.includes(c.value) ? "bg-primary border-primary" : "border-border"}`}
+                            >
+                              {caracteristiques.includes(c.value) && (
+                                <Check size={10} className="text-white" />
+                              )}
                             </div>
                             {t(c.labelKey)}
                           </button>
@@ -607,11 +729,20 @@ export default function EstimerPage() {
                           className="w-full px-4 py-3.5 rounded-xl border border-border/60 bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium appearance-none"
                         >
                           <option value="">{t("estimer.f_motivation_placeholder")}</option>
-                          {MOTIVATION_OPTIONS.map((m) => <option key={m.value} value={m.value}>{t(m.labelKey)}</option>)}
+                          {MOTIVATION_OPTIONS.map((m) => (
+                            <option key={m.value} value={m.value}>
+                              {t(m.labelKey)}
+                            </option>
+                          ))}
                         </select>
-                        <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                        <ChevronDown
+                          size={16}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+                        />
                       </div>
-                      {errors.motivation && <p className="text-xs text-destructive mt-2">{errors.motivation}</p>}
+                      {errors.motivation && (
+                        <p className="text-xs text-destructive mt-2">{errors.motivation}</p>
+                      )}
                     </div>
 
                     <div className="flex flex-col gap-3">
@@ -619,16 +750,22 @@ export default function EstimerPage() {
                         type="button"
                         onClick={goNext}
                         className="w-full py-4 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200"
-                        style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 4px 20px rgba(139,26,46,0.25)" }}
+                        style={{
+                          background: "var(--primary, #8B1A2E)",
+                          boxShadow: "0 4px 20px rgba(139,26,46,0.25)",
+                        }}
                       >
                         {t("estimer.btn_continue")} <ChevronRight size={18} />
                       </button>
-                      <button type="button" onClick={goBack} className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors py-2">
+                      <button
+                        type="button"
+                        onClick={goBack}
+                        className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+                      >
                         <ArrowLeft size={14} /> {t("estimer.btn_back")}
                       </button>
                     </div>
                   </motion.div>
-
                 ) : (
                   /* ── Step 3 ── */
                   <motion.div
@@ -658,7 +795,9 @@ export default function EstimerPage() {
                           placeholder={t("estimer.f_name_placeholder")}
                           className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                         />
-                        {errors.nom && <p className="text-xs text-destructive mt-1.5">{errors.nom}</p>}
+                        {errors.nom && (
+                          <p className="text-xs text-destructive mt-1.5">{errors.nom}</p>
+                        )}
                       </div>
 
                       {/* Téléphone */}
@@ -671,7 +810,9 @@ export default function EstimerPage() {
                           placeholder={t("estimer.f_phone_placeholder")}
                           className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                         />
-                        {errors.telephone && <p className="text-xs text-destructive mt-1.5">{errors.telephone}</p>}
+                        {errors.telephone && (
+                          <p className="text-xs text-destructive mt-1.5">{errors.telephone}</p>
+                        )}
                       </div>
 
                       {/* Email */}
@@ -684,7 +825,9 @@ export default function EstimerPage() {
                           placeholder={t("estimer.f_email_placeholder")}
                           className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                         />
-                        {errors.email && <p className="text-xs text-destructive mt-1.5">{errors.email}</p>}
+                        {errors.email && (
+                          <p className="text-xs text-destructive mt-1.5">{errors.email}</p>
+                        )}
                       </div>
 
                       {/* Message */}
@@ -706,7 +849,9 @@ export default function EstimerPage() {
                           onClick={() => setConsent(!consent)}
                           className="flex items-start gap-3 text-left w-full"
                         >
-                          <div className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-all ${consent ? "bg-primary border-primary" : "border-border/60"}`}>
+                          <div
+                            className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-all ${consent ? "bg-primary border-primary" : "border-border/60"}`}
+                          >
                             {consent && <Check size={11} className="text-white" />}
                           </div>
                           <p className="text-xs text-muted-foreground leading-relaxed">
@@ -714,24 +859,39 @@ export default function EstimerPage() {
                             <span className="font-semibold">{t("estimer.consent_part2")}</span>
                           </p>
                         </button>
-                        {errors.consent && <p className="text-xs text-destructive mt-1.5">{errors.consent}</p>}
+                        {errors.consent && (
+                          <p className="text-xs text-destructive mt-1.5">{errors.consent}</p>
+                        )}
                       </div>
 
                       {submitError && (
-                        <p className="text-sm text-destructive bg-destructive/5 px-4 py-3 rounded-xl">{submitError}</p>
+                        <p className="text-sm text-destructive bg-destructive/5 px-4 py-3 rounded-xl">
+                          {submitError}
+                        </p>
                       )}
 
                       <button
                         type="submit"
                         disabled={loading}
                         className="w-full py-4 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 mt-2"
-                        style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 4px 20px rgba(139,26,46,0.25)" }}
+                        style={{
+                          background: "var(--primary, #8B1A2E)",
+                          boxShadow: "0 4px 20px rgba(139,26,46,0.25)",
+                        }}
                       >
-                        {loading ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
+                        {loading ? (
+                          <Loader2 size={18} className="animate-spin" />
+                        ) : (
+                          <CheckCircle2 size={18} />
+                        )}
                         {loading ? t("estimer.btn_submitting") : t("estimer.btn_submit")}
                       </button>
 
-                      <button type="button" onClick={goBack} className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors py-2 w-full">
+                      <button
+                        type="button"
+                        onClick={goBack}
+                        className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors py-2 w-full"
+                      >
                         <ArrowLeft size={14} /> {t("estimer.btn_back")}
                       </button>
                     </form>
@@ -750,7 +910,9 @@ export default function EstimerPage() {
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-8">
           <FadeIn className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="font-display font-bold text-foreground text-3xl md:text-4xl">
-              {t("estimer.why_title_line1")}<br />{t("estimer.why_title_line2")}
+              {t("estimer.why_title_line1")}
+              <br />
+              {t("estimer.why_title_line2")}
             </h2>
           </FadeIn>
 
@@ -759,25 +921,28 @@ export default function EstimerPage() {
               {
                 icon: User,
                 title: t("estimer.why1_title"),
-                body:  t("estimer.why1_body"),
+                body: t("estimer.why1_body"),
                 delay: 0,
               },
               {
                 icon: BarChart2,
                 title: t("estimer.why2_title"),
-                body:  t("estimer.why2_body"),
+                body: t("estimer.why2_body"),
                 delay: 0.1,
               },
               {
                 icon: Shield,
                 title: t("estimer.why3_title"),
-                body:  t("estimer.why3_body"),
+                body: t("estimer.why3_body"),
                 delay: 0.2,
               },
             ].map(({ icon: Icon, title, body, delay }) => (
               <FadeIn key={title} delay={delay}>
                 <div className="flex flex-col gap-5 p-8 rounded-3xl bg-secondary/30 hover:bg-secondary/50 transition-colors duration-300">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: "rgba(139,26,46,0.08)" }}>
+                  <div
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                    style={{ background: "rgba(139,26,46,0.08)" }}
+                  >
                     <Icon size={22} style={{ color: "var(--primary, #8B1A2E)" }} />
                   </div>
                   <div>
@@ -804,20 +969,40 @@ export default function EstimerPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { quote: t("estimer.testimonial_1_quote"), author: "Karim B.",  location: "Maarif",   delay: 0 },
-              { quote: t("estimer.testimonial_2_quote"), author: "Sophia M.", location: "Racine",   delay: 0.1 },
-              { quote: t("estimer.testimonial_3_quote"), author: "Ahmed R.",  location: "Gauthier", delay: 0.2 },
+              {
+                quote: t("estimer.testimonial_1_quote"),
+                author: "Karim B.",
+                location: "Maarif",
+                delay: 0,
+              },
+              {
+                quote: t("estimer.testimonial_2_quote"),
+                author: "Sophia M.",
+                location: "Racine",
+                delay: 0.1,
+              },
+              {
+                quote: t("estimer.testimonial_3_quote"),
+                author: "Ahmed R.",
+                location: "Gauthier",
+                delay: 0.2,
+              },
             ].map(({ quote, author, location, delay }) => (
               <FadeIn key={author} delay={delay}>
                 <div className="bg-white rounded-3xl p-8 shadow-sm flex flex-col gap-6 hover:shadow-md transition-shadow duration-300">
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className="text-sm" style={{ color: "#F59E0B" }}>★</span>
+                      <span key={i} className="text-sm" style={{ color: "#F59E0B" }}>
+                        ★
+                      </span>
                     ))}
                   </div>
                   <p className="text-foreground/80 leading-[1.75] text-sm flex-grow">"{quote}"</p>
                   <div className="flex items-center gap-3 pt-2 border-t border-border/40">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0" style={{ background: "var(--primary, #8B1A2E)" }}>
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+                      style={{ background: "var(--primary, #8B1A2E)" }}
+                    >
                       {author[0]}
                     </div>
                     <div>
@@ -852,7 +1037,9 @@ export default function EstimerPage() {
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                     className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left hover:bg-secondary/30 transition-colors"
                   >
-                    <span className="font-semibold text-foreground text-sm leading-snug">{t(qKey)}</span>
+                    <span className="font-semibold text-foreground text-sm leading-snug">
+                      {t(qKey)}
+                    </span>
                     <motion.div
                       animate={{ rotate: openFaq === i ? 180 : 0 }}
                       transition={{ duration: 0.25 }}
@@ -892,12 +1079,17 @@ export default function EstimerPage() {
             className="font-display font-bold text-white leading-tight mb-6"
             style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}
           >
-            {t("estimer.closing_title_line1")}<br />{t("estimer.closing_title_line2")}
+            {t("estimer.closing_title_line1")}
+            <br />
+            {t("estimer.closing_title_line2")}
           </h2>
           <button
             onClick={scrollToForm}
             className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl font-bold text-base text-white hover:-translate-y-1 transition-all duration-300"
-            style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 8px 32px rgba(139,26,46,0.45)" }}
+            style={{
+              background: "var(--primary, #8B1A2E)",
+              boxShadow: "0 8px 32px rgba(139,26,46,0.45)",
+            }}
           >
             <Clock size={18} />
             {t("estimer.hero_cta")}

@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import { Users, MapPin, BarChart2, Network } from "lucide-react";
 
 const STATS = [
-  { icon: Users,    value: "500+",    label: "clients accompagnés" },
-  { icon: MapPin,   value: "5 villes", label: "Casa · Rabat · Marra · Tanger · et plus" },
-  { icon: BarChart2,value: "Temps réel", label: "Prix du marché actualisés" },
-  { icon: Network,  value: "Réseau",  label: "Agences partenaires — bientôt" },
+  { icon: Users, value: "500+", label: "clients accompagnés" },
+  { icon: MapPin, value: "5 villes", label: "Casa · Rabat · Marra · Tanger · et plus" },
+  { icon: BarChart2, value: "Temps réel", label: "Prix du marché actualisés" },
+  { icon: Network, value: "Réseau", label: "Agences partenaires — bientôt" },
 ];
 
 export function StatsBar() {

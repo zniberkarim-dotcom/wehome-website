@@ -20,7 +20,7 @@ interface Props {
 }
 
 const SIZE_MAP: Record<Size, { btn: string; icon: number }> = {
-  sm: { btn: "w-8 h-8",  icon: 16 },
+  sm: { btn: "w-8 h-8", icon: 16 },
   md: { btn: "w-10 h-10", icon: 20 },
   lg: { btn: "w-12 h-12", icon: 22 },
 };

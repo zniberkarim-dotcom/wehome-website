@@ -113,7 +113,9 @@ export function MortgageCalculator({
             <Calculator size={20} />
           </div>
           <div>
-            <h3 className="font-display font-bold text-foreground text-lg">{t("mortgage.header_title")}</h3>
+            <h3 className="font-display font-bold text-foreground text-lg">
+              {t("mortgage.header_title")}
+            </h3>
             <p className="text-xs text-muted-foreground">{t("mortgage.header_subtitle")}</p>
           </div>
         </div>
@@ -127,7 +129,9 @@ export function MortgageCalculator({
         transition={{ duration: 0.2 }}
         className="rounded-xl bg-gradient-to-br from-primary to-primary/80 text-white p-4 shadow-md shadow-primary/20"
       >
-        <p className="text-xs font-semibold uppercase tracking-wide opacity-90">{t("mortgage.monthly_estimate")}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide opacity-90">
+          {t("mortgage.monthly_estimate")}
+        </p>
         <p className="text-3xl font-display font-bold mt-0.5 tabular-nums">
           {formatMAD(Math.round(result.mensualite))}
           <span className="text-sm font-medium opacity-90">{t("mortgage.per_month")}</span>
@@ -231,17 +235,32 @@ export function MortgageCalculator({
           />
           {tauxError && <FieldError msg={tauxError} />}
           {!tauxError && (
-            <p className="text-[11px] text-muted-foreground mt-1">{t("mortgage.interest_rate_hint")}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">
+              {t("mortgage.interest_rate_hint")}
+            </p>
           )}
         </Field>
       </div>
 
       {/* ── Résumé ───────────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 gap-2">
-        <SummaryTile label={t("mortgage.loan_amount")}    value={formatMAD(Math.round(result.montantEmprunte))} />
-        <SummaryTile label={t("mortgage.total_interest")} value={formatMAD(Math.round(result.totalInterets))} />
-        <SummaryTile label={t("mortgage.monthly_estimate")} value={`${formatMAD(Math.round(result.mensualite))}${t("mortgage.per_month")}`} highlight />
-        <SummaryTile label={t("mortgage.total_cost")}     value={formatMAD(Math.round(result.coutTotal))} />
+        <SummaryTile
+          label={t("mortgage.loan_amount")}
+          value={formatMAD(Math.round(result.montantEmprunte))}
+        />
+        <SummaryTile
+          label={t("mortgage.total_interest")}
+          value={formatMAD(Math.round(result.totalInterets))}
+        />
+        <SummaryTile
+          label={t("mortgage.monthly_estimate")}
+          value={`${formatMAD(Math.round(result.mensualite))}${t("mortgage.per_month")}`}
+          highlight
+        />
+        <SummaryTile
+          label={t("mortgage.total_cost")}
+          value={formatMAD(Math.round(result.coutTotal))}
+        />
         {!compact && (
           <SummaryTile
             label={t("mortgage.acquisition_fees")}
@@ -266,7 +285,9 @@ export function MortgageCalculator({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-xs font-semibold text-foreground/75 mb-1.5 uppercase tracking-wide">{label}</label>
+      <label className="block text-xs font-semibold text-foreground/75 mb-1.5 uppercase tracking-wide">
+        {label}
+      </label>
       {children}
     </div>
   );
@@ -381,9 +402,19 @@ function SummaryTile({
   highlight?: boolean;
 }) {
   return (
-    <div className={`rounded-xl border p-3 ${highlight ? "bg-primary/8 border-primary/25" : "bg-secondary/60 border-border/40"}`}>
-      <p className={`text-[10px] uppercase tracking-wide font-semibold ${highlight ? "text-primary/70" : "text-muted-foreground"}`}>{label}</p>
-      <p className={`text-sm font-display font-bold mt-0.5 tabular-nums ${highlight ? "text-primary" : "text-foreground"}`}>{value}</p>
+    <div
+      className={`rounded-xl border p-3 ${highlight ? "bg-primary/8 border-primary/25" : "bg-secondary/60 border-border/40"}`}
+    >
+      <p
+        className={`text-[10px] uppercase tracking-wide font-semibold ${highlight ? "text-primary/70" : "text-muted-foreground"}`}
+      >
+        {label}
+      </p>
+      <p
+        className={`text-sm font-display font-bold mt-0.5 tabular-nums ${highlight ? "text-primary" : "text-foreground"}`}
+      >
+        {value}
+      </p>
       {hint && <p className="text-[10px] text-muted-foreground mt-0.5">{hint}</p>}
     </div>
   );

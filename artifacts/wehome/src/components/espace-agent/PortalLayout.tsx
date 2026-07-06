@@ -2,19 +2,30 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  LayoutDashboard, Building2, Users, BarChart2,
-  UserCircle, LogOut, Menu, X, Globe, ChevronRight, Loader2, Clock, ShieldX,
+  LayoutDashboard,
+  Building2,
+  Users,
+  BarChart2,
+  UserCircle,
+  LogOut,
+  Menu,
+  X,
+  Globe,
+  ChevronRight,
+  Loader2,
+  Clock,
+  ShieldX,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { portalSignOut } from "@/lib/agent-portal";
 import { Logo } from "@/components/layout/Logo";
 
 const NAV_ITEMS = [
-  { href: "/espace-agent/dashboard",            icon: LayoutDashboard, label: "Tableau de bord" },
-  { href: "/espace-agent/dashboard/biens",       icon: Building2,       label: "Mes biens" },
-  { href: "/espace-agent/dashboard/leads",       icon: Users,           label: "Mes leads" },
-  { href: "/espace-agent/dashboard/performance", icon: BarChart2,       label: "Performance" },
-  { href: "/espace-agent/dashboard/profil",      icon: UserCircle,      label: "Mon profil" },
+  { href: "/espace-agent/dashboard", icon: LayoutDashboard, label: "Tableau de bord" },
+  { href: "/espace-agent/dashboard/biens", icon: Building2, label: "Mes biens" },
+  { href: "/espace-agent/dashboard/leads", icon: Users, label: "Mes leads" },
+  { href: "/espace-agent/dashboard/performance", icon: BarChart2, label: "Performance" },
+  { href: "/espace-agent/dashboard/profil", icon: UserCircle, label: "Mon profil" },
 ];
 
 // ── Pending screen ────────────────────────────────────────────────────────────
@@ -45,7 +56,7 @@ function PendingScreen() {
           Retour au site WeHome
         </a>
         <button
-          onClick={() => portalSignOut().then(() => window.location.href = "/espace-agent/login")}
+          onClick={() => portalSignOut().then(() => (window.location.href = "/espace-agent/login"))}
           className="block w-full mt-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           Se déconnecter
@@ -64,15 +75,14 @@ function SuspendedScreen() {
         <div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-6">
           <ShieldX size={36} className="text-red-600" />
         </div>
-        <h1 className="text-2xl font-display font-bold text-foreground mb-3">
-          Compte suspendu
-        </h1>
+        <h1 className="text-2xl font-display font-bold text-foreground mb-3">Compte suspendu</h1>
         <p className="text-muted-foreground mb-8">
           Votre accès au portail a été suspendu. Contactez WeHome pour plus d'informations.
         </p>
         <a
           href={`https://wa.me/212653535156?text=${encodeURIComponent("Bonjour WeHome, mon accès agent partenaire a été suspendu. Pouvez-vous m'aider ?")}`}
-          target="_blank" rel="noopener noreferrer"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-semibold hover:bg-primary/90 transition-colors"
         >
           Contacter WeHome
@@ -116,7 +126,7 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
 
   const initials = agent
     ? `${agent.prenom.charAt(0)}${agent.nom.charAt(0)}`.toUpperCase()
-    : user?.email?.charAt(0).toUpperCase() ?? "?";
+    : (user?.email?.charAt(0).toUpperCase() ?? "?");
 
   const displayName = agent ? `${agent.prenom} ${agent.nom}` : (user?.email ?? "");
   const agencyName = agent?.nom_agence ?? "Agent WeHome";
@@ -221,12 +231,16 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
         {mobileOpen && (
           <>
             <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               className="lg:hidden fixed inset-0 bg-black/40 z-40"
               onClick={() => setMobileOpen(false)}
             />
             <motion.aside
-              initial={{ x: -260 }} animate={{ x: 0 }} exit={{ x: -260 }}
+              initial={{ x: -260 }}
+              animate={{ x: 0 }}
+              exit={{ x: -260 }}
               transition={{ type: "spring", damping: 28, stiffness: 220 }}
               className="lg:hidden fixed inset-y-0 left-0 w-64 bg-white border-r border-border z-50 flex flex-col shadow-xl"
             >
@@ -258,9 +272,7 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
           )}
         </header>
 
-        <main className="flex-1 p-5 lg:p-8 max-w-6xl w-full mx-auto">
-          {children}
-        </main>
+        <main className="flex-1 p-5 lg:p-8 max-w-6xl w-full mx-auto">{children}</main>
       </div>
     </div>
   );

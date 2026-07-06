@@ -2,8 +2,15 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  User, LayoutDashboard, LogOut, Menu, X, Building2,
-  Globe, ChevronRight, Loader2
+  User,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  X,
+  Building2,
+  Globe,
+  ChevronRight,
+  Loader2,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { authSignOut } from "@/lib/auth";
@@ -63,11 +70,15 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
       </div>
 
       <div className="flex items-center gap-3 px-6 py-4 border-b border-border/60">
-        <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0 overflow-hidden"
-          style={{ background: "#8B1A2E" }}>
-          {agent?.photo_url
-            ? <img src={agent.photo_url} alt={displayName} className="w-full h-full object-cover" />
-            : initials}
+        <div
+          className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0 overflow-hidden"
+          style={{ background: "#8B1A2E" }}
+        >
+          {agent?.photo_url ? (
+            <img src={agent.photo_url} alt={displayName} className="w-full h-full object-cover" />
+          ) : (
+            initials
+          )}
         </div>
         <div className="min-w-0">
           <p className="text-sm font-semibold text-foreground truncate">{displayName}</p>
@@ -77,12 +88,20 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
 
       <div className="flex-1 px-3 py-4 space-y-1">
         {navItems.map((item) => {
-          const active = location === item.href || (item.href !== "/dashboard" && location.startsWith(item.href));
+          const active =
+            location === item.href ||
+            (item.href !== "/dashboard" && location.startsWith(item.href));
           return (
-            <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                active ? "bg-primary text-white shadow-md shadow-primary/20" : "text-foreground/70 hover:bg-secondary hover:text-foreground"
-              }`}>
+                active
+                  ? "bg-primary text-white shadow-md shadow-primary/20"
+                  : "text-foreground/70 hover:bg-secondary hover:text-foreground"
+              }`}
+            >
               <item.icon size={18} />
               {item.label}
               {active && <ChevronRight size={14} className="ml-auto" />}
@@ -92,13 +111,20 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
       </div>
 
       <div className="px-3 pb-6 space-y-1 border-t border-border/60 pt-4">
-        <a href="/" target="_blank" onClick={() => setMobileOpen(false)}
-          className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-foreground/70 hover:bg-secondary hover:text-foreground transition-all">
+        <a
+          href="/"
+          target="_blank"
+          onClick={() => setMobileOpen(false)}
+          className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-foreground/70 hover:bg-secondary hover:text-foreground transition-all"
+        >
           <Globe size={18} />
           Voir le site
         </a>
-        <button onClick={handleLogout} disabled={loggingOut}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-foreground/70 hover:bg-destructive/10 hover:text-destructive transition-all">
+        <button
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-foreground/70 hover:bg-destructive/10 hover:text-destructive transition-all"
+        >
           {loggingOut ? <Loader2 size={18} className="animate-spin" /> : <LogOut size={18} />}
           Déconnexion
         </button>
@@ -115,13 +141,25 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
       <AnimatePresence>
         {mobileOpen && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="lg:hidden fixed inset-0 bg-black/40 z-40" onClick={() => setMobileOpen(false)} />
-            <motion.aside initial={{ x: -280 }} animate={{ x: 0 }} exit={{ x: -280 }}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="lg:hidden fixed inset-0 bg-black/40 z-40"
+              onClick={() => setMobileOpen(false)}
+            />
+            <motion.aside
+              initial={{ x: -280 }}
+              animate={{ x: 0 }}
+              exit={{ x: -280 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="lg:hidden fixed inset-y-0 left-0 w-72 bg-card border-r border-border z-50 flex flex-col">
+              className="lg:hidden fixed inset-y-0 left-0 w-72 bg-card border-r border-border z-50 flex flex-col"
+            >
               <div className="absolute top-4 right-4">
-                <button onClick={() => setMobileOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted">
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted"
+                >
                   <X size={18} />
                 </button>
               </div>
@@ -133,15 +171,16 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
 
       <div className="flex-1 flex flex-col min-w-0">
         <header className="lg:hidden flex items-center gap-4 px-4 py-4 bg-card border-b border-border sticky top-0 z-30">
-          <button onClick={() => setMobileOpen(true)} className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-muted">
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-muted"
+          >
             <Menu size={20} />
           </button>
           <Logo height={28} />
           {title && <span className="text-sm font-semibold text-foreground ml-auto">{title}</span>}
         </header>
-        <main className="flex-1 p-6 lg:p-8 max-w-6xl w-full mx-auto">
-          {children}
-        </main>
+        <main className="flex-1 p-6 lg:p-8 max-w-6xl w-full mx-auto">{children}</main>
       </div>
     </div>
   );

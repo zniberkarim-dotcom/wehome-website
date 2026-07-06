@@ -111,11 +111,7 @@ export async function portalResetPassword(email: string) {
 // ── Agent data ────────────────────────────────────────────────────────────────
 
 export async function fetchPortalAgent(userId: string): Promise<Agent | null> {
-  const { data, error } = await supabase
-    .from("agents")
-    .select("*")
-    .eq("user_id", userId)
-    .single();
+  const { data, error } = await supabase.from("agents").select("*").eq("user_id", userId).single();
   if (error) return null;
   return data as Agent;
 }
@@ -213,10 +209,7 @@ export async function updatePortalProperty(
   if (error) throw error;
 }
 
-export async function archivePortalProperty(
-  propertyId: string,
-  agentId: string
-): Promise<void> {
+export async function archivePortalProperty(propertyId: string, agentId: string): Promise<void> {
   const { error } = await supabase
     .from("properties")
     .update({ portal_statut: "archivé", published: false })
@@ -252,19 +245,13 @@ export async function updateLeadStatut(
   leadId: string,
   statut: PortalLead["statut_lead"]
 ): Promise<void> {
-  const { error } = await supabase
-    .from("leads")
-    .update({ statut_lead: statut })
-    .eq("id", leadId);
+  const { error } = await supabase.from("leads").update({ statut_lead: statut }).eq("id", leadId);
   if (error) throw error;
 }
 
 // ── Storage uploads ───────────────────────────────────────────────────────────
 
-export async function uploadPortalAgentPhoto(
-  file: File,
-  agentId: string
-): Promise<string> {
+export async function uploadPortalAgentPhoto(file: File, agentId: string): Promise<string> {
   const ext = file.name.split(".").pop() ?? "jpg";
   const path = `agents/${agentId}/avatar.${ext}`;
   const { error } = await supabase.storage
@@ -275,24 +262,16 @@ export async function uploadPortalAgentPhoto(
   return data.publicUrl;
 }
 
-export async function uploadPortalAgencyLogo(
-  file: File,
-  agentId: string
-): Promise<string> {
+export async function uploadPortalAgencyLogo(file: File, agentId: string): Promise<string> {
   const ext = file.name.split(".").pop() ?? "png";
   const path = `logos/${agentId}/logo.${ext}`;
-  const { error } = await supabase.storage
-    .from("agent-logos")
-    .upload(path, file, { upsert: true });
+  const { error } = await supabase.storage.from("agent-logos").upload(path, file, { upsert: true });
   if (error) throw error;
   const { data } = supabase.storage.from("agent-logos").getPublicUrl(path);
   return data.publicUrl;
 }
 
-export async function uploadPortalPropertyPhoto(
-  file: File,
-  agentId: string
-): Promise<string> {
+export async function uploadPortalPropertyPhoto(file: File, agentId: string): Promise<string> {
   const ext = file.name.split(".").pop() ?? "jpg";
   const path = `properties/${agentId}/${Date.now()}.${ext}`;
   const { error } = await supabase.storage
@@ -316,7 +295,10 @@ export interface PerformanceStats {
 
 export async function fetchPerformanceStats(agentId: string): Promise<PerformanceStats> {
   const [propsRes, leadsRes] = await Promise.all([
-    supabase.from("properties").select("id, portal_statut, views_count, created_at").eq("agent_id", agentId),
+    supabase
+      .from("properties")
+      .select("id, portal_statut, views_count, created_at")
+      .eq("agent_id", agentId),
     fetchPortalLeads(agentId),
   ]);
 
@@ -324,8 +306,13 @@ export async function fetchPerformanceStats(agentId: string): Promise<Performanc
   const leads = leadsRes;
 
   const totalBiens = props.length;
-  const biensActifs = props.filter((p: { portal_statut: string }) => p.portal_statut === "actif").length;
-  const totalViews = props.reduce((sum: number, p: { views_count?: number }) => sum + (p.views_count ?? 0), 0);
+  const biensActifs = props.filter(
+    (p: { portal_statut: string }) => p.portal_statut === "actif"
+  ).length;
+  const totalViews = props.reduce(
+    (sum: number, p: { views_count?: number }) => sum + (p.views_count ?? 0),
+    0
+  );
   const totalLeads = leads.length;
 
   const now = new Date();
@@ -340,8 +327,25 @@ export async function fetchPerformanceStats(agentId: string): Promise<Performanc
 // ── Moroccan cities (for dropdowns) ──────────────────────────────────────────
 
 export const MOROCCAN_CITIES = [
-  "Casablanca", "Rabat", "Marrakech", "Fès", "Tanger", "Agadir",
-  "Meknès", "Oujda", "Kénitra", "Tétouan", "Salé", "Mohammedia",
-  "El Jadida", "Béni Mellal", "Nador", "Settat", "Safi", "Laâyoune",
-  "Khouribga", "Berrechid", "Khémisset",
+  "Casablanca",
+  "Rabat",
+  "Marrakech",
+  "Fès",
+  "Tanger",
+  "Agadir",
+  "Meknès",
+  "Oujda",
+  "Kénitra",
+  "Tétouan",
+  "Salé",
+  "Mohammedia",
+  "El Jadida",
+  "Béni Mellal",
+  "Nador",
+  "Settat",
+  "Safi",
+  "Laâyoune",
+  "Khouribga",
+  "Berrechid",
+  "Khémisset",
 ];

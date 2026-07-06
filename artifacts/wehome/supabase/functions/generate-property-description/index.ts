@@ -20,16 +20,16 @@ const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY") ?? "";
 const ANTHROPIC_MODEL = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-haiku-4-5-20251001";
 
 interface Brief {
-  type: string;              // "Appartement" | "Villa" | etc.
-  transaction: string;       // "Vente" | "Location"
-  ville: string;             // "Casablanca"
-  quartier: string;          // "Maarif"
-  surface?: number;          // m²
+  type: string; // "Appartement" | "Villa" | etc.
+  transaction: string; // "Vente" | "Location"
+  ville: string; // "Casablanca"
+  quartier: string; // "Maarif"
+  surface?: number; // m²
   chambres?: number;
   salons?: number;
   sdb?: number;
-  prix?: number;             // MAD
-  features?: string[];       // ["Parking", "Piscine", ...]
+  prix?: number; // MAD
+  features?: string[]; // ["Parking", "Piscine", ...]
   meuble?: boolean;
 }
 
@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
       return json({ error: `Anthropic API ${anthropicRes.status}`, detail: errText }, 502);
     }
 
-    const data = await anthropicRes.json() as { content?: { type: string; text: string }[] };
+    const data = (await anthropicRes.json()) as { content?: { type: string; text: string }[] };
     const raw = data.content?.[0]?.text ?? "";
 
     const parsed = extractJson(raw);
@@ -109,10 +109,14 @@ Deno.serve(async (req) => {
 
     // Sanity-check shape
     const generated: Generated = {
-      title: String(parsed.title ?? "").trim().slice(0, 100),
+      title: String(parsed.title ?? "")
+        .trim()
+        .slice(0, 100),
       description: String(parsed.description ?? "").trim(),
       suggested_features: Array.isArray(parsed.suggested_features)
-        ? parsed.suggested_features.filter((s: unknown): s is string => typeof s === "string").slice(0, 8)
+        ? parsed.suggested_features
+            .filter((s: unknown): s is string => typeof s === "string")
+            .slice(0, 8)
         : [],
     };
 
@@ -152,10 +156,16 @@ function buildPrompt(b: Brief): string {
 
   lines.push(``);
   lines.push(`Génère :`);
-  lines.push(`1. Un titre accrocheur (60-80 caractères max, sans point d'exclamation, sans MAJUSCULES)`);
+  lines.push(
+    `1. Un titre accrocheur (60-80 caractères max, sans point d'exclamation, sans MAJUSCULES)`
+  );
   lines.push(`2. Une description premium de 150-200 mots, ton éditorial, évocateur du mode de vie`);
-  lines.push(`3. Une liste de 5 features supplémentaires qui s'appliqueraient probablement à ce bien, choisies parmi :`);
-  lines.push(`   Parking, Piscine, Ascenseur, Gardien, Terrasse, Climatisation, Jardin, Balcon, Garage, Vue mer, Vue dégagée, Cave, Cuisine équipée`);
+  lines.push(
+    `3. Une liste de 5 features supplémentaires qui s'appliqueraient probablement à ce bien, choisies parmi :`
+  );
+  lines.push(
+    `   Parking, Piscine, Ascenseur, Gardien, Terrasse, Climatisation, Jardin, Balcon, Garage, Vue mer, Vue dégagée, Cave, Cuisine équipée`
+  );
   lines.push(``);
   lines.push(`Réponds UNIQUEMENT avec ce JSON, rien d'autre :`);
   lines.push(`{`);
@@ -169,7 +179,10 @@ function buildPrompt(b: Brief): string {
 
 /** Extract JSON object from Claude response. Handles ```json blocks and prefix prose. */
 function extractJson(raw: string): Record<string, unknown> | null {
-  const cleaned = raw.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
+  const cleaned = raw
+    .replace(/```json\s*/g, "")
+    .replace(/```\s*/g, "")
+    .trim();
   // Find the first balanced {...}
   const start = cleaned.indexOf("{");
   if (start < 0) return null;
@@ -179,7 +192,10 @@ function extractJson(raw: string): Record<string, unknown> | null {
     if (cleaned[i] === "{") depth++;
     else if (cleaned[i] === "}") {
       depth--;
-      if (depth === 0) { end = i; break; }
+      if (depth === 0) {
+        end = i;
+        break;
+      }
     }
   }
   if (end < 0) return null;

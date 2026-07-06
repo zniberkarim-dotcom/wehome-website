@@ -1,6 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
-import { Home as HomeIcon, Building2, Palette, ArrowRight, ExternalLink, Sparkles } from "lucide-react";
+import {
+  Home as HomeIcon,
+  Building2,
+  Palette,
+  ArrowRight,
+  ExternalLink,
+  Sparkles,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 
@@ -46,7 +53,11 @@ const BRANDS: Brand[] = [
       "Accompagnement personnalisé",
       "Photos IA, home staging virtuel",
     ],
-    ctaInternal: { href: "/biens", labelKey: "ecosystem.wehome_cta", labelFallback: "Voir les biens" },
+    ctaInternal: {
+      href: "/biens",
+      labelKey: "ecosystem.wehome_cta",
+      labelFallback: "Voir les biens",
+    },
   },
   {
     id: "weoffice",
@@ -62,8 +73,16 @@ const BRANDS: Brand[] = [
       "Off-market exclusif",
       "Brief pro, options ciblées sous 24h",
     ],
-    ctaInternal: { href: WEOFFICE_INTERNAL, labelKey: "ecosystem.weoffice_cta_internal", labelFallback: "Briefer WeOffice" },
-    ctaExternal: { href: WEOFFICE_EXTERNAL, labelKey: "ecosystem.weoffice_cta_external", labelFallback: "Catalogue" },
+    ctaInternal: {
+      href: WEOFFICE_INTERNAL,
+      labelKey: "ecosystem.weoffice_cta_internal",
+      labelFallback: "Briefer WeOffice",
+    },
+    ctaExternal: {
+      href: WEOFFICE_EXTERNAL,
+      labelKey: "ecosystem.weoffice_cta_external",
+      labelFallback: "Catalogue",
+    },
   },
   {
     id: "wedesign",
@@ -79,7 +98,11 @@ const BRANDS: Brand[] = [
       "Home staging réel + virtuel",
       "Valorisation avant vente / location",
     ],
-    ctaExternal: { href: WEDESIGN_EXTERNAL, labelKey: "ecosystem.wedesign_cta_external", labelFallback: "Découvrir WeDesign" },
+    ctaExternal: {
+      href: WEDESIGN_EXTERNAL,
+      labelKey: "ecosystem.wedesign_cta_external",
+      labelFallback: "Découvrir WeDesign",
+    },
   },
 ];
 
@@ -125,12 +148,7 @@ export function Ecosystem() {
         {/* Brand cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {BRANDS.map((brand, i) => (
-            <BrandCard
-              key={brand.id}
-              brand={brand}
-              index={i}
-              fallback={fallback}
-            />
+            <BrandCard key={brand.id} brand={brand} index={i} fallback={fallback} />
           ))}
         </div>
       </div>
@@ -162,18 +180,23 @@ function BrandCard({
       className={`relative rounded-3xl border ${styles.border} bg-white flex flex-col group hover:-translate-y-1 hover:shadow-2xl transition-all overflow-hidden`}
     >
       {/* ── HERO zone — branded dark/colorful banner with logo or icon+name ── */}
-      <div className={`relative h-44 ${styles.heroBg} flex items-center justify-center px-5 overflow-hidden`}>
+      <div
+        className={`relative h-44 ${styles.heroBg} flex items-center justify-center px-5 overflow-hidden`}
+      >
         {/* Decorative blob inside the hero */}
-        <div className={`absolute -top-12 -right-12 w-48 h-48 ${styles.heroBlob} rounded-full blur-3xl pointer-events-none`} />
+        <div
+          className={`absolute -top-12 -right-12 w-48 h-48 ${styles.heroBlob} rounded-full blur-3xl pointer-events-none`}
+        />
 
         {/* Badge — top-right overlay */}
-        <span className={`absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${styles.badge} z-10`}>
+        <span
+          className={`absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${styles.badge} z-10`}
+        >
           {fallback(brand.badgeKey, brand.badgeFallback)}
         </span>
 
         {/* Logo OR fallback (icon + brand name in white) */}
         {showLogo ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={styles.logoSrc}
             alt={`Logo ${brandName}`}
@@ -183,7 +206,9 @@ function BrandCard({
         ) : (
           <div className="relative flex items-center gap-3 text-white">
             <span className="opacity-90">{styles.icon}</span>
-            <span className="text-3xl md:text-4xl font-display font-bold tracking-tight">{brandName}</span>
+            <span className="text-3xl md:text-4xl font-display font-bold tracking-tight">
+              {brandName}
+            </span>
           </div>
         )}
       </div>
@@ -236,17 +261,20 @@ function BrandCard({
  *  the logo or icon+name lives) and a light CONTENT zone below.
  *  logoSrc: PNG in /public/images/. If image fails to load (404, broken),
  *  the card gracefully falls back to icon + brand name in white text. */
-const STYLES: Record<Brand["id"], {
-  border: string;
-  heroBg: string;
-  heroBlob: string;
-  icon: React.ReactNode;
-  logoSrc?: string;
-  badge: string;
-  bulletDot: string;
-  ctaPrimary: string;
-  ctaSecondary: string;
-}> = {
+const STYLES: Record<
+  Brand["id"],
+  {
+    border: string;
+    heroBg: string;
+    heroBlob: string;
+    icon: React.ReactNode;
+    logoSrc?: string;
+    badge: string;
+    bulletDot: string;
+    ctaPrimary: string;
+    ctaSecondary: string;
+  }
+> = {
   wehome: {
     border: "border-primary/20",
     // Red gradient hero — WeHome's brand signature
@@ -280,7 +308,8 @@ const STYLES: Record<Brand["id"], {
     logoSrc: `${import.meta.env.BASE_URL}images/wedesign-logo.png`,
     badge: "bg-white/15 backdrop-blur-sm text-white",
     bulletDot: "bg-amber-500",
-    ctaPrimary: "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md hover:shadow-lg",
+    ctaPrimary:
+      "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md hover:shadow-lg",
     ctaSecondary: "border-2 border-amber-500/30 text-amber-700 hover:border-amber-500",
   },
 };

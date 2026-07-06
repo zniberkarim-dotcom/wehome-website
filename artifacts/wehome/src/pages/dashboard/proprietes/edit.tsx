@@ -2,7 +2,18 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useLocation } from "wouter";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ArrowLeft, Save, Loader2, CheckCircle, Upload, X, Building2, Star, MapPin, AlertCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  Loader2,
+  CheckCircle,
+  Upload,
+  X,
+  Building2,
+  Star,
+  MapPin,
+  AlertCircle,
+} from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -35,7 +46,18 @@ async function geocodeAddress(address: string): Promise<{ lat: number; lng: numb
 
 const TRANSACTION_TYPES = ["Vente", "Location"];
 const STATUT_TYPES = ["Actif", "Inactif", "Vendu", "Loué"];
-const FEATURES_LIST = ["Parking", "Piscine", "Ascenseur", "Gardien", "Terrasse", "Climatisation", "Jardin", "Cave", "Balcon", "Vue mer"];
+const FEATURES_LIST = [
+  "Parking",
+  "Piscine",
+  "Ascenseur",
+  "Gardien",
+  "Terrasse",
+  "Climatisation",
+  "Jardin",
+  "Cave",
+  "Balcon",
+  "Vue mer",
+];
 
 export default function DashboardPropertyEditPage() {
   const params = useParams<{ id: string }>();
@@ -133,11 +155,13 @@ export default function DashboardPropertyEditPage() {
 
   useEffect(() => {
     triggerGeocode();
-    return () => { if (geocodeTimerRef.current) clearTimeout(geocodeTimerRef.current); };
+    return () => {
+      if (geocodeTimerRef.current) clearTimeout(geocodeTimerRef.current);
+    };
   }, [adresse, ville]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleFeature = (f: string) =>
-    setFeatures((prev) => prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]);
+    setFeatures((prev) => (prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]));
 
   const handlePhotoAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
@@ -241,37 +265,75 @@ export default function DashboardPropertyEditPage() {
   return (
     <DashboardLayout title={isNew ? "Nouveau bien" : "Modifier"}>
       <div className="max-w-2xl space-y-6">
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-4">
-          <button onClick={() => navigate("/dashboard/proprietes")}
-            className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-secondary transition-colors text-muted-foreground">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-4"
+        >
+          <button
+            onClick={() => navigate("/dashboard/proprietes")}
+            className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-secondary transition-colors text-muted-foreground"
+          >
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-2xl font-display font-bold text-foreground">{isNew ? "Ajouter un bien" : "Modifier le bien"}</h1>
-            <p className="text-muted-foreground text-sm mt-0.5">{isNew ? "Créez une nouvelle annonce." : "Mettez à jour les informations."}</p>
+            <h1 className="text-2xl font-display font-bold text-foreground">
+              {isNew ? "Ajouter un bien" : "Modifier le bien"}
+            </h1>
+            <p className="text-muted-foreground text-sm mt-0.5">
+              {isNew ? "Créez une nouvelle annonce." : "Mettez à jour les informations."}
+            </p>
           </div>
         </motion.div>
 
         <form onSubmit={handleSave} className="space-y-5">
           {/* Informations principales */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-            className="bg-card border border-border rounded-2xl p-6 space-y-4">
-            <h2 className="text-xs font-semibold text-foreground uppercase tracking-wider">Informations principales</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="bg-card border border-border rounded-2xl p-6 space-y-4"
+          >
+            <h2 className="text-xs font-semibold text-foreground uppercase tracking-wider">
+              Informations principales
+            </h2>
             <div>
-              <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Titre de l'annonce *</label>
-              <input type="text" required value={titre} onChange={(e) => setTitre(e.target.value)} placeholder="Villa avec piscine à Ain Diab..."
-                className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium" />
+              <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                Titre de l'annonce *
+              </label>
+              <input
+                type="text"
+                required
+                value={titre}
+                onChange={(e) => setTitre(e.target.value)}
+                placeholder="Villa avec piscine à Ain Diab..."
+                className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+              />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Adresse / Quartier</label>
-                <input type="text" value={adresse} onChange={(e) => setAdresse(e.target.value)} placeholder="Maarif, Ain Diab..."
-                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium" />
+                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                  Adresse / Quartier
+                </label>
+                <input
+                  type="text"
+                  value={adresse}
+                  onChange={(e) => setAdresse(e.target.value)}
+                  placeholder="Maarif, Ain Diab..."
+                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Ville</label>
-                <input type="text" value={ville} onChange={(e) => setVille(e.target.value)} placeholder="Casablanca"
-                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium" />
+                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                  Ville
+                </label>
+                <input
+                  type="text"
+                  value={ville}
+                  onChange={(e) => setVille(e.target.value)}
+                  placeholder="Casablanca"
+                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                />
               </div>
             </div>
 
@@ -298,141 +360,289 @@ export default function DashboardPropertyEditPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Type de bien</label>
-                <select value={type} onChange={(e) => setType(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium appearance-none">
-                  {PROPERTY_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                  Type de bien
+                </label>
+                <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium appearance-none"
+                >
+                  {PROPERTY_TYPES.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Transaction</label>
-                <select value={transaction} onChange={(e) => setTransaction(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium appearance-none">
-                  {TRANSACTION_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                  Transaction
+                </label>
+                <select
+                  value={transaction}
+                  onChange={(e) => setTransaction(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium appearance-none"
+                >
+                  {TRANSACTION_TYPES.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Prix (MAD)</label>
-              <input type="text" value={prix} onChange={(e) => setPrix(e.target.value)} placeholder="Ex: 1500000"
-                className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium" />
+              <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                Prix (MAD)
+              </label>
+              <input
+                type="text"
+                value={prix}
+                onChange={(e) => setPrix(e.target.value)}
+                placeholder="Ex: 1500000"
+                className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+              />
             </div>
           </motion.div>
 
           {/* Caractéristiques */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="bg-card border border-border rounded-2xl p-6 space-y-4">
-            <h2 className="text-xs font-semibold text-foreground uppercase tracking-wider">Caractéristiques</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-card border border-border rounded-2xl p-6 space-y-4"
+          >
+            <h2 className="text-xs font-semibold text-foreground uppercase tracking-wider">
+              Caractéristiques
+            </h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Surface (m²)</label>
-                <input type="text" value={surface} onChange={(e) => setSurface(e.target.value)} placeholder="120"
-                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium" />
+                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                  Surface (m²)
+                </label>
+                <input
+                  type="text"
+                  value={surface}
+                  onChange={(e) => setSurface(e.target.value)}
+                  placeholder="120"
+                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Chambres</label>
-                <input type="number" min={0} value={chambres} onChange={(e) => setChambres(e.target.value)} placeholder="3"
-                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium" />
+                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                  Chambres
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  value={chambres}
+                  onChange={(e) => setChambres(e.target.value)}
+                  placeholder="3"
+                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Salons</label>
-                <input type="number" min={0} value={salons} onChange={(e) => setSalons(e.target.value)} placeholder="1"
-                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium" />
+                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                  Salons
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  value={salons}
+                  onChange={(e) => setSalons(e.target.value)}
+                  placeholder="1"
+                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Salles de bain</label>
-                <input type="number" min={0} value={sallesDeBain} onChange={(e) => setSallesDeBain(e.target.value)} placeholder="2"
-                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium" />
+                <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                  Salles de bain
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  value={sallesDeBain}
+                  onChange={(e) => setSallesDeBain(e.target.value)}
+                  placeholder="2"
+                  className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                />
               </div>
             </div>
 
             {/* Meublé toggle */}
             <div className="flex items-center gap-3">
-              <button type="button" onClick={() => setMeuble(!meuble)}
-                className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${meuble ? "bg-primary" : "bg-border"}`}>
-                <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 ${meuble ? "translate-x-5.5" : "translate-x-0.5"}`} />
+              <button
+                type="button"
+                onClick={() => setMeuble(!meuble)}
+                className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${meuble ? "bg-primary" : "bg-border"}`}
+              >
+                <span
+                  className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 ${meuble ? "translate-x-5.5" : "translate-x-0.5"}`}
+                />
               </button>
               <span className="text-sm font-medium text-foreground">Meublé</span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Description</label>
-              <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} placeholder="Décrivez le bien en détail..."
-                className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium resize-none" />
+              <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                Description
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={4}
+                placeholder="Décrivez le bien en détail..."
+                className="w-full px-4 py-3 rounded-xl bg-muted/40 border border-border/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium resize-none"
+              />
             </div>
 
             {/* Statut */}
             <div>
-              <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider">Statut de publication</label>
+              <label className="block text-xs font-semibold text-foreground/70 mb-2 uppercase tracking-wider">
+                Statut de publication
+              </label>
               <div className="flex gap-2 flex-wrap">
                 {STATUT_TYPES.map((s) => (
-                  <button key={s} type="button" onClick={() => setStatut(s)}
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setStatut(s)}
                     className={`px-4 py-2.5 rounded-xl text-xs font-semibold border transition-all ${
-                      statut === s ? "bg-primary text-white border-primary shadow-md" : "bg-secondary border-border/60 text-foreground/70 hover:border-primary/40"
-                    }`}>{s}</button>
+                      statut === s
+                        ? "bg-primary text-white border-primary shadow-md"
+                        : "bg-secondary border-border/60 text-foreground/70 hover:border-primary/40"
+                    }`}
+                  >
+                    {s}
+                  </button>
                 ))}
               </div>
             </div>
           </motion.div>
 
           {/* Équipements */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}
-            className="bg-card border border-border rounded-2xl p-6">
-            <h2 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4">Équipements</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12 }}
+            className="bg-card border border-border rounded-2xl p-6"
+          >
+            <h2 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4">
+              Équipements
+            </h2>
             <div className="flex flex-wrap gap-2">
               {FEATURES_LIST.map((f) => (
-                <button key={f} type="button" onClick={() => toggleFeature(f)}
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => toggleFeature(f)}
                   className={`px-3 py-2 rounded-full text-xs font-semibold border transition-all duration-200 ${
-                    features.includes(f) ? "bg-primary text-white border-primary shadow-md" : "bg-secondary border-border/60 text-foreground/70 hover:border-primary/40"
-                  }`}>{f}</button>
+                    features.includes(f)
+                      ? "bg-primary text-white border-primary shadow-md"
+                      : "bg-secondary border-border/60 text-foreground/70 hover:border-primary/40"
+                  }`}
+                >
+                  {f}
+                </button>
               ))}
             </div>
           </motion.div>
 
           {/* Photos */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-            className="bg-card border border-border rounded-2xl p-6">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="bg-card border border-border rounded-2xl p-6"
+          >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xs font-semibold text-foreground uppercase tracking-wider">Photos</h2>
-              <span className="text-xs text-muted-foreground">{allPreviews.length} photo{allPreviews.length !== 1 ? "s" : ""}</span>
+              <h2 className="text-xs font-semibold text-foreground uppercase tracking-wider">
+                Photos
+              </h2>
+              <span className="text-xs text-muted-foreground">
+                {allPreviews.length} photo{allPreviews.length !== 1 ? "s" : ""}
+              </span>
             </div>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
               {allPreviews.map((item, i) => (
-                <div key={i} className="relative aspect-square rounded-xl overflow-hidden bg-secondary group/photo">
+                <div
+                  key={i}
+                  className="relative aspect-square rounded-xl overflow-hidden bg-secondary group/photo"
+                >
                   <img src={item.url} alt="" className="w-full h-full object-cover" />
-                  <button type="button"
-                    onClick={() => item.isNew ? removeNewPhoto(item.index) : removeExistingPhoto(i)}
-                    className="absolute top-1.5 right-1.5 w-6 h-6 bg-black/70 rounded-full flex items-center justify-center text-white opacity-0 group-hover/photo:opacity-100 transition-opacity">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      item.isNew ? removeNewPhoto(item.index) : removeExistingPhoto(i)
+                    }
+                    className="absolute top-1.5 right-1.5 w-6 h-6 bg-black/70 rounded-full flex items-center justify-center text-white opacity-0 group-hover/photo:opacity-100 transition-opacity"
+                  >
                     <X size={12} />
                   </button>
                   {i === 0 && (
                     <span className="absolute bottom-1.5 left-1.5 flex items-center gap-0.5 text-[10px] bg-primary text-white px-1.5 py-0.5 rounded-full font-semibold">
-                      <Star size={8} className="fill-white" />Principale
+                      <Star size={8} className="fill-white" />
+                      Principale
                     </span>
                   )}
                 </div>
               ))}
-              <button type="button" onClick={() => fileRef.current?.click()}
-                className="aspect-square rounded-xl border-2 border-dashed border-border/60 hover:border-primary/40 flex flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-colors">
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                className="aspect-square rounded-xl border-2 border-dashed border-border/60 hover:border-primary/40 flex flex-col items-center justify-center gap-1 text-muted-foreground hover:text-primary transition-colors"
+              >
                 <Upload size={20} />
                 <span className="text-[10px] font-semibold">Ajouter</span>
               </button>
             </div>
-            <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={handlePhotoAdd} />
-            <p className="text-xs text-muted-foreground mt-3">La première photo sera la photo principale de l'annonce.</p>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={handlePhotoAdd}
+            />
+            <p className="text-xs text-muted-foreground mt-3">
+              La première photo sera la photo principale de l'annonce.
+            </p>
           </motion.div>
 
-          {error && <p className="text-sm text-destructive bg-destructive/10 rounded-xl px-4 py-3">{error}</p>}
+          {error && (
+            <p className="text-sm text-destructive bg-destructive/10 rounded-xl px-4 py-3">
+              {error}
+            </p>
+          )}
 
           <div className="flex gap-3">
-            <button type="button" onClick={() => navigate("/dashboard/proprietes")}
-              className="px-6 py-3.5 rounded-xl border border-border text-sm font-semibold text-foreground/70 hover:bg-secondary transition-colors">
+            <button
+              type="button"
+              onClick={() => navigate("/dashboard/proprietes")}
+              className="px-6 py-3.5 rounded-xl border border-border text-sm font-semibold text-foreground/70 hover:bg-secondary transition-colors"
+            >
               Annuler
             </button>
-            <button type="submit" disabled={saving || saved}
-              className="flex-1 py-3.5 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-60 shadow-lg shadow-primary/20">
-              {saving ? <Loader2 size={18} className="animate-spin" /> : saved ? <CheckCircle size={18} /> : <Save size={18} />}
-              {saving ? "Sauvegarde..." : saved ? "Publié !" : isNew ? "Publier le bien" : "Sauvegarder"}
+            <button
+              type="submit"
+              disabled={saving || saved}
+              className="flex-1 py-3.5 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-60 shadow-lg shadow-primary/20"
+            >
+              {saving ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : saved ? (
+                <CheckCircle size={18} />
+              ) : (
+                <Save size={18} />
+              )}
+              {saving
+                ? "Sauvegarde..."
+                : saved
+                  ? "Publié !"
+                  : isNew
+                    ? "Publier le bien"
+                    : "Sauvegarder"}
             </button>
           </div>
         </form>

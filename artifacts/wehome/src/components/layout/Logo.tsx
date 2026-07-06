@@ -9,7 +9,7 @@ export function Logo({ className = "", height = 40 }: LogoProps) {
       src={`${import.meta.env.BASE_URL}images/wehome-logo.png`}
       alt="WeHome"
       height={height}
-      style={{ height: `${height}px`, width: 'auto' }}
+      style={{ height: `${height}px`, width: "auto" }}
       className={className}
     />
   );

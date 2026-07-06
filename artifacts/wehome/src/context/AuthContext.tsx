@@ -42,16 +42,13 @@ async function fetchAgentByUserIdDirect(
   try {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
     const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
-    const res = await fetch(
-      `${supabaseUrl}/rest/v1/agents?user_id=eq.${userId}&select=*&limit=1`,
-      {
-        headers: {
-          apikey: supabaseKey,
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(`${supabaseUrl}/rest/v1/agents?user_id=eq.${userId}&select=*&limit=1`, {
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
     if (!res.ok) return null;
     const rows: Agent[] = await res.json();
     return rows[0] ?? null;
@@ -76,13 +73,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Immediately fetch the agent for the stored user — no Supabase client lock involved
     if (storedUser && storedSession?.access_token) {
-      fetchAgentByUserIdDirect(storedUser.id, storedSession.access_token).then(
-        (agent) => {
+      fetchAgentByUserIdDirect(storedUser.id, storedSession.access_token)
+        .then((agent) => {
           if (!cancelled) setState((s) => ({ ...s, agent, loading: false }));
-        }
-      ).catch(() => {
-        if (!cancelled) setState((s) => ({ ...s, loading: false }));
-      });
+        })
+        .catch(() => {
+          if (!cancelled) setState((s) => ({ ...s, loading: false }));
+        });
     } else if (!storedUser) {
       // No stored session — immediately mark as not loading
       setState((s) => ({ ...s, loading: false }));
@@ -103,8 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user && session?.access_token
           ? await fetchAgentByUserIdDirect(user.id, session.access_token).catch(() => null)
           : null;
-      if (!cancelled)
-        setState({ user, session, agent, loading: false });
+      if (!cancelled) setState({ user, session, agent, loading: false });
     });
 
     return () => {

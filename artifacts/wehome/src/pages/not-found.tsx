@@ -14,8 +14,8 @@ export default function NotFound() {
           <p className="text-muted-foreground text-lg mb-8">
             La page que vous recherchez n'existe pas ou a été déplacée.
           </p>
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
           >
             <Home size={20} />

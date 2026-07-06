@@ -60,16 +60,20 @@ export default function WeOfficePage() {
 
   const modeLabel = (m: Mode) => {
     switch (m) {
-      case "rent": return fallback("weoffice.mode_rent", "Louer un bureau");
-      case "buy": return fallback("weoffice.mode_buy", "Acheter / Investir");
-      case "list": return fallback("weoffice.mode_list", "Mettre en location / vente");
+      case "rent":
+        return fallback("weoffice.mode_rent", "Louer un bureau");
+      case "buy":
+        return fallback("weoffice.mode_buy", "Acheter / Investir");
+      case "list":
+        return fallback("weoffice.mode_list", "Mettre en location / vente");
     }
   };
 
   const isValid = (): string | null => {
     if (!contactName.trim()) return fallback("weoffice.err_name", "Merci d'indiquer votre nom.");
     if (!/^\S+@\S+\.\S+$/.test(email)) return fallback("weoffice.err_email", "Email invalide.");
-    if (!/^[+\d][\d\s-]{6,}$/.test(phone)) return fallback("weoffice.err_phone", "Téléphone invalide.");
+    if (!/^[+\d][\d\s-]{6,}$/.test(phone))
+      return fallback("weoffice.err_phone", "Téléphone invalide.");
     return null;
   };
 
@@ -98,7 +102,9 @@ export default function WeOfficePage() {
           budget ? `Budget : ${budget} MAD` : null,
           headcount ? `Effectif : ${headcount} pers.` : null,
           message ? `Message : ${message}` : null,
-        ].filter(Boolean).join("\n"),
+        ]
+          .filter(Boolean)
+          .join("\n"),
         source: `WeOffice — ${modeLabel(mode)}`,
         status: "New",
         created_at: new Date().toISOString(),
@@ -121,7 +127,6 @@ export default function WeOfficePage() {
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       <main className="flex-grow">
-
         {/* ─── HERO ─────────────────────────────────────────────── */}
         <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
           <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,#3b82f6_0%,transparent_50%),radial-gradient(circle_at_80%_80%,#8b5cf6_0%,transparent_50%)]" />
@@ -165,7 +170,10 @@ export default function WeOfficePage() {
                     className="group inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-bold bg-white text-slate-900 shadow-2xl hover:-translate-y-0.5 transition-all"
                   >
                     {fallback("weoffice.hero_cta_primary", "Décrire mon besoin")}
-                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight
+                      size={18}
+                      className="group-hover:translate-x-1 transition-transform"
+                    />
                   </a>
                   <a
                     href={WEOFFICE_URL}
@@ -179,9 +187,18 @@ export default function WeOfficePage() {
                 </div>
 
                 <div className="grid grid-cols-3 gap-4 md:gap-6 mt-12 pt-8 border-t border-white/10 max-w-lg">
-                  <Stat value={fallback("weoffice.stat_1_value", "100+")} label={fallback("weoffice.stat_1_label", "Espaces référencés")} />
-                  <Stat value={fallback("weoffice.stat_2_value", "200k+")} label={fallback("weoffice.stat_2_label", "m² commercialisés")} />
-                  <Stat value={fallback("weoffice.stat_3_value", "30j")} label={fallback("weoffice.stat_3_label", "Délai moyen")} />
+                  <Stat
+                    value={fallback("weoffice.stat_1_value", "100+")}
+                    label={fallback("weoffice.stat_1_label", "Espaces référencés")}
+                  />
+                  <Stat
+                    value={fallback("weoffice.stat_2_value", "200k+")}
+                    label={fallback("weoffice.stat_2_label", "m² commercialisés")}
+                  />
+                  <Stat
+                    value={fallback("weoffice.stat_3_value", "30j")}
+                    label={fallback("weoffice.stat_3_label", "Délai moyen")}
+                  />
                 </div>
               </motion.div>
 
@@ -198,7 +215,10 @@ export default function WeOfficePage() {
                   accent="blue"
                   icon={<Briefcase size={18} />}
                   title={fallback("weoffice.float_1_title", "Bureaux clé en main")}
-                  description={fallback("weoffice.float_1_desc", "Espaces aménagés et prêts à occuper")}
+                  description={fallback(
+                    "weoffice.float_1_desc",
+                    "Espaces aménagés et prêts à occuper"
+                  )}
                 />
                 <FloatingCard
                   className="absolute top-36 left-0 w-72"
@@ -206,7 +226,10 @@ export default function WeOfficePage() {
                   accent="purple"
                   icon={<Crown size={18} />}
                   title={fallback("weoffice.float_2_title", "Plateaux premium")}
-                  description={fallback("weoffice.float_2_desc", "Adresses prestige, finitions haut de gamme")}
+                  description={fallback(
+                    "weoffice.float_2_desc",
+                    "Adresses prestige, finitions haut de gamme"
+                  )}
                 />
                 <FloatingCard
                   className="absolute top-72 right-8 w-72"
@@ -214,7 +237,10 @@ export default function WeOfficePage() {
                   accent="blue"
                   icon={<Network size={18} />}
                   title={fallback("weoffice.float_3_title", "Off-market exclusif")}
-                  description={fallback("weoffice.float_3_desc", "Opportunités invisibles ailleurs")}
+                  description={fallback(
+                    "weoffice.float_3_desc",
+                    "Opportunités invisibles ailleurs"
+                  )}
                 />
               </motion.div>
             </div>
@@ -291,7 +317,10 @@ export default function WeOfficePage() {
                 {fallback("weoffice.why_badge", "Pourquoi WeOffice")}
               </div>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold leading-tight">
-                {fallback("weoffice.why_title", "Le bureau influence votre business. Choisissez-le bien.")}
+                {fallback(
+                  "weoffice.why_title",
+                  "Le bureau influence votre business. Choisissez-le bien."
+                )}
               </h2>
             </motion.div>
 
@@ -299,32 +328,50 @@ export default function WeOfficePage() {
               <BenefitDark
                 icon={<Network size={22} />}
                 title={fallback("weoffice.benefit_1_title", "Off-market exclusif")}
-                description={fallback("weoffice.benefit_1_desc", "Accès aux espaces premium qui ne sortent jamais sur les portails. Notre force : le réseau direct propriétaires.")}
+                description={fallback(
+                  "weoffice.benefit_1_desc",
+                  "Accès aux espaces premium qui ne sortent jamais sur les portails. Notre force : le réseau direct propriétaires."
+                )}
               />
               <BenefitDark
                 icon={<Target size={22} />}
                 title={fallback("weoffice.benefit_2_title", "Brief précis, options ciblées")}
-                description={fallback("weoffice.benefit_2_desc", "Tu nous donnes ton besoin (équipe, image, budget, zone). On revient avec 3 options qui matchent vraiment.")}
+                description={fallback(
+                  "weoffice.benefit_2_desc",
+                  "Tu nous donnes ton besoin (équipe, image, budget, zone). On revient avec 3 options qui matchent vraiment."
+                )}
               />
               <BenefitDark
                 icon={<TrendingUp size={22} />}
                 title={fallback("weoffice.benefit_3_title", "Marketing intégré")}
-                description={fallback("weoffice.benefit_3_desc", "Pour les landlords : photos IA, plans 3D, vidéo drone, diffusion premium. Vos m² deviennent désirables.")}
+                description={fallback(
+                  "weoffice.benefit_3_desc",
+                  "Pour les landlords : photos IA, plans 3D, vidéo drone, diffusion premium. Vos m² deviennent désirables."
+                )}
               />
               <BenefitDark
                 icon={<ShieldCheck size={22} />}
                 title={fallback("weoffice.benefit_4_title", "Juridique & financier")}
-                description={fallback("weoffice.benefit_4_desc", "Négociation du bail, conditions suspensives, vérifications, garanties. On reste à tes côtés jusqu'à la signature.")}
+                description={fallback(
+                  "weoffice.benefit_4_desc",
+                  "Négociation du bail, conditions suspensives, vérifications, garanties. On reste à tes côtés jusqu'à la signature."
+                )}
               />
               <BenefitDark
                 icon={<Users size={22} />}
                 title={fallback("weoffice.benefit_5_title", "Locataires entreprises")}
-                description={fallback("weoffice.benefit_5_desc", "Pour les bailleurs : on filtre les locataires. Société établie, dossier financier solide, projet d'occupation clair.")}
+                description={fallback(
+                  "weoffice.benefit_5_desc",
+                  "Pour les bailleurs : on filtre les locataires. Société établie, dossier financier solide, projet d'occupation clair."
+                )}
               />
               <BenefitDark
                 icon={<Crown size={22} />}
                 title={fallback("weoffice.benefit_6_title", "Approche premium")}
-                description={fallback("weoffice.benefit_6_desc", "Pas de spam, pas de visites en série. Un conseil sur-mesure, comme un cabinet de courtage d'entreprise.")}
+                description={fallback(
+                  "weoffice.benefit_6_desc",
+                  "Pas de spam, pas de visites en série. Un conseil sur-mesure, comme un cabinet de courtage d'entreprise."
+                )}
               />
             </div>
           </div>
@@ -349,7 +396,10 @@ export default function WeOfficePage() {
                     {fallback("weoffice.brief_badge", "Briefez-nous en 60 secondes")}
                   </div>
                   <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground leading-tight">
-                    {fallback("weoffice.brief_title", "Décrivez votre besoin. On revient avec des options.")}
+                    {fallback(
+                      "weoffice.brief_title",
+                      "Décrivez votre besoin. On revient avec des options."
+                    )}
                   </h2>
                   <p className="text-base md:text-lg text-muted-foreground mt-4 leading-relaxed">
                     {fallback(
@@ -389,39 +439,101 @@ export default function WeOfficePage() {
 
                   <div className="grid sm:grid-cols-2 gap-4">
                     <Field label={fallback("weoffice.field_company", "Société")}>
-                      <Input value={company} onChange={setCompany} placeholder={fallback("weoffice.field_company_placeholder", "Ex: Ma société SARL")} />
+                      <Input
+                        value={company}
+                        onChange={setCompany}
+                        placeholder={fallback(
+                          "weoffice.field_company_placeholder",
+                          "Ex: Ma société SARL"
+                        )}
+                      />
                     </Field>
                     <Field label={fallback("weoffice.field_role", "Fonction")}>
-                      <Input value={contactRole} onChange={setContactRole} placeholder={fallback("weoffice.field_role_placeholder", "Ex: CEO, RH, etc.")} />
+                      <Input
+                        value={contactRole}
+                        onChange={setContactRole}
+                        placeholder={fallback(
+                          "weoffice.field_role_placeholder",
+                          "Ex: CEO, RH, etc."
+                        )}
+                      />
                     </Field>
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-4">
                     <Field label={fallback("weoffice.field_name", "Votre nom")} required>
-                      <Input value={contactName} onChange={setContactName} placeholder={fallback("weoffice.field_name_placeholder", "Prénom Nom")} />
+                      <Input
+                        value={contactName}
+                        onChange={setContactName}
+                        placeholder={fallback("weoffice.field_name_placeholder", "Prénom Nom")}
+                      />
                     </Field>
-                    <Field label={fallback("weoffice.field_email", "Email")} required icon={<Mail size={15} />}>
-                      <Input type="email" value={email} onChange={setEmail} placeholder="vous@societe.ma" />
+                    <Field
+                      label={fallback("weoffice.field_email", "Email")}
+                      required
+                      icon={<Mail size={15} />}
+                    >
+                      <Input
+                        type="email"
+                        value={email}
+                        onChange={setEmail}
+                        placeholder="vous@societe.ma"
+                      />
                     </Field>
                   </div>
 
-                  <Field label={fallback("weoffice.field_phone", "Téléphone")} required icon={<Phone size={15} />}>
-                    <Input type="tel" value={phone} onChange={setPhone} placeholder="+212 6 XX XX XX XX" />
+                  <Field
+                    label={fallback("weoffice.field_phone", "Téléphone")}
+                    required
+                    icon={<Phone size={15} />}
+                  >
+                    <Input
+                      type="tel"
+                      value={phone}
+                      onChange={setPhone}
+                      placeholder="+212 6 XX XX XX XX"
+                    />
                   </Field>
 
                   <div className="grid sm:grid-cols-3 gap-4">
-                    <Field label={fallback("weoffice.field_city", "Ville cible")} icon={<MapPin size={15} />}>
+                    <Field
+                      label={fallback("weoffice.field_city", "Ville cible")}
+                      icon={<MapPin size={15} />}
+                    >
                       <Input value={city} onChange={setCity} placeholder="Casablanca" />
                     </Field>
-                    <Field label={fallback("weoffice.field_surface", "Surface (m²)")} icon={<Square size={15} />}>
-                      <Input type="number" inputMode="numeric" value={surface} onChange={setSurface} placeholder="150" />
+                    <Field
+                      label={fallback("weoffice.field_surface", "Surface (m²)")}
+                      icon={<Square size={15} />}
+                    >
+                      <Input
+                        type="number"
+                        inputMode="numeric"
+                        value={surface}
+                        onChange={setSurface}
+                        placeholder="150"
+                      />
                     </Field>
-                    <Field label={fallback("weoffice.field_headcount", "Effectif")} icon={<Users size={15} />}>
-                      <Input type="number" inputMode="numeric" value={headcount} onChange={setHeadcount} placeholder="12" />
+                    <Field
+                      label={fallback("weoffice.field_headcount", "Effectif")}
+                      icon={<Users size={15} />}
+                    >
+                      <Input
+                        type="number"
+                        inputMode="numeric"
+                        value={headcount}
+                        onChange={setHeadcount}
+                        placeholder="12"
+                      />
                     </Field>
                   </div>
 
-                  <Field label={fallback("weoffice.field_budget", mode === "rent" ? "Budget mensuel (MAD)" : "Budget (MAD)")}>
+                  <Field
+                    label={fallback(
+                      "weoffice.field_budget",
+                      mode === "rent" ? "Budget mensuel (MAD)" : "Budget (MAD)"
+                    )}
+                  >
                     <Input
                       type="number"
                       inputMode="numeric"
@@ -435,7 +547,10 @@ export default function WeOfficePage() {
                     <textarea
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder={fallback("weoffice.field_message_placeholder", "Image souhaitée, contraintes, délais, etc.")}
+                      placeholder={fallback(
+                        "weoffice.field_message_placeholder",
+                        "Image souhaitée, contraintes, délais, etc."
+                      )}
                       rows={4}
                       className="w-full px-3 py-3 rounded-xl bg-muted/40 border border-border focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-900 text-sm transition-all resize-none"
                     />
@@ -505,7 +620,10 @@ export default function WeOfficePage() {
                     {fallback("weoffice.final_badge", "Catalogue complet")}
                   </div>
                   <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight">
-                    {fallback("weoffice.final_title", "Plus de 100 espaces référencés sur weoffice.ma.")}
+                    {fallback(
+                      "weoffice.final_title",
+                      "Plus de 100 espaces référencés sur weoffice.ma."
+                    )}
                   </h2>
                   <p className="text-base md:text-lg opacity-85 mt-4 leading-relaxed max-w-xl">
                     {fallback(
@@ -522,7 +640,10 @@ export default function WeOfficePage() {
                   className="group inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold bg-white text-slate-900 shadow-2xl hover:shadow-3xl hover:-translate-y-0.5 transition-all whitespace-nowrap"
                 >
                   {fallback("weoffice.final_cta", "Voir le catalogue")}
-                  <ExternalLink size={18} className="group-hover:translate-x-0.5 transition-transform" />
+                  <ExternalLink
+                    size={18}
+                    className="group-hover:translate-x-0.5 transition-transform"
+                  />
                 </a>
               </div>
             </div>
@@ -542,7 +663,9 @@ function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div>
       <div className="text-2xl md:text-3xl font-display font-bold text-white">{value}</div>
-      <div className="text-[10px] uppercase tracking-wider opacity-70 mt-1 leading-tight">{label}</div>
+      <div className="text-[10px] uppercase tracking-wider opacity-70 mt-1 leading-tight">
+        {label}
+      </div>
     </div>
   );
 }
@@ -617,9 +740,11 @@ function CategoryCard({
           Le plus demandé
         </div>
       )}
-      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${
-        featured ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-700"
-      }`}>
+      <div
+        className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${
+          featured ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-700"
+        }`}
+      >
         {icon}
       </div>
       <h3 className="text-xl font-display font-bold text-foreground leading-tight">{title}</h3>
@@ -635,7 +760,15 @@ function CategoryCard({
   );
 }
 
-function BenefitDark({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+function BenefitDark({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}

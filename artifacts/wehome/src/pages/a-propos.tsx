@@ -2,8 +2,16 @@ import { useRef } from "react";
 import { Link } from "wouter";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
-  ChevronDown, LayoutGrid, Handshake, Gem,
-  Users, BarChart2, Cpu, Building2, Palette, Home,
+  ChevronDown,
+  LayoutGrid,
+  Handshake,
+  Gem,
+  Users,
+  BarChart2,
+  Cpu,
+  Building2,
+  Palette,
+  Home,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
@@ -24,10 +32,13 @@ function FadeIn({
   style?: React.CSSProperties;
 }) {
   const initial =
-    from === "bottom" ? { opacity: 0, y: 32 }
-    : from === "left"  ? { opacity: 0, x: -32 }
-    : from === "right" ? { opacity: 0, x: 32 }
-    : { opacity: 0 };
+    from === "bottom"
+      ? { opacity: 0, y: 32 }
+      : from === "left"
+        ? { opacity: 0, x: -32 }
+        : from === "right"
+          ? { opacity: 0, x: 32 }
+          : { opacity: 0 };
 
   return (
     <motion.div
@@ -61,31 +72,36 @@ const TEAM = [
   {
     name: "Karim Zniber",
     title: "CEO",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop&crop=face&q=80",
+    photo:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop&crop=face&q=80",
     bioKey: "about.team_bio_karim",
   },
   {
     name: "Basma Tazi",
     title: "COO",
-    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=500&fit=crop&crop=face&q=80",
+    photo:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=500&fit=crop&crop=face&q=80",
     bioKey: "about.team_bio_basma",
   },
   {
     name: "Maha El Hamzaoui",
     title: "CMO",
-    photo: "https://ui-avatars.com/api/?name=Maha+El+Hamzaoui&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
+    photo:
+      "https://ui-avatars.com/api/?name=Maha+El+Hamzaoui&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
     bioKey: "about.team_bio_maha",
   },
   {
     name: "Oumaima Dakirelah",
     title: "CFO",
-    photo: "https://ui-avatars.com/api/?name=Oumaima+Dakirelah&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
+    photo:
+      "https://ui-avatars.com/api/?name=Oumaima+Dakirelah&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
     bioKey: "about.team_bio_oumaima",
   },
   {
     name: "Abdou",
     title: "CTO",
-    photo: "https://ui-avatars.com/api/?name=Abdou&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
+    photo:
+      "https://ui-avatars.com/api/?name=Abdou&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
     bioKey: "about.team_bio_abdou",
   },
 ];
@@ -103,8 +119,8 @@ const COMMITMENTS = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function AProposPage() {
   const { t } = useTranslation();
-  const heroRef  = useRef<HTMLElement>(null);
-  const ctaRef   = useRef<HTMLElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const ctaRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress: heroProgress } = useScroll({
     target: heroRef,
@@ -166,7 +182,10 @@ export default function AProposPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
             className="font-display font-bold text-white leading-[1.08] tracking-tight mb-8"
-            style={{ fontSize: "clamp(2.6rem, 7vw, 5.5rem)", textShadow: "0 2px 24px rgba(0,0,0,0.5)" }}
+            style={{
+              fontSize: "clamp(2.6rem, 7vw, 5.5rem)",
+              textShadow: "0 2px 24px rgba(0,0,0,0.5)",
+            }}
           >
             {t("about.hero_title")}
           </motion.h1>
@@ -214,39 +233,43 @@ export default function AProposPage() {
               {/* Manifesto text */}
               <div
                 className="space-y-7 text-foreground"
-                style={{ fontSize: "clamp(1.05rem, 2vw, 1.25rem)", lineHeight: 1.88, letterSpacing: "0.01em" }}
+                style={{
+                  fontSize: "clamp(1.05rem, 2vw, 1.25rem)",
+                  lineHeight: 1.88,
+                  letterSpacing: "0.01em",
+                }}
               >
-                <p className="font-medium text-foreground/90">
-                  {t("about.manifesto_p1")}
-                </p>
+                <p className="font-medium text-foreground/90">{t("about.manifesto_p1")}</p>
 
                 <p className="text-foreground/75">
-                  {t("about.manifesto_p2_line1")}<br />
-                  {t("about.manifesto_p2_line2")}<br />
-                  {t("about.manifesto_p2_line3")}<br />
+                  {t("about.manifesto_p2_line1")}
+                  <br />
+                  {t("about.manifesto_p2_line2")}
+                  <br />
+                  {t("about.manifesto_p2_line3")}
+                  <br />
                   {t("about.manifesto_p2_line4")}
                 </p>
 
-                <p className="text-foreground/75">
-                  {t("about.manifesto_p3")}
-                </p>
+                <p className="text-foreground/75">{t("about.manifesto_p3")}</p>
 
-                <p
-                  className="font-semibold"
-                  style={{ color: "var(--primary, #8B1A2E)" }}
-                >
+                <p className="font-semibold" style={{ color: "var(--primary, #8B1A2E)" }}>
                   {t("about.manifesto_p4")}
                 </p>
 
                 <p className="text-foreground/75">
-                  {t("about.manifesto_p5_line1")}<br />
-                  {t("about.manifesto_p5_line2")}<br />
+                  {t("about.manifesto_p5_line1")}
+                  <br />
+                  {t("about.manifesto_p5_line2")}
+                  <br />
                   {t("about.manifesto_p5_line3")}
                 </p>
 
                 <p className="font-medium text-foreground/90">
                   {t("about.manifesto_p6_part1")}{" "}
-                  <span style={{ color: "var(--primary, #8B1A2E)" }}>{t("about.manifesto_p6_part2")}</span>{" "}
+                  <span style={{ color: "var(--primary, #8B1A2E)" }}>
+                    {t("about.manifesto_p6_part2")}
+                  </span>{" "}
                   {t("about.manifesto_p6_part3")}
                 </p>
               </div>
@@ -261,14 +284,18 @@ export default function AProposPage() {
       <section className="py-28 md:py-40" style={{ background: "#0d0d0d" }}>
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-8">
           <FadeIn className="text-center mb-20">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-5" style={{ color: "rgba(139,26,46,0.9)" }}>
+            <p
+              className="text-xs font-bold tracking-[0.2em] uppercase mb-5"
+              style={{ color: "rgba(139,26,46,0.9)" }}
+            >
               {t("about.section2_overline")}
             </p>
             <h2
               className="font-display font-bold text-white leading-tight"
               style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}
             >
-              {t("about.section2_title_line1")}<br />
+              {t("about.section2_title_line1")}
+              <br />
               {t("about.section2_title_line2")}
             </h2>
           </FadeIn>
@@ -276,7 +303,10 @@ export default function AProposPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/[0.06] rounded-3xl overflow-hidden">
             {/* Column 1 */}
             <FadeIn delay={0.0} className="bg-[#111] p-10 md:p-12">
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8" style={{ background: "rgba(139,26,46,0.12)" }}>
+              <div
+                className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8"
+                style={{ background: "rgba(139,26,46,0.12)" }}
+              >
                 <LayoutGrid size={22} style={{ color: "rgba(139,26,46,0.85)" }} />
               </div>
               <h3 className="font-display font-bold text-white text-xl mb-4">
@@ -289,7 +319,10 @@ export default function AProposPage() {
 
             {/* Column 2 */}
             <FadeIn delay={0.12} className="bg-[#111] p-10 md:p-12">
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8" style={{ background: "rgba(139,26,46,0.12)" }}>
+              <div
+                className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8"
+                style={{ background: "rgba(139,26,46,0.12)" }}
+              >
                 <Handshake size={22} style={{ color: "rgba(139,26,46,0.85)" }} />
               </div>
               <h3 className="font-display font-bold text-white text-xl mb-4">
@@ -301,12 +334,19 @@ export default function AProposPage() {
             </FadeIn>
 
             {/* Column 3 — WeHome */}
-            <FadeIn delay={0.24} className="p-10 md:p-12 relative" style={{ background: "#161010" }}>
+            <FadeIn
+              delay={0.24}
+              className="p-10 md:p-12 relative"
+              style={{ background: "#161010" }}
+            >
               <div
                 className="absolute inset-0 rounded-none pointer-events-none"
                 style={{ boxShadow: "inset 0 0 0 1px rgba(139,26,46,0.25)" }}
               />
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8" style={{ background: "rgba(139,26,46,0.2)" }}>
+              <div
+                className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8"
+                style={{ background: "rgba(139,26,46,0.2)" }}
+              >
                 <Gem size={22} style={{ color: "#C0392B" }} />
               </div>
               <h3 className="font-display font-bold text-white text-xl mb-4">
@@ -388,7 +428,9 @@ export default function AProposPage() {
               className="font-display font-bold text-foreground leading-tight"
               style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}
             >
-              {t("about.ecosystem_title_line1")}<br />{t("about.ecosystem_title_line2")}
+              {t("about.ecosystem_title_line1")}
+              <br />
+              {t("about.ecosystem_title_line2")}
             </h2>
           </FadeIn>
 
@@ -436,7 +478,9 @@ export default function AProposPage() {
                     </span>
                     <span className="text-muted-foreground font-medium text-sm ml-2">— {sub}</span>
                   </div>
-                  <p className="text-muted-foreground leading-[1.8] text-sm flex-grow mb-8">{body}</p>
+                  <p className="text-muted-foreground leading-[1.8] text-sm flex-grow mb-8">
+                    {body}
+                  </p>
                   {cta ? (
                     <Link
                       href={cta.href}
@@ -471,7 +515,10 @@ export default function AProposPage() {
           </FadeIn>
 
           <FadeIn delay={0.1} className="mb-20">
-            <p className="text-muted-foreground leading-relaxed max-w-2xl" style={{ fontSize: "1.05rem" }}>
+            <p
+              className="text-muted-foreground leading-relaxed max-w-2xl"
+              style={{ fontSize: "1.05rem" }}
+            >
               {t("about.team_intro_body")}
             </p>
           </FadeIn>
@@ -489,12 +536,20 @@ export default function AProposPage() {
                     />
                     <div
                       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{ background: "linear-gradient(to top, rgba(139,26,46,0.25) 0%, transparent 60%)" }}
+                      style={{
+                        background:
+                          "linear-gradient(to top, rgba(139,26,46,0.25) 0%, transparent 60%)",
+                      }}
                     />
                   </div>
                   {/* Info */}
-                  <p className="font-display font-bold text-foreground text-lg leading-tight">{name}</p>
-                  <p className="text-sm font-semibold mt-1 mb-3" style={{ color: "var(--primary, #8B1A2E)" }}>
+                  <p className="font-display font-bold text-foreground text-lg leading-tight">
+                    {name}
+                  </p>
+                  <p
+                    className="text-sm font-semibold mt-1 mb-3"
+                    style={{ color: "var(--primary, #8B1A2E)" }}
+                  >
                     {title}
                   </p>
                   <p className="text-sm text-muted-foreground leading-relaxed">{t(bioKey)}</p>
@@ -573,7 +628,10 @@ export default function AProposPage() {
           <FadeIn from="none">
             <h2
               className="font-display font-bold text-white leading-tight mb-5"
-              style={{ fontSize: "clamp(2.4rem, 6vw, 4.5rem)", textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}
+              style={{
+                fontSize: "clamp(2.4rem, 6vw, 4.5rem)",
+                textShadow: "0 2px 20px rgba(0,0,0,0.5)",
+              }}
             >
               {t("about.closing_title")}
             </h2>
@@ -588,7 +646,10 @@ export default function AProposPage() {
               <Link
                 href="/contact"
                 className="px-9 py-4 rounded-2xl font-bold text-base text-white shadow-xl hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
-                style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 8px 32px rgba(139,26,46,0.45)" }}
+                style={{
+                  background: "var(--primary, #8B1A2E)",
+                  boxShadow: "0 8px 32px rgba(139,26,46,0.45)",
+                }}
               >
                 {t("about.closing_cta_agent")}
               </Link>

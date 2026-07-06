@@ -14,7 +14,6 @@ export function FeaturedProperties() {
   return (
     <section className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -26,7 +25,8 @@ export function FeaturedProperties() {
               Biens en vedette
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-              Découvrez notre sélection de biens immobiliers premium, commercialisés avec notre approche data-driven unique.
+              Découvrez notre sélection de biens immobiliers premium, commercialisés avec notre
+              approche data-driven unique.
             </p>
           </motion.div>
 
@@ -36,7 +36,10 @@ export function FeaturedProperties() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <Link href="/biens" className="inline-flex items-center gap-2 text-primary font-bold hover:text-primary/80 transition-colors group">
+            <Link
+              href="/biens"
+              className="inline-flex items-center gap-2 text-primary font-bold hover:text-primary/80 transition-colors group"
+            >
               Voir toutes les annonces
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Link>
@@ -74,12 +77,14 @@ export function FeaturedProperties() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex justify-center mt-12"
         >
-          <Link href="/biens" className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors group shadow-lg shadow-primary/20">
+          <Link
+            href="/biens"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors group shadow-lg shadow-primary/20"
+          >
             Voir toutes les annonces
             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
-
       </div>
     </section>
   );

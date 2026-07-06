@@ -105,12 +105,17 @@ function CapacityCalculator() {
         transition={{ duration: 0.2 }}
         className="rounded-xl bg-gradient-to-br from-foreground to-foreground/80 text-white p-4 shadow-md"
       >
-        <p className="text-xs font-semibold uppercase tracking-wide opacity-90">{t("capacity.headline")}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide opacity-90">
+          {t("capacity.headline")}
+        </p>
         <p className="text-3xl font-display font-bold mt-0.5 tabular-nums">
           {formatMAD(result.budgetTotal)}
         </p>
         <p className="text-xs opacity-80 mt-0.5 tabular-nums">
-          {t("capacity.headline_breakdown", { loan: formatMAD(result.principalMax), down: formatMAD(apport) })}
+          {t("capacity.headline_breakdown", {
+            loan: formatMAD(result.principalMax),
+            down: formatMAD(apport),
+          })}
         </p>
       </motion.div>
 
@@ -125,7 +130,13 @@ function CapacityCalculator() {
         </CapField>
 
         <CapField label={t("capacity.down_payment")}>
-          <SuffixInput value={apport} onCommit={setApport} suffix="MAD" decimals={0} step={10_000} />
+          <SuffixInput
+            value={apport}
+            onCommit={setApport}
+            suffix="MAD"
+            decimals={0}
+            step={10_000}
+          />
         </CapField>
 
         <CapField label={t("capacity.duration")}>
@@ -133,9 +144,16 @@ function CapacityCalculator() {
             value={duree}
             onCommit={(v) => {
               const r = Math.round(v);
-              if (r < DUREE_MIN) { setDureeError(t("mortgage.err_min_duration", { years: DUREE_MIN })); setDuree(DUREE_MIN); }
-              else if (r > DUREE_MAX) { setDureeError(t("mortgage.err_max_duration", { years: DUREE_MAX })); setDuree(DUREE_MAX); }
-              else { setDureeError(""); setDuree(r); }
+              if (r < DUREE_MIN) {
+                setDureeError(t("mortgage.err_min_duration", { years: DUREE_MIN }));
+                setDuree(DUREE_MIN);
+              } else if (r > DUREE_MAX) {
+                setDureeError(t("mortgage.err_max_duration", { years: DUREE_MAX }));
+                setDuree(DUREE_MAX);
+              } else {
+                setDureeError("");
+                setDuree(r);
+              }
             }}
             suffix={duree > 1 ? t("mortgage.year_other") : t("mortgage.year_one")}
             decimals={0}
@@ -148,9 +166,16 @@ function CapacityCalculator() {
           <SuffixInput
             value={taux}
             onCommit={(v) => {
-              if (v < TAUX_MIN) { setTauxError(t("mortgage.err_min_rate", { rate: TAUX_MIN })); setTaux(TAUX_MIN); }
-              else if (v > TAUX_MAX) { setTauxError(t("mortgage.err_max_rate", { rate: TAUX_MAX })); setTaux(TAUX_MAX); }
-              else { setTauxError(""); setTaux(v); }
+              if (v < TAUX_MIN) {
+                setTauxError(t("mortgage.err_min_rate", { rate: TAUX_MIN }));
+                setTaux(TAUX_MIN);
+              } else if (v > TAUX_MAX) {
+                setTauxError(t("mortgage.err_max_rate", { rate: TAUX_MAX }));
+                setTaux(TAUX_MAX);
+              } else {
+                setTauxError("");
+                setTaux(v);
+              }
             }}
             suffix="%"
             decimals={2}
@@ -172,10 +197,14 @@ function CapacityCalculator() {
       </div>
 
       <div className="rounded-xl bg-secondary/60 border border-border/40 p-3">
-        <p className="text-[10px] uppercase tracking-wide font-semibold text-muted-foreground">{t("capacity.max_monthly")}</p>
+        <p className="text-[10px] uppercase tracking-wide font-semibold text-muted-foreground">
+          {t("capacity.max_monthly")}
+        </p>
         <p className="text-base font-display font-bold text-foreground tabular-nums">
           {formatMAD(result.mensualiteMax)}
-          <span className="text-sm font-medium text-muted-foreground">{t("mortgage.per_month")}</span>
+          <span className="text-sm font-medium text-muted-foreground">
+            {t("mortgage.per_month")}
+          </span>
         </p>
         <p className="text-[11px] text-muted-foreground mt-0.5">
           {t("capacity.max_monthly_formula", { ratio: endettementPct })}
@@ -193,7 +222,9 @@ function CapacityCalculator() {
 function CapField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-xs font-semibold text-foreground/75 mb-1.5 uppercase tracking-wide">{label}</label>
+      <label className="block text-xs font-semibold text-foreground/75 mb-1.5 uppercase tracking-wide">
+        {label}
+      </label>
       {children}
     </div>
   );
@@ -302,9 +333,21 @@ const whatsappFinancement = `https://wa.me/212653535156?text=${encodeURIComponen
 )}`;
 
 const PARTNER_KEYS = [
-  { labelKey: "financement.profile_cdi",     durationKey: "financement.profile_cdi_duration",     descKey: "financement.profile_cdi_desc" },
-  { labelKey: "financement.profile_liberal", durationKey: "financement.profile_liberal_duration", descKey: "financement.profile_liberal_desc" },
-  { labelKey: "financement.profile_mre",     durationKey: "financement.profile_mre_duration",     descKey: "financement.profile_mre_desc" },
+  {
+    labelKey: "financement.profile_cdi",
+    durationKey: "financement.profile_cdi_duration",
+    descKey: "financement.profile_cdi_desc",
+  },
+  {
+    labelKey: "financement.profile_liberal",
+    durationKey: "financement.profile_liberal_duration",
+    descKey: "financement.profile_liberal_desc",
+  },
+  {
+    labelKey: "financement.profile_mre",
+    durationKey: "financement.profile_mre_duration",
+    descKey: "financement.profile_mre_desc",
+  },
 ];
 
 export default function FinancementPage() {
@@ -326,9 +369,7 @@ export default function FinancementPage() {
               <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground leading-tight">
                 {t("financement.page_title")}
               </h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                {t("financement.page_subtitle")}
-              </p>
+              <p className="text-sm text-muted-foreground mt-1">{t("financement.page_subtitle")}</p>
             </div>
             <a
               href={whatsappFinancement}
@@ -347,7 +388,6 @@ export default function FinancementPage() {
       <section className="py-5 flex-1">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-5">
-
             {/* Left: Mortgage calculator */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -360,8 +400,12 @@ export default function FinancementPage() {
                   <Calculator size={16} />
                 </div>
                 <div>
-                  <h2 className="font-display font-bold text-foreground text-base leading-tight">{t("financement.mortgage_card_title")}</h2>
-                  <p className="text-xs text-muted-foreground">{t("financement.mortgage_card_subtitle")}</p>
+                  <h2 className="font-display font-bold text-foreground text-base leading-tight">
+                    {t("financement.mortgage_card_title")}
+                  </h2>
+                  <p className="text-xs text-muted-foreground">
+                    {t("financement.mortgage_card_subtitle")}
+                  </p>
                 </div>
               </div>
               <MortgageCalculator compact />
@@ -372,7 +416,10 @@ export default function FinancementPage() {
                 className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm bg-primary text-white shadow-md shadow-primary/20 hover:shadow-lg hover:-translate-y-0.5 transition-all"
               >
                 <Sparkles size={14} />
-                {t("financement.lead_cta_mortgage", "Être mis en relation avec un partenaire bancaire")}
+                {t(
+                  "financement.lead_cta_mortgage",
+                  "Être mis en relation avec un partenaire bancaire"
+                )}
               </button>
               <p className="text-[11px] text-muted-foreground text-center mt-1.5">
                 {t("financement.lead_cta_hint", "Gratuit · Réponse sous 24h · Sans engagement")}
@@ -391,8 +438,12 @@ export default function FinancementPage() {
                   <TrendingUp size={16} />
                 </div>
                 <div>
-                  <h2 className="font-display font-bold text-foreground text-base leading-tight">{t("financement.capacity_card_title")}</h2>
-                  <p className="text-xs text-muted-foreground">{t("financement.capacity_card_subtitle")}</p>
+                  <h2 className="font-display font-bold text-foreground text-base leading-tight">
+                    {t("financement.capacity_card_title")}
+                  </h2>
+                  <p className="text-xs text-muted-foreground">
+                    {t("financement.capacity_card_subtitle")}
+                  </p>
                 </div>
               </div>
               <CapacityCalculator />
@@ -409,7 +460,6 @@ export default function FinancementPage() {
                 {t("financement.lead_cta_hint", "Gratuit · Réponse sous 24h · Sans engagement")}
               </p>
             </motion.div>
-
           </div>
         </div>
       </section>
@@ -484,12 +534,28 @@ export default function FinancementPage() {
  * ────────────────────────────────────────────────────────────────────────── */
 
 const PROFILE_OPTIONS = [
-  { value: "Salarié CDI",          labelKey: "financement.modal_profile_cdi",     fallback: "Salarié CDI" },
-  { value: "Salarié CDD / Stage",  labelKey: "financement.modal_profile_cdd",     fallback: "Salarié CDD / Stage" },
-  { value: "Profession libérale",  labelKey: "financement.modal_profile_liberal", fallback: "Profession libérale" },
-  { value: "Chef d'entreprise",    labelKey: "financement.modal_profile_chef",    fallback: "Chef d'entreprise" },
-  { value: "MRE",                  labelKey: "financement.modal_profile_mre",     fallback: "Marocain résident à l'étranger" },
-  { value: "Autre",                labelKey: "financement.modal_profile_other",   fallback: "Autre" },
+  { value: "Salarié CDI", labelKey: "financement.modal_profile_cdi", fallback: "Salarié CDI" },
+  {
+    value: "Salarié CDD / Stage",
+    labelKey: "financement.modal_profile_cdd",
+    fallback: "Salarié CDD / Stage",
+  },
+  {
+    value: "Profession libérale",
+    labelKey: "financement.modal_profile_liberal",
+    fallback: "Profession libérale",
+  },
+  {
+    value: "Chef d'entreprise",
+    labelKey: "financement.modal_profile_chef",
+    fallback: "Chef d'entreprise",
+  },
+  {
+    value: "MRE",
+    labelKey: "financement.modal_profile_mre",
+    fallback: "Marocain résident à l'étranger",
+  },
+  { value: "Autre", labelKey: "financement.modal_profile_other", fallback: "Autre" },
 ];
 
 function FinancementLeadModal({
@@ -522,7 +588,9 @@ function FinancementLeadModal({
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = ""; };
+      return () => {
+        document.body.style.overflow = "";
+      };
     }
   }, [open]);
 
@@ -530,23 +598,32 @@ function FinancementLeadModal({
   useEffect(() => {
     if (!open) {
       const timer = setTimeout(() => {
-        setNom(""); setTelephone(""); setEmail("");
-        setProfile(""); setBudget(""); setMessage("");
-        setSuccess(false); setSubmitError(null);
+        setNom("");
+        setTelephone("");
+        setEmail("");
+        setProfile("");
+        setBudget("");
+        setMessage("");
+        setSuccess(false);
+        setSubmitError(null);
       }, 300);
       return () => clearTimeout(timer);
     }
   }, [open]);
 
-  const contextLabel = context === "mortgage"
-    ? fallback("financement.modal_ctx_mortgage", "Simulation mensualité")
-    : fallback("financement.modal_ctx_capacity", "Capacité d'emprunt");
+  const contextLabel =
+    context === "mortgage"
+      ? fallback("financement.modal_ctx_mortgage", "Simulation mensualité")
+      : fallback("financement.modal_ctx_capacity", "Capacité d'emprunt");
 
   const isValid = (): string | null => {
     if (!nom.trim()) return fallback("financement.modal_err_name", "Merci d'indiquer votre nom.");
-    if (!/^[+\d][\d\s-]{6,}$/.test(telephone)) return fallback("financement.modal_err_phone", "Téléphone invalide.");
-    if (!/^\S+@\S+\.\S+$/.test(email)) return fallback("financement.modal_err_email", "Email invalide.");
-    if (!profile) return fallback("financement.modal_err_profile", "Merci de choisir votre profil.");
+    if (!/^[+\d][\d\s-]{6,}$/.test(telephone))
+      return fallback("financement.modal_err_phone", "Téléphone invalide.");
+    if (!/^\S+@\S+\.\S+$/.test(email))
+      return fallback("financement.modal_err_email", "Email invalide.");
+    if (!profile)
+      return fallback("financement.modal_err_profile", "Merci de choisir votre profil.");
     return null;
   };
 
@@ -554,7 +631,10 @@ function FinancementLeadModal({
     e.preventDefault();
     setSubmitError(null);
     const v = isValid();
-    if (v) { setSubmitError(v); return; }
+    if (v) {
+      setSubmitError(v);
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -567,7 +647,9 @@ function FinancementLeadModal({
           `Profil : ${profile}`,
           budget ? `Budget visé : ${budget} MAD` : null,
           message ? `Message : ${message}` : null,
-        ].filter(Boolean).join("\n"),
+        ]
+          .filter(Boolean)
+          .join("\n"),
         source: `Financement — ${contextLabel}`,
         status: "New",
         created_at: new Date().toISOString(),
@@ -646,7 +728,10 @@ function FinancementLeadModal({
                     {contextLabel}
                   </div>
                   <h2 className="text-xl md:text-2xl font-display font-bold text-foreground leading-tight">
-                    {fallback("financement.modal_title", "Être contacté par un partenaire bancaire")}
+                    {fallback(
+                      "financement.modal_title",
+                      "Être contacté par un partenaire bancaire"
+                    )}
                   </h2>
                   <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
                     {fallback(
@@ -657,39 +742,78 @@ function FinancementLeadModal({
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-4">
-                  <ModalField label={fallback("financement.modal_name", "Nom complet")} required icon={<UserIcon size={14} />}>
-                    <ModalInput value={nom} onChange={setNom} placeholder={fallback("financement.modal_name_placeholder", "Prénom Nom")} />
+                  <ModalField
+                    label={fallback("financement.modal_name", "Nom complet")}
+                    required
+                    icon={<UserIcon size={14} />}
+                  >
+                    <ModalInput
+                      value={nom}
+                      onChange={setNom}
+                      placeholder={fallback("financement.modal_name_placeholder", "Prénom Nom")}
+                    />
                   </ModalField>
 
                   <div className="grid sm:grid-cols-2 gap-3">
-                    <ModalField label={fallback("financement.modal_phone", "Téléphone")} required icon={<Phone size={14} />}>
-                      <ModalInput type="tel" value={telephone} onChange={setTelephone} placeholder="+212 6 XX XX XX XX" />
+                    <ModalField
+                      label={fallback("financement.modal_phone", "Téléphone")}
+                      required
+                      icon={<Phone size={14} />}
+                    >
+                      <ModalInput
+                        type="tel"
+                        value={telephone}
+                        onChange={setTelephone}
+                        placeholder="+212 6 XX XX XX XX"
+                      />
                     </ModalField>
-                    <ModalField label={fallback("financement.modal_email", "Email")} required icon={<Mail size={14} />}>
-                      <ModalInput type="email" value={email} onChange={setEmail} placeholder="vous@email.ma" />
+                    <ModalField
+                      label={fallback("financement.modal_email", "Email")}
+                      required
+                      icon={<Mail size={14} />}
+                    >
+                      <ModalInput
+                        type="email"
+                        value={email}
+                        onChange={setEmail}
+                        placeholder="vous@email.ma"
+                      />
                     </ModalField>
                   </div>
 
-                  <ModalField label={fallback("financement.modal_profile_label", "Profil professionnel")} required icon={<Briefcase size={14} />}>
+                  <ModalField
+                    label={fallback("financement.modal_profile_label", "Profil professionnel")}
+                    required
+                    icon={<Briefcase size={14} />}
+                  >
                     <select
                       value={profile}
                       onChange={(e) => setProfile(e.target.value)}
                       className="w-full px-3 py-3 rounded-xl bg-muted/40 border border-border focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium transition-all appearance-none"
                     >
-                      <option value="">{fallback("financement.modal_profile_placeholder", "Choisir...")}</option>
+                      <option value="">
+                        {fallback("financement.modal_profile_placeholder", "Choisir...")}
+                      </option>
                       {PROFILE_OPTIONS.map((p) => (
-                        <option key={p.value} value={p.value}>{fallback(p.labelKey, p.fallback)}</option>
+                        <option key={p.value} value={p.value}>
+                          {fallback(p.labelKey, p.fallback)}
+                        </option>
                       ))}
                     </select>
                   </ModalField>
 
-                  <ModalField label={fallback("financement.modal_budget", "Budget visé (MAD) — optionnel")}>
+                  <ModalField
+                    label={fallback("financement.modal_budget", "Budget visé (MAD) — optionnel")}
+                  >
                     <ModalInput
                       type="number"
                       inputMode="numeric"
                       value={budget}
                       onChange={setBudget}
-                      placeholder={fallback("financement.modal_budget_placeholder", "Ex: 1 500 000")}
+                      placeholder={fallback(
+                        "financement.modal_budget_placeholder",
+                        "Ex: 1 500 000"
+                      )}
                     />
                   </ModalField>
 
@@ -697,7 +821,10 @@ function FinancementLeadModal({
                     <textarea
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder={fallback("financement.modal_message_placeholder", "Détails utiles : type de bien, délai, situation particulière...")}
+                      placeholder={fallback(
+                        "financement.modal_message_placeholder",
+                        "Détails utiles : type de bien, délai, situation particulière..."
+                      )}
                       rows={3}
                       className="w-full px-3 py-3 rounded-xl bg-muted/40 border border-border focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all resize-none"
                     />

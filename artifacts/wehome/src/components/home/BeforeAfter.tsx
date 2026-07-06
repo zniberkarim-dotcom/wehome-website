@@ -91,8 +91,7 @@ export function BeforeAfter() {
   useEffect(() => {
     const onMove = (e: MouseEvent | TouchEvent) => {
       if (!draggingRef.current) return;
-      const clientX =
-        "touches" in e ? e.touches[0]?.clientX ?? 0 : e.clientX;
+      const clientX = "touches" in e ? (e.touches[0]?.clientX ?? 0) : e.clientX;
       updateFromClientX(clientX);
     };
     const onUp = () => {
@@ -112,8 +111,7 @@ export function BeforeAfter() {
 
   const onPointerDown = (e: React.MouseEvent | React.TouchEvent) => {
     draggingRef.current = true;
-    const clientX =
-      "touches" in e ? e.touches[0]?.clientX ?? 0 : (e as React.MouseEvent).clientX;
+    const clientX = "touches" in e ? (e.touches[0]?.clientX ?? 0) : (e as React.MouseEvent).clientX;
     updateFromClientX(clientX);
   };
 
@@ -171,7 +169,9 @@ export function BeforeAfter() {
                   : "bg-white border-border text-foreground/70 hover:border-foreground/40 hover:text-foreground"
               }`}
             >
-              <span className={activeIdx === idx ? "text-amber-300" : "text-primary"}>{ex.icon}</span>
+              <span className={activeIdx === idx ? "text-amber-300" : "text-primary"}>
+                {ex.icon}
+              </span>
               {fallback(ex.labelKey, ex.labelFallback)}
             </button>
           ))}

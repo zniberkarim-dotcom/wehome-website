@@ -46,9 +46,14 @@ export default function LoginPage() {
         <div className="bg-card border border-border rounded-3xl p-8 shadow-lg">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Email</label>
+              <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                Email
+              </label>
               <div className="relative">
-                <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                <Mail
+                  size={16}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+                />
                 <input
                   type="email"
                   required
@@ -61,9 +66,14 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">Mot de passe</label>
+              <label className="block text-xs font-semibold text-foreground/70 mb-1.5 uppercase tracking-wider">
+                Mot de passe
+              </label>
               <div className="relative">
-                <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                <Lock
+                  size={16}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+                />
                 <input
                   type={showPwd ? "text" : "password"}
                   required
@@ -83,7 +93,9 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <p className="text-sm text-destructive bg-destructive/10 rounded-xl px-4 py-3">{error}</p>
+              <p className="text-sm text-destructive bg-destructive/10 rounded-xl px-4 py-3">
+                {error}
+              </p>
             )}
 
             <button
@@ -105,7 +117,9 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
-          <Link href="/" className="hover:text-primary transition-colors">← Retour au site</Link>
+          <Link href="/" className="hover:text-primary transition-colors">
+            ← Retour au site
+          </Link>
         </p>
       </motion.div>
     </div>

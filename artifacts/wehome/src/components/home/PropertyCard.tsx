@@ -1,4 +1,13 @@
-import { MapPin, Bed, Bath, Square, ArrowRight, Sofa, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  MapPin,
+  Bed,
+  Bath,
+  Square,
+  ArrowRight,
+  Sofa,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import { formatMAD } from "@/lib/utils";
@@ -40,15 +49,21 @@ export function PropertyCard({ property }: PropertyCardProps) {
     setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
   }, [imageUrls.length]);
 
-  const goNext = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    goNextIndex();
-  }, [goNextIndex]);
+  const goNext = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      goNextIndex();
+    },
+    [goNextIndex]
+  );
 
-  const goPrev = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    goPrevIndex();
-  }, [goPrevIndex]);
+  const goPrev = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      goPrevIndex();
+    },
+    [goPrevIndex]
+  );
 
   const { onTouchStart, onTouchEnd, didSwipe } = useSwipe(goNextIndex, goPrevIndex);
 
@@ -64,22 +79,27 @@ export function PropertyCard({ property }: PropertyCardProps) {
       <div
         role="link"
         tabIndex={0}
-        onClick={() => { if (!didSwipe.current) navigate(`/bien/${property.id}`); }}
-        onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/bien/${property.id}`); }}
+        onClick={() => {
+          if (!didSwipe.current) navigate(`/bien/${property.id}`);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") navigate(`/bien/${property.id}`);
+        }}
         onTouchStart={hasMultiple ? onTouchStart : undefined}
         onTouchEnd={hasMultiple ? onTouchEnd : undefined}
-        className={`relative aspect-[4/5] w-full overflow-hidden cursor-pointer ${!showImage ? property.gradientClass : ''}`}
+        className={`relative aspect-[4/5] w-full overflow-hidden cursor-pointer ${!showImage ? property.gradientClass : ""}`}
       >
-        {hasImages && imageUrls.map((url, i) => (
-          <img
-            key={i}
-            src={url}
-            alt={`${property.title} - Photo ${i + 1}`}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${i === currentIndex ? 'opacity-100' : 'opacity-0'}`}
-            onError={() => handleImgError(i)}
-            loading={i === 0 ? "eager" : "lazy"}
-          />
-        ))}
+        {hasImages &&
+          imageUrls.map((url, i) => (
+            <img
+              key={i}
+              src={url}
+              alt={`${property.title} - Photo ${i + 1}`}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${i === currentIndex ? "opacity-100" : "opacity-0"}`}
+              onError={() => handleImgError(i)}
+              loading={i === 0 ? "eager" : "lazy"}
+            />
+          ))}
 
         <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
           {/* Lifecycle badge — only when not "Disponible" (the default state has no badge to avoid noise) */}
@@ -101,10 +121,14 @@ export function PropertyCard({ property }: PropertyCardProps) {
           <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg shadow-sm">
             {property.type}
           </span>
-          <span className={`px-3 py-1 text-white text-xs font-bold rounded-lg shadow-sm ${
-            property.transaction === "Location" ? "bg-foreground" : "bg-primary"
-          }`}>
-            {property.transaction === "Location" ? t("card.transaction_rent") : t("card.transaction_sale")}
+          <span
+            className={`px-3 py-1 text-white text-xs font-bold rounded-lg shadow-sm ${
+              property.transaction === "Location" ? "bg-foreground" : "bg-primary"
+            }`}
+          >
+            {property.transaction === "Location"
+              ? t("card.transaction_rent")
+              : t("card.transaction_sale")}
           </span>
           {property.furnished && (
             <span className="px-3 py-1 bg-primary/80 text-white text-xs font-bold rounded-lg shadow-sm">
@@ -112,7 +136,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
             </span>
           )}
         </div>
-        
+
         <FavoriteButton
           propertyId={property.id}
           variant="floating"
@@ -139,9 +163,12 @@ export function PropertyCard({ property }: PropertyCardProps) {
               {imageUrls.map((_, i) => (
                 <button
                   key={i}
-                  onClick={(e) => { e.stopPropagation(); setCurrentIndex(i); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentIndex(i);
+                  }}
                   className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                    i === currentIndex ? 'bg-white w-4' : 'bg-white/60 hover:bg-white/80'
+                    i === currentIndex ? "bg-white w-4" : "bg-white/60 hover:bg-white/80"
                   }`}
                 />
               ))}
@@ -157,7 +184,14 @@ export function PropertyCard({ property }: PropertyCardProps) {
           <h3 className="text-2xl font-display font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
             {hasPrice ? (
               <>
-                {formatMAD(property.price)}{property.isRental ? <span className="text-base font-medium text-muted-foreground">{t("card.per_month")}</span> : ""}
+                {formatMAD(property.price)}
+                {property.isRental ? (
+                  <span className="text-base font-medium text-muted-foreground">
+                    {t("card.per_month")}
+                  </span>
+                ) : (
+                  ""
+                )}
               </>
             ) : (
               <span className="text-lg">{property.priceLabel || t("card.price_on_request")}</span>
@@ -176,50 +210,73 @@ export function PropertyCard({ property }: PropertyCardProps) {
         {isTerrain ? (
           <div className="flex items-center justify-center gap-2 py-4 border-y border-border/60 mt-auto">
             <Square size={20} className="text-primary/70" />
-            <span className="text-sm font-medium">{property.surfaceLabel || `${property.surface.toLocaleString("fr-FR")} m²`}</span>
+            <span className="text-sm font-medium">
+              {property.surfaceLabel || `${property.surface.toLocaleString("fr-FR")} m²`}
+            </span>
           </div>
         ) : (
-          <div className={`grid gap-0 py-0 border-y border-border/60 mt-auto divide-x divide-border/60 ${
-            statCount === 4 ? 'grid-cols-4' : statCount === 3 ? 'grid-cols-3' : statCount === 2 ? 'grid-cols-2' : 'grid-cols-1'
-          }`}>
+          <div
+            className={`grid gap-0 py-0 border-y border-border/60 mt-auto divide-x divide-border/60 ${
+              statCount === 4
+                ? "grid-cols-4"
+                : statCount === 3
+                  ? "grid-cols-3"
+                  : statCount === 2
+                    ? "grid-cols-2"
+                    : "grid-cols-1"
+            }`}
+          >
             {showBeds && (
               <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
                 <Bed size={18} style={{ color: "#8B1A2E" }} />
                 <span className="text-xs font-bold text-foreground">{property.beds}</span>
-                <span className="text-[10px] text-muted-foreground">{t("card.stat_bedrooms_short")}</span>
+                <span className="text-[10px] text-muted-foreground">
+                  {t("card.stat_bedrooms_short")}
+                </span>
               </div>
             )}
             {showRooms && (
               <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
                 <Bed size={18} style={{ color: "#8B1A2E" }} />
                 <span className="text-xs font-bold text-foreground">{property.rooms}</span>
-                <span className="text-[10px] text-muted-foreground">{t("card.stat_rooms_short")}</span>
+                <span className="text-[10px] text-muted-foreground">
+                  {t("card.stat_rooms_short")}
+                </span>
               </div>
             )}
             {showSalons && (
               <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
                 <Sofa size={18} style={{ color: "#8B1A2E" }} />
                 <span className="text-xs font-bold text-foreground">{property.salons}</span>
-                <span className="text-[10px] text-muted-foreground">{t("card.stat_salons_short")}</span>
+                <span className="text-[10px] text-muted-foreground">
+                  {t("card.stat_salons_short")}
+                </span>
               </div>
             )}
             {showBaths && (
               <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
                 <Bath size={18} style={{ color: "#8B1A2E" }} />
                 <span className="text-xs font-bold text-foreground">{property.baths}</span>
-                <span className="text-[10px] text-muted-foreground">{t("card.stat_baths_short")}</span>
+                <span className="text-[10px] text-muted-foreground">
+                  {t("card.stat_baths_short")}
+                </span>
               </div>
             )}
             <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
               <Square size={18} style={{ color: "#8B1A2E" }} />
-              <span className="text-xs font-bold text-foreground">{property.surface > 0 ? property.surface.toLocaleString("fr-FR") : "—"}</span>
+              <span className="text-xs font-bold text-foreground">
+                {property.surface > 0 ? property.surface.toLocaleString("fr-FR") : "—"}
+              </span>
               <span className="text-[10px] text-muted-foreground">m²</span>
             </div>
           </div>
         )}
 
         <div className="pt-4 mt-2">
-          <Link href={`/bien/${property.id}`} className="w-full py-3 rounded-xl bg-secondary hover:bg-primary hover:text-white text-secondary-foreground font-semibold flex items-center justify-center gap-2 transition-all duration-300 group/btn">
+          <Link
+            href={`/bien/${property.id}`}
+            className="w-full py-3 rounded-xl bg-secondary hover:bg-primary hover:text-white text-secondary-foreground font-semibold flex items-center justify-center gap-2 transition-all duration-300 group/btn"
+          >
             {t("card.see_details")}
             <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
           </Link>

@@ -6,9 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatMAD(amount: number) {
-  return new Intl.NumberFormat('fr-MA', {
-    style: 'currency',
-    currency: 'MAD',
+  return new Intl.NumberFormat("fr-MA", {
+    style: "currency",
+    currency: "MAD",
     maximumFractionDigits: 0,
   }).format(amount);
 }

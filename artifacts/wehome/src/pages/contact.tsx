@@ -107,7 +107,8 @@ export default function ContactPage() {
                     Message envoyé !
                   </h2>
                   <p className="text-muted-foreground mt-3 max-w-md mx-auto leading-relaxed">
-                    Merci pour votre message. Nous vous répondons sous 24 h ouvrées à l'adresse indiquée.
+                    Merci pour votre message. Nous vous répondons sous 24 h ouvrées à l'adresse
+                    indiquée.
                   </p>
                   <button
                     onClick={() => {
@@ -126,9 +127,12 @@ export default function ContactPage() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div>
-                    <h2 className="text-2xl font-display font-bold text-foreground">Écrivez-nous</h2>
+                    <h2 className="text-2xl font-display font-bold text-foreground">
+                      Écrivez-nous
+                    </h2>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Tous les champs marqués d'un <span className="text-destructive">*</span> sont obligatoires.
+                      Tous les champs marqués d'un <span className="text-destructive">*</span> sont
+                      obligatoires.
                     </p>
                   </div>
 
@@ -259,7 +263,9 @@ export default function ContactPage() {
                   title="Horaires"
                   body={
                     <span className="text-sm text-foreground/80">
-                      Lundi – Samedi<br />9h – 19h
+                      Lundi – Samedi
+                      <br />
+                      9h – 19h
                     </span>
                   }
                 />
@@ -326,7 +332,9 @@ function InfoRow({
         {icon}
       </div>
       <div>
-        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">{title}</p>
+        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+          {title}
+        </p>
         <div className="mt-0.5">{body}</div>
       </div>
     </div>

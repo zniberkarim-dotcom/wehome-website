@@ -43,10 +43,18 @@ type DealState = "live" | "upcoming" | "finished";
 
 function computeDealState(now: Date): { state: DealState; targetMs: number; targetDate: Date } {
   if (now < PEPITE_DEAL_START) {
-    return { state: "upcoming", targetMs: PEPITE_DEAL_START.getTime() - now.getTime(), targetDate: PEPITE_DEAL_START };
+    return {
+      state: "upcoming",
+      targetMs: PEPITE_DEAL_START.getTime() - now.getTime(),
+      targetDate: PEPITE_DEAL_START,
+    };
   }
   if (now < PEPITE_DEAL_END) {
-    return { state: "live", targetMs: PEPITE_DEAL_END.getTime() - now.getTime(), targetDate: PEPITE_DEAL_END };
+    return {
+      state: "live",
+      targetMs: PEPITE_DEAL_END.getTime() - now.getTime(),
+      targetDate: PEPITE_DEAL_END,
+    };
   }
   // Deal finished — show "next pépite" countdown to the 1st of next month at 9am
   const next = new Date(now);
@@ -94,12 +102,35 @@ export function PepiteDuMois() {
   const { state, targetMs, targetDate } = useCountdown();
   const { days, hours, minutes, seconds } = breakdown(targetMs);
 
-  const goNextIndex = useCallback(() => setCurrentIndex((p) => (p + 1) % imageUrls.length), [imageUrls.length]);
-  const goPrevIndex = useCallback(() => setCurrentIndex((p) => (p - 1 + imageUrls.length) % imageUrls.length), [imageUrls.length]);
-  const goNext = useCallback((e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); goNextIndex(); }, [goNextIndex]);
-  const goPrev = useCallback((e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); goPrevIndex(); }, [goPrevIndex]);
+  const goNextIndex = useCallback(
+    () => setCurrentIndex((p) => (p + 1) % imageUrls.length),
+    [imageUrls.length]
+  );
+  const goPrevIndex = useCallback(
+    () => setCurrentIndex((p) => (p - 1 + imageUrls.length) % imageUrls.length),
+    [imageUrls.length]
+  );
+  const goNext = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      goNextIndex();
+    },
+    [goNextIndex]
+  );
+  const goPrev = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      goPrevIndex();
+    },
+    [goPrevIndex]
+  );
   const { onTouchStart, onTouchEnd } = useSwipe(goNextIndex, goPrevIndex);
-  const handleImgError = useCallback((index: number) => setFailedIndexes((prev) => new Set(prev).add(index)), []);
+  const handleImgError = useCallback(
+    (index: number) => setFailedIndexes((prev) => new Set(prev).add(index)),
+    []
+  );
 
   if (isLoading) {
     return (
@@ -159,7 +190,6 @@ export function PepiteDuMois() {
   return (
     <section className="py-20 md:py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
         {/* ─── Section heading ──────────────────────────────────────────── */}
         <div className="flex items-center gap-4 mb-6">
           <div className="w-12 h-12 rounded-full bg-amber-500/15 flex items-center justify-center text-amber-600">
@@ -213,8 +243,8 @@ export function PepiteDuMois() {
                 {state === "live"
                   ? `Fin le ${formatDate(targetDate)}`
                   : state === "upcoming"
-                  ? `Début le ${formatDate(targetDate)}`
-                  : `Reprise le ${formatDate(targetDate)}`}
+                    ? `Début le ${formatDate(targetDate)}`
+                    : `Reprise le ${formatDate(targetDate)}`}
               </p>
             </div>
           </div>
@@ -222,10 +252,9 @@ export function PepiteDuMois() {
 
         {/* ─── Main card ────────────────────────────────────────────────── */}
         <div className="bg-card rounded-[2.5rem] overflow-hidden border border-border shadow-2xl flex flex-col lg:flex-row">
-
           {/* Image carousel */}
           <div
-            className={`group w-full lg:w-3/5 relative min-h-[400px] lg:min-h-[600px] ${!hasImages ? 'bg-slate-100' : ''}`}
+            className={`group w-full lg:w-3/5 relative min-h-[400px] lg:min-h-[600px] ${!hasImages ? "bg-slate-100" : ""}`}
             onTouchStart={hasMultiple ? onTouchStart : undefined}
             onTouchEnd={hasMultiple ? onTouchEnd : undefined}
           >
@@ -236,22 +265,36 @@ export function PepiteDuMois() {
                     key={i}
                     src={url}
                     alt={`${pepite.title} - Photo ${i + 1}`}
-                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${i === currentIndex ? 'opacity-100' : 'opacity-0'}`}
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${i === currentIndex ? "opacity-100" : "opacity-0"}`}
                     onError={() => handleImgError(i)}
                     loading={i === 0 ? "eager" : "lazy"}
                   />
                 ))}
                 {hasMultiple && (
                   <>
-                    <button onClick={goPrev} className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-lg z-10">
+                    <button
+                      onClick={goPrev}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-lg z-10"
+                    >
                       <ChevronLeft size={22} />
                     </button>
-                    <button onClick={goNext} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-lg z-10">
+                    <button
+                      onClick={goNext}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-lg z-10"
+                    >
                       <ChevronRight size={22} />
                     </button>
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                       {imageUrls.map((_, i) => (
-                        <button key={i} onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentIndex(i); }} className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${i === currentIndex ? 'bg-white w-5 shadow-md' : 'bg-white/60 hover:bg-white/80'}`} />
+                        <button
+                          key={i}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setCurrentIndex(i);
+                          }}
+                          className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${i === currentIndex ? "bg-white w-5 shadow-md" : "bg-white/60 hover:bg-white/80"}`}
+                        />
                       ))}
                     </div>
                   </>
@@ -267,7 +310,9 @@ export function PepiteDuMois() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent lg:hidden pointer-events-none" />
 
             {/* Offer ribbon — diagonal across the corner */}
-            <div className={`absolute top-6 left-6 px-4 py-2 ${stateConfig.ribbonColor} font-bold rounded-xl shadow-2xl backdrop-blur-md flex items-center gap-2 z-10`}>
+            <div
+              className={`absolute top-6 left-6 px-4 py-2 ${stateConfig.ribbonColor} font-bold rounded-xl shadow-2xl backdrop-blur-md flex items-center gap-2 z-10`}
+            >
               {state === "live" ? <Zap size={16} /> : <Sparkles size={16} />}
               <span className="text-sm">{stateConfig.ribbon}</span>
             </div>
@@ -289,8 +334,12 @@ export function PepiteDuMois() {
             >
               <div className="mb-6">
                 <div className="flex gap-2 mb-3 flex-wrap">
-                  <span className="text-primary font-bold tracking-wider uppercase text-xs">Annonce Exclusive</span>
-                  <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded-md uppercase tracking-wider">{pepite.transaction}</span>
+                  <span className="text-primary font-bold tracking-wider uppercase text-xs">
+                    Annonce Exclusive
+                  </span>
+                  <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded-md uppercase tracking-wider">
+                    {pepite.transaction}
+                  </span>
                   {state === "live" && (
                     <span className="px-2 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded-md uppercase tracking-wider animate-pulse flex items-center gap-1">
                       <Zap size={9} />
@@ -306,7 +355,7 @@ export function PepiteDuMois() {
                   <span className="text-lg">{pepite.location}</span>
                 </div>
                 <div className="text-4xl font-display font-bold text-primary mb-2">
-                  {hasPrice ? formatMAD(pepite.price) : (pepite.priceLabel || "Prix sur demande")}
+                  {hasPrice ? formatMAD(pepite.price) : pepite.priceLabel || "Prix sur demande"}
                 </div>
                 {state === "live" && hasPrice && (
                   <p className="text-sm text-red-700 font-semibold flex items-center gap-1.5">
@@ -365,12 +414,15 @@ export function PepiteDuMois() {
               {state === "live" && (
                 <p className="text-center text-[11px] text-muted-foreground mt-3 flex items-center justify-center gap-1">
                   <Zap size={11} className="text-red-600" />
-                  Plus que <span className="font-bold text-foreground tabular-nums">{pad2(hours)}h{pad2(minutes)}m{pad2(seconds)}s</span> avant la fin
+                  Plus que{" "}
+                  <span className="font-bold text-foreground tabular-nums">
+                    {pad2(hours)}h{pad2(minutes)}m{pad2(seconds)}s
+                  </span>{" "}
+                  avant la fin
                 </p>
               )}
             </motion.div>
           </div>
-
         </div>
       </div>
     </section>
@@ -381,7 +433,15 @@ export function PepiteDuMois() {
  * Sub-components
  * ────────────────────────────────────────────────────────────────────────── */
 
-function CountdownBox({ value, label, highlight = false }: { value: number; label: string; highlight?: boolean }) {
+function CountdownBox({
+  value,
+  label,
+  highlight = false,
+}: {
+  value: number;
+  label: string;
+  highlight?: boolean;
+}) {
   return (
     <div className="flex flex-col items-center min-w-[44px] md:min-w-[56px]">
       <AnimatePresence mode="popLayout" initial={false}>
@@ -396,13 +456,20 @@ function CountdownBox({ value, label, highlight = false }: { value: number; labe
           {pad2(value)}
         </motion.div>
       </AnimatePresence>
-      <span className="text-[9px] md:text-[10px] uppercase tracking-wider opacity-80 mt-0.5">{label}</span>
+      <span className="text-[9px] md:text-[10px] uppercase tracking-wider opacity-80 mt-0.5">
+        {label}
+      </span>
     </div>
   );
 }
 
 function formatDate(d: Date): string {
-  return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+  return d.toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function formatDuration(ms: number): string {

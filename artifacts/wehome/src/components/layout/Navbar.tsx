@@ -46,12 +46,12 @@ export function Navbar() {
   };
 
   const navLinks: { name: string; href: string; external?: boolean }[] = [
-    { name: t("nav.buy"),       href: "/acheter" },
-    { name: t("nav.rent"),      href: "/louer" },
-    { name: t("nav.sell"),      href: "/publier" },
-    { name: t("nav.estimate"),  href: "/estimer" },
+    { name: t("nav.buy"), href: "/acheter" },
+    { name: t("nav.rent"), href: "/louer" },
+    { name: t("nav.sell"), href: "/publier" },
+    { name: t("nav.estimate"), href: "/estimer" },
     { name: t("nav.financing"), href: "/financement" },
-    { name: t("nav.agents"),    href: "/agents" },
+    { name: t("nav.agents"), href: "/agents" },
   ];
 
   // Shared text styles for scrolled vs transparent nav
@@ -169,13 +169,17 @@ export function Navbar() {
                         className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
                         style={{ background: "#8B1A2E" }}
                       >
-                        {agent.prenom?.[0]}{agent.nom?.[0]}
+                        {agent.prenom?.[0]}
+                        {agent.nom?.[0]}
                       </span>
                     )}
                     <span>{agent.prenom}</span>
                     <ChevronDown
                       size={13}
-                      className={cn("transition-transform duration-200", agentMenuOpen && "rotate-180")}
+                      className={cn(
+                        "transition-transform duration-200",
+                        agentMenuOpen && "rotate-180"
+                      )}
                     />
                   </button>
 
@@ -191,7 +195,9 @@ export function Navbar() {
                       >
                         {/* Header */}
                         <div className="px-4 py-3 border-b border-border/40 bg-secondary/30">
-                          <p className="text-xs text-muted-foreground font-medium">{t("nav.logged_in_as")}</p>
+                          <p className="text-xs text-muted-foreground font-medium">
+                            {t("nav.logged_in_as")}
+                          </p>
                           <p className="text-sm font-semibold text-foreground mt-0.5 truncate">
                             {agent.prenom} {agent.nom}
                           </p>
@@ -328,28 +334,37 @@ export function Navbar() {
 
             {/* Language switcher (mobile) */}
             <div className="flex items-center justify-between px-1 py-3 border-t border-border/40 mt-2">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t("nav.language")}</span>
+              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                {t("nav.language")}
+              </span>
               <LanguageSwitcher />
             </div>
 
             {/* Agent zone — mobile */}
             <div className="mt-2 border-t border-border/40 pt-4">
-              {!loading && (
-                agent ? (
+              {!loading &&
+                (agent ? (
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-3 mb-2">
                       {agent.photo_url ? (
-                        <img src={agent.photo_url} alt={agent.prenom} className="w-10 h-10 rounded-full object-cover" />
+                        <img
+                          src={agent.photo_url}
+                          alt={agent.prenom}
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
                       ) : (
                         <span
                           className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white"
                           style={{ background: "#8B1A2E" }}
                         >
-                          {agent.prenom?.[0]}{agent.nom?.[0]}
+                          {agent.prenom?.[0]}
+                          {agent.nom?.[0]}
                         </span>
                       )}
                       <div>
-                        <p className="font-semibold text-foreground">{agent.prenom} {agent.nom}</p>
+                        <p className="font-semibold text-foreground">
+                          {agent.prenom} {agent.nom}
+                        </p>
                         <p className="text-xs text-muted-foreground">Agent WeHome</p>
                       </div>
                     </div>
@@ -386,8 +401,7 @@ export function Navbar() {
                     <LogIn size={18} />
                     {t("nav.agent_portal")}
                   </Link>
-                )
-              )}
+                ))}
             </div>
           </motion.div>
         )}

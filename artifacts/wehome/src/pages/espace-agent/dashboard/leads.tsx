@@ -9,16 +9,18 @@ import { fetchPortalLeads, updateLeadStatut, type PortalLead } from "@/lib/agent
 // ── Status helpers ────────────────────────────────────────────────────────────
 
 const STATUT_OPTIONS = [
-  { value: "nouveau",           label: "Nouveau",           color: "bg-blue-100 text-blue-700" },
-  { value: "contacté",          label: "Contacté",          color: "bg-purple-100 text-purple-700" },
-  { value: "visite_planifiée",  label: "Visite planifiée",  color: "bg-amber-100 text-amber-700" },
-  { value: "sans_suite",        label: "Sans suite",        color: "bg-gray-100 text-gray-500" },
+  { value: "nouveau", label: "Nouveau", color: "bg-blue-100 text-blue-700" },
+  { value: "contacté", label: "Contacté", color: "bg-purple-100 text-purple-700" },
+  { value: "visite_planifiée", label: "Visite planifiée", color: "bg-amber-100 text-amber-700" },
+  { value: "sans_suite", label: "Sans suite", color: "bg-gray-100 text-gray-500" },
 ];
 
 function StatutBadge({ statut }: { statut: string | undefined }) {
   const s = STATUT_OPTIONS.find((o) => o.value === statut) ?? STATUT_OPTIONS[0];
   return (
-    <span className={`inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full ${s.color}`}>
+    <span
+      className={`inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full ${s.color}`}
+    >
       {s.label}
     </span>
   );
@@ -26,19 +28,28 @@ function StatutBadge({ statut }: { statut: string | undefined }) {
 
 // ── Lead detail panel ─────────────────────────────────────────────────────────
 
-function LeadDetail({ lead, onClose, onStatusChange }: {
+function LeadDetail({
+  lead,
+  onClose,
+  onStatusChange,
+}: {
   lead: PortalLead;
   onClose: () => void;
   onStatusChange: (id: string, statut: PortalLead["statut_lead"]) => void;
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }}
+      initial={{ opacity: 0, x: 16 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 16 }}
       className="bg-white border border-border rounded-2xl p-6 sticky top-24"
     >
       <div className="flex items-center justify-between mb-5">
         <h3 className="font-display font-bold text-lg text-foreground">Détail du lead</h3>
-        <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted">
+        <button
+          onClick={onClose}
+          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted"
+        >
           <X size={16} />
         </button>
       </div>
@@ -49,13 +60,19 @@ function LeadDetail({ lead, onClose, onStatusChange }: {
           <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Contact</p>
           <p className="font-semibold text-foreground">{lead.name}</p>
           {lead.phone && (
-            <a href={`tel:${lead.phone}`} className="flex items-center gap-2 text-sm text-primary hover:underline">
+            <a
+              href={`tel:${lead.phone}`}
+              className="flex items-center gap-2 text-sm text-primary hover:underline"
+            >
               <Phone size={14} />
               {lead.phone}
             </a>
           )}
           {lead.email && (
-            <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground truncate">
+            <a
+              href={`mailto:${lead.email}`}
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground truncate"
+            >
               <Mail size={14} className="shrink-0" />
               {lead.email}
             </a>
@@ -74,7 +91,9 @@ function LeadDetail({ lead, onClose, onStatusChange }: {
         {/* Message */}
         {lead.notes && (
           <div>
-            <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Message</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+              Message
+            </p>
             <p className="text-sm text-foreground bg-muted/40 rounded-xl p-3 leading-relaxed">
               {lead.notes}
             </p>
@@ -83,12 +102,19 @@ function LeadDetail({ lead, onClose, onStatusChange }: {
 
         {/* Date */}
         <p className="text-xs text-muted-foreground">
-          Reçu le {new Date(lead.created_at).toLocaleDateString("fr-MA", { day: "numeric", month: "long", year: "numeric" })}
+          Reçu le{" "}
+          {new Date(lead.created_at).toLocaleDateString("fr-MA", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })}
         </p>
 
         {/* Status change */}
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">Statut</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-2">
+            Statut
+          </p>
           <div className="grid grid-cols-2 gap-2">
             {STATUT_OPTIONS.map((opt) => (
               <button
@@ -110,7 +136,8 @@ function LeadDetail({ lead, onClose, onStatusChange }: {
         <div className="grid grid-cols-2 gap-2 pt-2">
           <a
             href={`https://wa.me/${lead.phone?.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Bonjour ${lead.name}, je suis ${""} de WeHome. Vous m'avez contacté au sujet du bien ${lead.property_reference ?? ""}.`)}`}
-            target="_blank" rel="noopener noreferrer"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold text-white"
             style={{ background: "#25D366" }}
           >
@@ -151,19 +178,19 @@ export default function PortalLeadsPage() {
 
   function handleStatusChange(id: string, statut: PortalLead["statut_lead"]) {
     updateMutation.mutate({ id, statut });
-    setSelectedLead((prev) => prev?.id === id ? { ...prev, statut_lead: statut } : prev);
+    setSelectedLead((prev) => (prev?.id === id ? { ...prev, statut_lead: statut } : prev));
   }
 
-  const filtered = filterStatut === "all"
-    ? leads
-    : leads.filter((l) => (l.statut_lead ?? "nouveau") === filterStatut);
+  const filtered =
+    filterStatut === "all"
+      ? leads
+      : leads.filter((l) => (l.statut_lead ?? "nouveau") === filterStatut);
 
   const newCount = leads.filter((l) => !l.statut_lead || l.statut_lead === "nouveau").length;
 
   return (
     <PortalLayout title="Mes leads">
       <div className="space-y-6">
-
         {/* Header */}
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -203,14 +230,19 @@ export default function PortalLeadsPage() {
             {isLoading ? (
               <div className="space-y-2">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="bg-white border border-border rounded-2xl p-4 animate-pulse h-20" />
+                  <div
+                    key={i}
+                    className="bg-white border border-border rounded-2xl p-4 animate-pulse h-20"
+                  />
                 ))}
               </div>
             ) : filtered.length === 0 ? (
               <div className="bg-white border-2 border-dashed border-border rounded-3xl py-20 text-center">
                 <Users size={40} className="text-muted-foreground mx-auto mb-4" />
                 <h2 className="text-lg font-display font-bold text-foreground mb-2">
-                  {leads.length === 0 ? "Aucun lead pour l'instant" : "Aucun lead dans cette catégorie"}
+                  {leads.length === 0
+                    ? "Aucun lead pour l'instant"
+                    : "Aucun lead dans cette catégorie"}
                 </h2>
                 <p className="text-muted-foreground text-sm max-w-xs mx-auto">
                   {leads.length === 0
@@ -226,20 +258,23 @@ export default function PortalLeadsPage() {
                   return (
                     <motion.div
                       key={lead.id}
-                      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
                       onClick={() => setSelectedLead(isSelected ? null : lead)}
                       className={`bg-white border rounded-2xl p-4 cursor-pointer transition-all ${
                         isSelected
                           ? "border-primary shadow-sm"
                           : isNew
-                          ? "border-blue-200 hover:border-blue-300"
-                          : "border-border hover:border-primary/20"
+                            ? "border-blue-200 hover:border-blue-300"
+                            : "border-border hover:border-primary/20"
                       }`}
                     >
                       <div className="flex items-center gap-4">
                         {/* Avatar */}
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0 ${isNew ? "" : "opacity-60"}`}
-                          style={{ background: "#C0392B" }}>
+                        <div
+                          className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0 ${isNew ? "" : "opacity-60"}`}
+                          style={{ background: "#C0392B" }}
+                        >
                           {lead.name.charAt(0).toUpperCase()}
                         </div>
 
@@ -250,7 +285,9 @@ export default function PortalLeadsPage() {
                             <StatutBadge statut={lead.statut_lead} />
                           </div>
                           <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                            {lead.property_reference && <span>📍 {lead.property_reference} · </span>}
+                            {lead.property_reference && (
+                              <span>📍 {lead.property_reference} · </span>
+                            )}
                             {new Date(lead.created_at).toLocaleDateString("fr-MA")}
                           </p>
                           {lead.notes && (
@@ -264,16 +301,20 @@ export default function PortalLeadsPage() {
                         {/* Contact quick */}
                         <div className="flex items-center gap-2 shrink-0">
                           {lead.phone && (
-                            <a href={`tel:${lead.phone}`}
+                            <a
+                              href={`tel:${lead.phone}`}
                               onClick={(e) => e.stopPropagation()}
-                              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-primary/10 text-primary transition-colors">
+                              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-primary/10 text-primary transition-colors"
+                            >
                               <Phone size={15} />
                             </a>
                           )}
                           {lead.email && (
-                            <a href={`mailto:${lead.email}`}
+                            <a
+                              href={`mailto:${lead.email}`}
                               onClick={(e) => e.stopPropagation()}
-                              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
+                              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                            >
                               <Mail size={15} />
                             </a>
                           )}

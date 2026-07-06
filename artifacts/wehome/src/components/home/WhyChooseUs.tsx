@@ -34,7 +34,6 @@ export function WhyChooseUs() {
       <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-[400px] h-[400px] rounded-full border-[40px] border-white/5 opacity-50 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
           <motion.div
@@ -47,7 +46,9 @@ export function WhyChooseUs() {
               Notre différence
             </p>
             <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
-              Pourquoi WeHome<br />est différent
+              Pourquoi WeHome
+              <br />
+              est différent
             </h2>
           </motion.div>
           <motion.p
@@ -57,7 +58,8 @@ export function WhyChooseUs() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="text-primary-foreground/70 text-base leading-relaxed max-w-md lg:text-right"
           >
-            WeHome n'est pas une plateforme d'annonces.<br />
+            WeHome n'est pas une plateforme d'annonces.
+            <br />
             C'est l'infrastructure de confiance du marché immobilier marocain.
           </motion.p>
         </div>
@@ -89,7 +91,6 @@ export function WhyChooseUs() {
             </motion.div>
           ))}
         </div>
-
       </div>
     </section>
   );

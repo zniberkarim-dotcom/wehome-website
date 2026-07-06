@@ -2,8 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { BarChart2, TrendingUp, Users, Eye, Building2 } from "lucide-react";
 import {
-  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Cell,
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
 } from "recharts";
 import { PortalLayout } from "@/components/espace-agent/PortalLayout";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,7 +19,15 @@ import { fetchPortalProperties, fetchPortalLeads, fetchPerformanceStats } from "
 
 // ── Chart tooltip ─────────────────────────────────────────────────────────────
 
-function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number }>; label?: string }) {
+function ChartTooltip({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean;
+  payload?: Array<{ value: number }>;
+  label?: string;
+}) {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-white border border-border rounded-xl px-3 py-2 shadow-md text-sm">
@@ -23,16 +39,30 @@ function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: 
 
 // ── KPI card ──────────────────────────────────────────────────────────────────
 
-function KpiCard({ icon: Icon, label, value, sub, delay = 0 }: {
-  icon: React.ElementType; label: string; value: string | number; sub?: string; delay?: number;
+function KpiCard({
+  icon: Icon,
+  label,
+  value,
+  sub,
+  delay = 0,
+}: {
+  icon: React.ElementType;
+  label: string;
+  value: string | number;
+  sub?: string;
+  delay?: number;
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay }}
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
       className="bg-white border border-border rounded-2xl p-5"
     >
       <div className="flex items-center justify-between mb-3">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          {label}
+        </p>
         <Icon size={18} className="text-primary" />
       </div>
       <p className="text-3xl font-display font-bold text-foreground">{value}</p>
@@ -117,14 +147,15 @@ export default function PortalPerformancePage() {
   });
 
   const STATUS_LABELS: Record<string, string> = {
-    actif: "Publié", en_attente_validation: "En attente",
-    rejeté: "Rejeté", archivé: "Archivé",
+    actif: "Publié",
+    en_attente_validation: "En attente",
+    rejeté: "Rejeté",
+    archivé: "Archivé",
   };
 
   return (
     <PortalLayout title="Performance">
       <div className="space-y-8">
-
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-2xl font-display font-bold text-foreground">Performance</h1>
@@ -147,30 +178,61 @@ export default function PortalPerformancePage() {
           <>
             {/* KPIs */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <KpiCard icon={Building2} label="Biens actifs" value={stats?.biensActifs ?? 0}
-                sub="Publiés sur wehome.ma" delay={0.05} />
-              <KpiCard icon={Users} label="Total leads" value={stats?.totalLeads ?? 0}
-                sub="Contacts reçus" delay={0.1} />
-              <KpiCard icon={Eye} label="Vues totales" value={stats?.totalViews ?? 0}
-                sub="Visites de vos annonces" delay={0.15} />
-              <KpiCard icon={TrendingUp} label="Taux de contact"
+              <KpiCard
+                icon={Building2}
+                label="Biens actifs"
+                value={stats?.biensActifs ?? 0}
+                sub="Publiés sur wehome.ma"
+                delay={0.05}
+              />
+              <KpiCard
+                icon={Users}
+                label="Total leads"
+                value={stats?.totalLeads ?? 0}
+                sub="Contacts reçus"
+                delay={0.1}
+              />
+              <KpiCard
+                icon={Eye}
+                label="Vues totales"
+                value={stats?.totalViews ?? 0}
+                sub="Visites de vos annonces"
+                delay={0.15}
+              />
+              <KpiCard
+                icon={TrendingUp}
+                label="Taux de contact"
                 value={stats ? `${stats.conversionRate}%` : "—"}
-                sub="Leads / Vues" delay={0.2} />
+                sub="Leads / Vues"
+                delay={0.2}
+              />
             </div>
 
             {hasChartData ? (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Vues par bien */}
-                <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-                  className="bg-white border border-border rounded-2xl p-5">
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25 }}
+                  className="bg-white border border-border rounded-2xl p-5"
+                >
                   <h2 className="text-sm font-display font-bold text-foreground mb-5 uppercase tracking-wide">
                     Vues par bien
                   </h2>
                   {viewsData.length > 0 ? (
                     <ResponsiveContainer width="100%" height={220}>
-                      <BarChart data={viewsData} margin={{ top: 4, right: 8, left: -20, bottom: 40 }}>
+                      <BarChart
+                        data={viewsData}
+                        margin={{ top: 4, right: 8, left: -20, bottom: 40 }}
+                      >
                         <CartesianGrid strokeDasharray="3 3" stroke="#f0ede9" />
-                        <XAxis dataKey="name" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" />
+                        <XAxis
+                          dataKey="name"
+                          tick={{ fontSize: 10 }}
+                          angle={-35}
+                          textAnchor="end"
+                        />
                         <YAxis tick={{ fontSize: 11 }} />
                         <Tooltip content={<ChartTooltip />} />
                         <Bar dataKey="vues" radius={[6, 6, 0, 0]}>
@@ -188,8 +250,12 @@ export default function PortalPerformancePage() {
                 </motion.div>
 
                 {/* Leads par semaine */}
-                <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                  className="bg-white border border-border rounded-2xl p-5">
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="bg-white border border-border rounded-2xl p-5"
+                >
                   <h2 className="text-sm font-display font-bold text-foreground mb-5 uppercase tracking-wide">
                     Leads par semaine
                   </h2>
@@ -200,9 +266,12 @@ export default function PortalPerformancePage() {
                       <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
                       <Tooltip content={<ChartTooltip />} />
                       <Line
-                        type="monotone" dataKey="leads"
-                        stroke="#C0392B" strokeWidth={2.5}
-                        dot={{ fill: "#C0392B", r: 4 }} activeDot={{ r: 6 }}
+                        type="monotone"
+                        dataKey="leads"
+                        stroke="#C0392B"
+                        strokeWidth={2.5}
+                        dot={{ fill: "#C0392B", r: 4 }}
+                        activeDot={{ r: 6 }}
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -219,8 +288,12 @@ export default function PortalPerformancePage() {
             )}
 
             {/* Per-property table */}
-            <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
-              className="bg-white border border-border rounded-2xl overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35 }}
+              className="bg-white border border-border rounded-2xl overflow-hidden"
+            >
               <div className="px-5 py-4 border-b border-border">
                 <h2 className="text-sm font-display font-bold text-foreground uppercase tracking-wide">
                   Détail par bien
@@ -230,23 +303,44 @@ export default function PortalPerformancePage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border bg-muted/30">
-                      <th className="text-left px-5 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Bien</th>
-                      <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Vues</th>
-                      <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Leads</th>
-                      <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Taux</th>
-                      <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Jours</th>
-                      <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Statut</th>
+                      <th className="text-left px-5 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                        Bien
+                      </th>
+                      <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                        Vues
+                      </th>
+                      <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                        Leads
+                      </th>
+                      <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                        Taux
+                      </th>
+                      <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                        Jours
+                      </th>
+                      <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                        Statut
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {propStats.map((p, i) => (
-                      <tr key={p.id} className={`border-b border-border/50 hover:bg-muted/20 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
+                      <tr
+                        key={p.id}
+                        className={`border-b border-border/50 hover:bg-muted/20 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}
+                      >
                         <td className="px-5 py-3">
-                          <p className="font-medium text-foreground truncate max-w-[180px]">{p.titre}</p>
+                          <p className="font-medium text-foreground truncate max-w-[180px]">
+                            {p.titre}
+                          </p>
                           <p className="text-xs text-muted-foreground">{p.reference}</p>
                         </td>
-                        <td className="px-4 py-3 text-center font-semibold text-foreground">{p.views}</td>
-                        <td className="px-4 py-3 text-center font-semibold text-foreground">{p.leadsCount}</td>
+                        <td className="px-4 py-3 text-center font-semibold text-foreground">
+                          {p.views}
+                        </td>
+                        <td className="px-4 py-3 text-center font-semibold text-foreground">
+                          {p.leadsCount}
+                        </td>
                         <td className="px-4 py-3 text-center text-muted-foreground">{p.taux}</td>
                         <td className="px-4 py-3 text-center text-muted-foreground">{p.jours}j</td>
                         <td className="px-4 py-3 text-center">

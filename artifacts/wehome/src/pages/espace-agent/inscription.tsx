@@ -1,11 +1,24 @@
 import { useState, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, Upload, Loader2, AlertCircle, CheckCircle2, ArrowRight, ArrowLeft } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Upload,
+  Loader2,
+  AlertCircle,
+  CheckCircle2,
+  ArrowRight,
+  ArrowLeft,
+} from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
 import {
-  registerPortalAgent, portalSignIn, fetchPortalAgent,
-  updatePortalAgentProfile, uploadPortalAgentPhoto, uploadPortalAgencyLogo,
+  registerPortalAgent,
+  portalSignIn,
+  fetchPortalAgent,
+  updatePortalAgentProfile,
+  uploadPortalAgentPhoto,
+  uploadPortalAgencyLogo,
   MOROCCAN_CITIES,
 } from "@/lib/agent-portal";
 
@@ -13,11 +26,19 @@ import {
 const VARIANTS = {
   enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 36 : -36 }),
   center: { opacity: 1, x: 0 },
-  exit:  (dir: number) => ({ opacity: 0, x: dir > 0 ? -36 : 36 }),
+  exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -36 : 36 }),
 };
 
 // ── Field component ───────────────────────────────────────────────────────────
-function Field({ label, children, error }: { label: string; children: React.ReactNode; error?: string }) {
+function Field({
+  label,
+  children,
+  error,
+}: {
+  label: string;
+  children: React.ReactNode;
+  error?: string;
+}) {
   return (
     <div>
       <label className="text-xs font-semibold text-foreground/70 uppercase tracking-wide mb-1.5 block">
@@ -80,7 +101,7 @@ export default function InscriptionPage() {
   const [success, setSuccess] = useState(false);
 
   const photoRef = useRef<HTMLInputElement>(null);
-  const logoRef  = useRef<HTMLInputElement>(null);
+  const logoRef = useRef<HTMLInputElement>(null);
 
   function goNext() {
     const newErrors: Record<string, string> = {};
@@ -93,7 +114,10 @@ export default function InscriptionPage() {
       if (password.length < 8) newErrors.password = "8 caractères minimum";
       if (password !== confirmPwd) newErrors.confirmPwd = "Les mots de passe ne correspondent pas";
     }
-    if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
     setErrors({});
     setDir(1);
     setStep(step + 1);
@@ -108,18 +132,31 @@ export default function InscriptionPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
-    if (type === "photo") { setPhotoFile(file); setPhotoPreview(url); }
-    else { setLogoFile(file); setLogoPreview(url); }
+    if (type === "photo") {
+      setPhotoFile(file);
+      setPhotoPreview(url);
+    } else {
+      setLogoFile(file);
+      setLogoPreview(url);
+    }
   }
 
   async function handleSubmit() {
-    if (!accepted) { setErrors({ accepted: "Requis" }); return; }
+    if (!accepted) {
+      setErrors({ accepted: "Requis" });
+      return;
+    }
     setLoading(true);
     setGlobalError(null);
     try {
       // First register (creates auth user + agent row without photo)
       await registerPortalAgent({
-        prenom, nom, email, telephone, ville, password,
+        prenom,
+        nom,
+        email,
+        telephone,
+        ville,
+        password,
         nom_agence: nomAgence || "Indépendant",
         bio,
       });
@@ -144,7 +181,10 @@ export default function InscriptionPage() {
       setSuccess(true);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Une erreur est survenue.";
-      if (msg.toLowerCase().includes("already registered") || msg.toLowerCase().includes("already exists")) {
+      if (
+        msg.toLowerCase().includes("already registered") ||
+        msg.toLowerCase().includes("already exists")
+      ) {
         setGlobalError("Un compte existe déjà avec cet email. Connectez-vous.");
       } else {
         setGlobalError(msg);
@@ -230,11 +270,17 @@ export default function InscriptionPage() {
                   >
                     {step > s ? "✓" : s}
                   </div>
-                  <span className={`text-xs font-medium hidden sm:block ${step === s ? "text-foreground" : "text-muted-foreground"}`}>
+                  <span
+                    className={`text-xs font-medium hidden sm:block ${step === s ? "text-foreground" : "text-muted-foreground"}`}
+                  >
                     {label}
                   </span>
                 </div>
-                {i < 2 && <div className={`flex-1 h-0.5 mx-3 transition-all ${step > s ? "bg-primary" : "bg-border"}`} />}
+                {i < 2 && (
+                  <div
+                    className={`flex-1 h-0.5 mx-3 transition-all ${step > s ? "bg-primary" : "bg-border"}`}
+                  />
+                )}
               </div>
             );
           })}
@@ -256,24 +302,46 @@ export default function InscriptionPage() {
               {/* ── Step 1 ──────────────────────────────────────────────── */}
               {step === 1 && (
                 <div className="space-y-5">
-                  <h2 className="text-xl font-display font-bold text-foreground mb-1">Votre identité</h2>
-                  <p className="text-muted-foreground text-sm mb-6">Informations de connexion et de contact.</p>
+                  <h2 className="text-xl font-display font-bold text-foreground mb-1">
+                    Votre identité
+                  </h2>
+                  <p className="text-muted-foreground text-sm mb-6">
+                    Informations de connexion et de contact.
+                  </p>
 
                   <div className="grid grid-cols-2 gap-4">
                     <Field label="Prénom" error={errors.prenom}>
-                      <Input value={prenom} onChange={(e) => setPrenom(e.target.value)} placeholder="Karim" />
+                      <Input
+                        value={prenom}
+                        onChange={(e) => setPrenom(e.target.value)}
+                        placeholder="Karim"
+                      />
                     </Field>
                     <Field label="Nom" error={errors.nom}>
-                      <Input value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Benali" />
+                      <Input
+                        value={nom}
+                        onChange={(e) => setNom(e.target.value)}
+                        placeholder="Benali"
+                      />
                     </Field>
                   </div>
 
                   <Field label="Email professionnel" error={errors.email}>
-                    <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="vous@agence.ma" />
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="vous@agence.ma"
+                    />
                   </Field>
 
                   <Field label="Téléphone" error={errors.telephone}>
-                    <Input type="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)} placeholder="+212 6XX XXX XXX" />
+                    <Input
+                      type="tel"
+                      value={telephone}
+                      onChange={(e) => setTelephone(e.target.value)}
+                      placeholder="+212 6XX XXX XXX"
+                    />
                   </Field>
 
                   <Field label="Ville principale d'activité" error={errors.ville}>
@@ -283,7 +351,11 @@ export default function InscriptionPage() {
                       className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
                     >
                       <option value="">Sélectionnez une ville</option>
-                      {MOROCCAN_CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                      {MOROCCAN_CITIES.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
                     </select>
                   </Field>
 
@@ -296,8 +368,11 @@ export default function InscriptionPage() {
                         placeholder="8 caractères minimum"
                         className="pr-12"
                       />
-                      <button type="button" onClick={() => setShowPwd(!showPwd)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                      <button
+                        type="button"
+                        onClick={() => setShowPwd(!showPwd)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                      >
                         {showPwd ? <EyeOff size={18} /> : <Eye size={18} />}
                       </button>
                     </div>
@@ -317,11 +392,19 @@ export default function InscriptionPage() {
               {/* ── Step 2 ──────────────────────────────────────────────── */}
               {step === 2 && (
                 <div className="space-y-5">
-                  <h2 className="text-xl font-display font-bold text-foreground mb-1">Votre agence</h2>
-                  <p className="text-muted-foreground text-sm mb-6">Présentez-vous aux futurs acheteurs WeHome.</p>
+                  <h2 className="text-xl font-display font-bold text-foreground mb-1">
+                    Votre agence
+                  </h2>
+                  <p className="text-muted-foreground text-sm mb-6">
+                    Présentez-vous aux futurs acheteurs WeHome.
+                  </p>
 
                   <Field label="Nom de l'agence (ou Indépendant)">
-                    <Input value={nomAgence} onChange={(e) => setNomAgence(e.target.value)} placeholder="Agence Immo Casablanca" />
+                    <Input
+                      value={nomAgence}
+                      onChange={(e) => setNomAgence(e.target.value)}
+                      placeholder="Agence Immo Casablanca"
+                    />
                   </Field>
 
                   <Field label={`Bio courte (${bio.length}/200)`}>
@@ -336,21 +419,32 @@ export default function InscriptionPage() {
 
                   {/* Photo upload */}
                   <Field label="Photo de profil (optionnel)">
-                    <input ref={photoRef} type="file" accept="image/*" className="hidden"
-                      onChange={(e) => handlePhotoChange(e, "photo")} />
+                    <input
+                      ref={photoRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handlePhotoChange(e, "photo")}
+                    />
                     <div
                       onClick={() => photoRef.current?.click()}
                       className="flex items-center gap-4 p-4 rounded-xl border-2 border-dashed border-border hover:border-primary/40 cursor-pointer transition-colors group"
                     >
                       {photoPreview ? (
-                        <img src={photoPreview} alt="" className="w-14 h-14 rounded-full object-cover" />
+                        <img
+                          src={photoPreview}
+                          alt=""
+                          className="w-14 h-14 rounded-full object-cover"
+                        />
                       ) : (
                         <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
                           <Upload size={22} />
                         </div>
                       )}
                       <div>
-                        <p className="text-sm font-medium text-foreground">{photoPreview ? "Changer la photo" : "Uploader une photo"}</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {photoPreview ? "Changer la photo" : "Uploader une photo"}
+                        </p>
                         <p className="text-xs text-muted-foreground">JPG, PNG — max 5 MB</p>
                       </div>
                     </div>
@@ -358,21 +452,32 @@ export default function InscriptionPage() {
 
                   {/* Logo upload */}
                   <Field label="Logo de l'agence (optionnel)">
-                    <input ref={logoRef} type="file" accept="image/*" className="hidden"
-                      onChange={(e) => handlePhotoChange(e, "logo")} />
+                    <input
+                      ref={logoRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handlePhotoChange(e, "logo")}
+                    />
                     <div
                       onClick={() => logoRef.current?.click()}
                       className="flex items-center gap-4 p-4 rounded-xl border-2 border-dashed border-border hover:border-primary/40 cursor-pointer transition-colors group"
                     >
                       {logoPreview ? (
-                        <img src={logoPreview} alt="" className="w-14 h-14 rounded-xl object-contain bg-muted" />
+                        <img
+                          src={logoPreview}
+                          alt=""
+                          className="w-14 h-14 rounded-xl object-contain bg-muted"
+                        />
                       ) : (
                         <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
                           <Upload size={22} />
                         </div>
                       )}
                       <div>
-                        <p className="text-sm font-medium text-foreground">{logoPreview ? "Changer le logo" : "Uploader un logo"}</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {logoPreview ? "Changer le logo" : "Uploader un logo"}
+                        </p>
                         <p className="text-xs text-muted-foreground">PNG transparent recommandé</p>
                       </div>
                     </div>
@@ -383,8 +488,12 @@ export default function InscriptionPage() {
               {/* ── Step 3 ──────────────────────────────────────────────── */}
               {step === 3 && (
                 <div className="space-y-6">
-                  <h2 className="text-xl font-display font-bold text-foreground mb-1">Confirmation</h2>
-                  <p className="text-muted-foreground text-sm mb-4">Vérifiez vos informations avant d'envoyer.</p>
+                  <h2 className="text-xl font-display font-bold text-foreground mb-1">
+                    Confirmation
+                  </h2>
+                  <p className="text-muted-foreground text-sm mb-4">
+                    Vérifiez vos informations avant d'envoyer.
+                  </p>
 
                   {/* Summary */}
                   <div className="bg-muted/40 border border-border rounded-2xl p-5 space-y-3 text-sm">
@@ -425,7 +534,8 @@ export default function InscriptionPage() {
                       <Link href="/espace-agent" className="text-primary hover:underline">
                         conditions du réseau WeHome
                       </Link>{" "}
-                      et m'engage à respecter les standards de qualité (biens vérifiés, mandats signés, photos professionnelles).
+                      et m'engage à respecter les standards de qualité (biens vérifiés, mandats
+                      signés, photos professionnelles).
                     </p>
                   </label>
                   {errors.accepted && <p className="text-xs text-red-500">{errors.accepted}</p>}
@@ -452,7 +562,10 @@ export default function InscriptionPage() {
                 Retour
               </button>
             ) : (
-              <Link href="/espace-agent/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="/espace-agent/login"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Déjà inscrit ? Se connecter
               </Link>
             )}

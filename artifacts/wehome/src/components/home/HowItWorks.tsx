@@ -33,7 +33,6 @@ export function HowItWorks() {
   return (
     <section className="py-24 md:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
         {/* Header */}
         <div className="max-w-2xl mb-16 md:mb-20">
           <motion.p
@@ -53,7 +52,9 @@ export function HowItWorks() {
             className="font-display font-bold text-foreground leading-tight"
             style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}
           >
-            Une plateforme.<br />Trois façons d'en bénéficier.
+            Une plateforme.
+            <br />
+            Trois façons d'en bénéficier.
           </motion.h2>
         </div>
 
@@ -85,16 +86,17 @@ export function HowItWorks() {
               </div>
 
               {/* Audience tag */}
-              <p className="text-[10px] font-bold tracking-[0.18em] uppercase mb-3" style={{ color: "var(--primary, #8B1A2E)" }}>
+              <p
+                className="text-[10px] font-bold tracking-[0.18em] uppercase mb-3"
+                style={{ color: "var(--primary, #8B1A2E)" }}
+              >
                 {audience}
               </p>
 
               <h3 className="font-display font-bold text-foreground text-xl mb-4 leading-snug">
                 {title}
               </h3>
-              <p className="text-muted-foreground text-sm leading-[1.8] flex-grow">
-                {body}
-              </p>
+              <p className="text-muted-foreground text-sm leading-[1.8] flex-grow">{body}</p>
 
               {cta && (
                 <Link
@@ -103,7 +105,10 @@ export function HowItWorks() {
                   style={{ color: "var(--primary, #8B1A2E)" }}
                 >
                   {cta.label}
-                  <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
+                  <ArrowRight
+                    size={14}
+                    className="group-hover/link:translate-x-1 transition-transform"
+                  />
                 </Link>
               )}
             </motion.div>
@@ -114,7 +119,6 @@ export function HowItWorks() {
         <div className="hidden md:block relative mt-0">
           {/* connector line drawn with CSS under the step numbers — decorative */}
         </div>
-
       </div>
     </section>
   );

@@ -27,8 +27,8 @@ export function LegalPage({ title, subtitle, lastUpdated, sections }: Props) {
     lang === "en"
       ? t("legal.prevailing_notice_en")
       : lang === "zh"
-      ? t("legal.prevailing_notice_zh")
-      : "";
+        ? t("legal.prevailing_notice_zh")
+        : "";
 
   // Highlight the section currently in view
   useEffect(() => {
@@ -122,11 +122,7 @@ export function LegalPage({ title, subtitle, lastUpdated, sections }: Props) {
             {/* Sections */}
             <div className="space-y-10 max-w-3xl">
               {sections.map((s, i) => (
-                <section
-                  key={s.id}
-                  id={s.id}
-                  className="scroll-mt-28"
-                >
+                <section key={s.id} id={s.id} className="scroll-mt-28">
                   <h2 className="text-xl md:text-2xl font-display font-bold text-foreground mb-4">
                     <span className="text-primary tabular-nums text-base mr-2">
                       {String(i + 1).padStart(2, "0")}.
@@ -155,12 +151,18 @@ export function P({ children }: { children: React.ReactNode }) {
 
 /** Convenience: list with bullets. */
 export function UL({ children }: { children: React.ReactNode }) {
-  return <ul className="list-disc list-outside ml-5 space-y-1.5 text-sm md:text-base">{children}</ul>;
+  return (
+    <ul className="list-disc list-outside ml-5 space-y-1.5 text-sm md:text-base">{children}</ul>
+  );
 }
 
 /** Subhead H3 inside a section. */
 export function H3({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-base md:text-lg font-display font-bold text-foreground mt-6 mb-2">{children}</h3>;
+  return (
+    <h3 className="text-base md:text-lg font-display font-bold text-foreground mt-6 mb-2">
+      {children}
+    </h3>
+  );
 }
 
 /** Placeholder span — visually highlights fields the legal team must fill in. */

@@ -81,7 +81,10 @@ export default function AgentsPage() {
                     className="group inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-bold bg-white text-primary shadow-2xl hover:shadow-3xl hover:-translate-y-0.5 transition-all"
                   >
                     {fallback("agents.hero_cta_primary", "Rejoindre le réseau")}
-                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight
+                      size={18}
+                      className="group-hover:translate-x-1 transition-transform"
+                    />
                   </Link>
                   <a
                     href={whatsappRecrutement}
@@ -96,9 +99,18 @@ export default function AgentsPage() {
 
                 {/* Trust strip */}
                 <div className="grid grid-cols-3 gap-4 md:gap-6 mt-10 pt-8 border-t border-white/15 max-w-md">
-                  <Stat value={fallback("agents.stat_1_value", "+50")} label={fallback("agents.stat_1_label", "Agents partenaires")} />
-                  <Stat value={fallback("agents.stat_2_value", "500+")} label={fallback("agents.stat_2_label", "Leads / mois")} />
-                  <Stat value={fallback("agents.stat_3_value", "2-3×")} label={fallback("agents.stat_3_label", "Vendus plus vite")} />
+                  <Stat
+                    value={fallback("agents.stat_1_value", "+50")}
+                    label={fallback("agents.stat_1_label", "Agents partenaires")}
+                  />
+                  <Stat
+                    value={fallback("agents.stat_2_value", "500+")}
+                    label={fallback("agents.stat_2_label", "Leads / mois")}
+                  />
+                  <Stat
+                    value={fallback("agents.stat_3_value", "2-3×")}
+                    label={fallback("agents.stat_3_label", "Vendus plus vite")}
+                  />
                 </div>
               </motion.div>
 
@@ -114,7 +126,10 @@ export default function AgentsPage() {
                   delay={0.4}
                   icon={<Wand2 size={18} />}
                   title={fallback("agents.float_card_1_title", "Photos retouchées IA")}
-                  description={fallback("agents.float_card_1_desc", "Tes annonces 3× plus attractives")}
+                  description={fallback(
+                    "agents.float_card_1_desc",
+                    "Tes annonces 3× plus attractives"
+                  )}
                 />
                 <FloatingCard
                   className="absolute top-32 left-0 w-64"
@@ -129,7 +144,10 @@ export default function AgentsPage() {
                   delay={0.8}
                   icon={<LayoutDashboard size={18} />}
                   title={fallback("agents.float_card_3_title", "Dashboard pro")}
-                  description={fallback("agents.float_card_3_desc", "Suivi des biens, leads, perfs")}
+                  description={fallback(
+                    "agents.float_card_3_desc",
+                    "Suivi des biens, leads, perfs"
+                  )}
                 />
               </motion.div>
             </div>
@@ -169,7 +187,11 @@ export default function AgentsPage() {
                   "agents.benefit_1_desc",
                   "Retouche photo IA, home staging virtuel, visite 3D — accès illimité à nos outils premium pour tes annonces."
                 )}
-                tags={[fallback("agents.benefit_1_tag1", "Photos IA"), fallback("agents.benefit_1_tag2", "Staging virtuel"), fallback("agents.benefit_1_tag3", "3D")]}
+                tags={[
+                  fallback("agents.benefit_1_tag1", "Photos IA"),
+                  fallback("agents.benefit_1_tag2", "Staging virtuel"),
+                  fallback("agents.benefit_1_tag3", "3D"),
+                ]}
               />
               <BenefitCard
                 icon={<Target size={22} />}
@@ -288,7 +310,10 @@ export default function AgentsPage() {
                     {fallback("agents.earnings_badge", "Ton potentiel")}
                   </div>
                   <h2 className="text-3xl md:text-4xl font-display font-bold leading-tight">
-                    {fallback("agents.earnings_title", "Multiplie ton volume par 2 à 3 dès le premier trimestre.")}
+                    {fallback(
+                      "agents.earnings_title",
+                      "Multiplie ton volume par 2 à 3 dès le premier trimestre."
+                    )}
                   </h2>
                   <p className="text-base md:text-lg opacity-80 mt-5 leading-relaxed">
                     {fallback(
@@ -297,9 +322,18 @@ export default function AgentsPage() {
                     )}
                   </p>
                   <div className="flex flex-wrap gap-2 mt-6">
-                    <Pill icon={<CheckCircle2 size={12} />} label={fallback("agents.earnings_pill_1", "Commission classique")} />
-                    <Pill icon={<CheckCircle2 size={12} />} label={fallback("agents.earnings_pill_2", "Pas de frais cachés")} />
-                    <Pill icon={<CheckCircle2 size={12} />} label={fallback("agents.earnings_pill_3", "Outils inclus")} />
+                    <Pill
+                      icon={<CheckCircle2 size={12} />}
+                      label={fallback("agents.earnings_pill_1", "Commission classique")}
+                    />
+                    <Pill
+                      icon={<CheckCircle2 size={12} />}
+                      label={fallback("agents.earnings_pill_2", "Pas de frais cachés")}
+                    />
+                    <Pill
+                      icon={<CheckCircle2 size={12} />}
+                      label={fallback("agents.earnings_pill_3", "Outils inclus")}
+                    />
                   </div>
                 </div>
 
@@ -339,7 +373,10 @@ export default function AgentsPage() {
                 {fallback("agents.directory_title", "Rencontre nos agents partenaires")}
               </h2>
               <p className="text-lg text-muted-foreground mt-4">
-                {fallback("agents.directory_subtitle", "Des professionnels triés sur le volet, partout au Maroc.")}
+                {fallback(
+                  "agents.directory_subtitle",
+                  "Des professionnels triés sur le volet, partout au Maroc."
+                )}
               </p>
             </motion.div>
 
@@ -386,7 +423,9 @@ export default function AgentsPage() {
                           ) : (
                             <div
                               className="w-full h-full flex items-center justify-center text-white text-5xl font-display font-bold"
-                              style={{ background: "linear-gradient(135deg, #8B1A2E 0%, #C0392B 100%)" }}
+                              style={{
+                                background: "linear-gradient(135deg, #8B1A2E 0%, #C0392B 100%)",
+                              }}
                             >
                               {agent.prenom.charAt(0)}
                               {agent.nom.charAt(0)}
@@ -397,18 +436,25 @@ export default function AgentsPage() {
                           <h3 className="text-xl font-display font-bold text-foreground group-hover:text-primary transition-colors">
                             {agent.prenom} {agent.nom}
                           </h3>
-                          <p className="text-sm text-muted-foreground mt-1">{t("agents.wehome_agent")}</p>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {t("agents.wehome_agent")}
+                          </p>
                           {agent.specialites && agent.specialites.length > 0 && (
                             <div className="flex flex-wrap gap-1.5 mt-3">
                               {agent.specialites.slice(0, 3).map((s) => (
-                                <span key={s} className="text-xs font-semibold px-2.5 py-1 rounded-full bg-secondary text-foreground/70">
+                                <span
+                                  key={s}
+                                  className="text-xs font-semibold px-2.5 py-1 rounded-full bg-secondary text-foreground/70"
+                                >
                                   {s}
                                 </span>
                               ))}
                             </div>
                           )}
                           <div className="mt-4 pt-4 border-t border-border/60">
-                            <span className="text-sm font-semibold text-primary group-hover:underline">{t("agents.view_profile")}</span>
+                            <span className="text-sm font-semibold text-primary group-hover:underline">
+                              {t("agents.view_profile")}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -449,7 +495,10 @@ export default function AgentsPage() {
                   className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold bg-primary text-white shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
                 >
                   {fallback("agents.final_cta_primary", "Rejoindre le réseau WeHome")}
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight
+                    size={18}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
                 </Link>
                 <a
                   href={whatsappRecrutement}
@@ -478,7 +527,9 @@ function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div>
       <div className="text-2xl md:text-3xl font-display font-bold text-white">{value}</div>
-      <div className="text-[11px] uppercase tracking-wider opacity-70 mt-1 leading-tight">{label}</div>
+      <div className="text-[11px] uppercase tracking-wider opacity-70 mt-1 leading-tight">
+        {label}
+      </div>
     </div>
   );
 }
@@ -559,7 +610,10 @@ function BenefitCard({
       {tags && tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mt-4">
           {tags.map((tag) => (
-            <span key={tag} className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-foreground/5 text-foreground/70">
+            <span
+              key={tag}
+              className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-foreground/5 text-foreground/70"
+            >
               {tag}
             </span>
           ))}
@@ -569,7 +623,15 @@ function BenefitCard({
   );
 }
 
-function StepCard({ number, title, description }: { number: string; title: string; description: string }) {
+function StepCard({
+  number,
+  title,
+  description,
+}: {
+  number: string;
+  title: string;
+  description: string;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -606,11 +668,15 @@ function EarningCard({
           : "bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-xl"
       }`}
     >
-      <div className={`text-[10px] font-bold uppercase tracking-wider ${muted ? "opacity-70" : "opacity-90"}`}>
+      <div
+        className={`text-[10px] font-bold uppercase tracking-wider ${muted ? "opacity-70" : "opacity-90"}`}
+      >
         {label}
       </div>
       <div className="text-2xl font-display font-bold mt-2 leading-tight">{value}</div>
-      <div className={`text-xs mt-1.5 leading-snug ${muted ? "opacity-70" : "opacity-95"}`}>{sub}</div>
+      <div className={`text-xs mt-1.5 leading-snug ${muted ? "opacity-70" : "opacity-95"}`}>
+        {sub}
+      </div>
     </div>
   );
 }

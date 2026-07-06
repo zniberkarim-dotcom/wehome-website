@@ -45,7 +45,9 @@ export function Services() {
             transition={{ delay: 0.05 }}
             className="text-3xl md:text-4xl font-display font-bold text-foreground mb-5"
           >
-            Ce que WeHome apporte<br />que personne d'autre n'offre.
+            Ce que WeHome apporte
+            <br />
+            que personne d'autre n'offre.
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -54,8 +56,8 @@ export function Services() {
             transition={{ delay: 0.1 }}
             className="text-muted-foreground text-base leading-relaxed"
           >
-            Entre les plateformes qui abandonnent les acheteurs et les agences qui manquent de données —
-            WeHome construit le standard que le marché attendait.
+            Entre les plateformes qui abandonnent les acheteurs et les agences qui manquent de
+            données — WeHome construit le standard que le marché attendait.
           </motion.p>
         </div>
 
@@ -72,7 +74,9 @@ export function Services() {
               <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                 {service.icon}
               </div>
-              <h3 className="text-xl font-display font-bold text-foreground mb-4">{service.title}</h3>
+              <h3 className="text-xl font-display font-bold text-foreground mb-4">
+                {service.title}
+              </h3>
               <p className="text-muted-foreground leading-[1.75] text-sm">{service.description}</p>
             </motion.div>
           ))}

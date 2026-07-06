@@ -2,7 +2,13 @@ import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import {
-  Globe, Tag, ShieldCheck, ChevronDown, CheckCircle2, Loader2, ArrowRight,
+  Globe,
+  Tag,
+  ShieldCheck,
+  ChevronDown,
+  CheckCircle2,
+  Loader2,
+  ArrowRight,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
@@ -11,12 +17,25 @@ import { submitPartenairesWaitlist } from "@/lib/data";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function FadeIn({ children, delay = 0, className = "", from = "bottom" }: { children: React.ReactNode; delay?: number; className?: string; from?: "bottom" | "left" | "right" | "none" }) {
+function FadeIn({
+  children,
+  delay = 0,
+  className = "",
+  from = "bottom",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+  from?: "bottom" | "left" | "right" | "none";
+}) {
   const initial =
-    from === "none" ? { opacity: 0 }
-    : from === "left"  ? { opacity: 0, x: -24 }
-    : from === "right" ? { opacity: 0, x: 24 }
-    : { opacity: 0, y: 24 };
+    from === "none"
+      ? { opacity: 0 }
+      : from === "left"
+        ? { opacity: 0, x: -24 }
+        : from === "right"
+          ? { opacity: 0, x: 24 }
+          : { opacity: 0, y: 24 };
   return (
     <motion.div
       initial={initial}
@@ -32,7 +51,10 @@ function FadeIn({ children, delay = 0, className = "", from = "bottom" }: { chil
 
 function Overline({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs font-bold tracking-[0.2em] uppercase mb-4" style={{ color: "var(--primary, #8B1A2E)" }}>
+    <p
+      className="text-xs font-bold tracking-[0.2em] uppercase mb-4"
+      style={{ color: "var(--primary, #8B1A2E)" }}
+    >
       {children}
     </p>
   );
@@ -49,8 +71,17 @@ const FAQ = [
 
 // City names stay in Latin script across all locales (only the placeholder is translated).
 const VILLES = [
-  "Casablanca", "Rabat", "Marrakech", "Tanger", "Agadir",
-  "Fès", "Meknès", "Oujda", "Kénitra", "Témara", "Autre",
+  "Casablanca",
+  "Rabat",
+  "Marrakech",
+  "Tanger",
+  "Agadir",
+  "Fès",
+  "Meknès",
+  "Oujda",
+  "Kénitra",
+  "Témara",
+  "Autre",
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -125,7 +156,13 @@ export default function PartenairesPage() {
             className="w-full h-full object-cover object-center"
             loading="eager"
           />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.48) 55%, rgba(0,0,0,0.72) 100%)" }} />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.48) 55%, rgba(0,0,0,0.72) 100%)",
+            }}
+          />
         </div>
 
         <div className="relative z-10 text-center max-w-3xl mx-auto px-4">
@@ -136,8 +173,13 @@ export default function PartenairesPage() {
             className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full"
             style={{ background: "rgba(139,26,46,0.25)", border: "1px solid rgba(139,26,46,0.5)" }}
           >
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#C0392B" }} />
-            <span className="text-xs font-bold tracking-widest text-white/80 uppercase">{t("partenaires.hero_badge")}</span>
+            <span
+              className="w-1.5 h-1.5 rounded-full animate-pulse"
+              style={{ background: "#C0392B" }}
+            />
+            <span className="text-xs font-bold tracking-widest text-white/80 uppercase">
+              {t("partenaires.hero_badge")}
+            </span>
           </motion.div>
 
           <motion.h1
@@ -145,9 +187,13 @@ export default function PartenairesPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="font-display font-bold text-white leading-[1.08] tracking-tight mb-7"
-            style={{ fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)", textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}
+            style={{
+              fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)",
+              textShadow: "0 2px 20px rgba(0,0,0,0.5)",
+            }}
           >
-            {t("partenaires.hero_title_line1")}<br className="hidden sm:block" /> {t("partenaires.hero_title_line2")}
+            {t("partenaires.hero_title_line1")}
+            <br className="hidden sm:block" /> {t("partenaires.hero_title_line2")}
           </motion.h1>
 
           <motion.p
@@ -166,7 +212,10 @@ export default function PartenairesPage() {
             transition={{ duration: 0.6, delay: 0.58 }}
             onClick={scrollToForm}
             className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl font-bold text-base text-white hover:-translate-y-1 transition-all duration-300"
-            style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 8px 32px rgba(139,26,46,0.5)" }}
+            style={{
+              background: "var(--primary, #8B1A2E)",
+              boxShadow: "0 8px 32px rgba(139,26,46,0.5)",
+            }}
           >
             {t("partenaires.hero_cta")}
             <ArrowRight size={18} />
@@ -181,21 +230,43 @@ export default function PartenairesPage() {
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-8">
           <FadeIn className="max-w-2xl mb-16">
             <Overline>{t("partenaires.what_overline")}</Overline>
-            <h2 className="font-display font-bold text-foreground leading-tight"
-              style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}>
-              {t("partenaires.what_title_line1")}<br />{t("partenaires.what_title_line2")}
+            <h2
+              className="font-display font-bold text-foreground leading-tight"
+              style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}
+            >
+              {t("partenaires.what_title_line1")}
+              <br />
+              {t("partenaires.what_title_line2")}
             </h2>
           </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: Globe,       title: t("partenaires.what1_title"), body: t("partenaires.what1_body"), delay: 0 },
-              { icon: Tag,         title: t("partenaires.what2_title"), body: t("partenaires.what2_body"), delay: 0.1 },
-              { icon: ShieldCheck, title: t("partenaires.what3_title"), body: t("partenaires.what3_body"), delay: 0.2 },
+              {
+                icon: Globe,
+                title: t("partenaires.what1_title"),
+                body: t("partenaires.what1_body"),
+                delay: 0,
+              },
+              {
+                icon: Tag,
+                title: t("partenaires.what2_title"),
+                body: t("partenaires.what2_body"),
+                delay: 0.1,
+              },
+              {
+                icon: ShieldCheck,
+                title: t("partenaires.what3_title"),
+                body: t("partenaires.what3_body"),
+                delay: 0.2,
+              },
             ].map(({ icon: Icon, title, body, delay }) => (
               <FadeIn key={title} delay={delay}>
                 <div className="flex flex-col gap-5 p-8 rounded-3xl border border-border/60 hover:border-primary/25 hover:shadow-xl transition-all duration-400 h-full">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: "rgba(139,26,46,0.08)" }}>
+                  <div
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                    style={{ background: "rgba(139,26,46,0.08)" }}
+                  >
                     <Icon size={22} style={{ color: "var(--primary, #8B1A2E)" }} />
                   </div>
                   <div>
@@ -234,8 +305,15 @@ export default function PartenairesPage() {
                   transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                   className="text-center py-6"
                 >
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5" style={{ background: "rgba(139,26,46,0.08)" }}>
-                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: "spring", stiffness: 200 }}>
+                  <div
+                    className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
+                    style={{ background: "rgba(139,26,46,0.08)" }}
+                  >
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                    >
                       <CheckCircle2 size={34} style={{ color: "var(--primary, #8B1A2E)" }} />
                     </motion.div>
                   </div>
@@ -287,7 +365,9 @@ export default function PartenairesPage() {
                       placeholder={t("partenaires.f_agency_placeholder")}
                       className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                     />
-                    {errors.nomAgence && <p className="text-xs text-destructive mt-1.5">{errors.nomAgence}</p>}
+                    {errors.nomAgence && (
+                      <p className="text-xs text-destructive mt-1.5">{errors.nomAgence}</p>
+                    )}
                   </div>
 
                   {/* Ville */}
@@ -302,18 +382,28 @@ export default function PartenairesPage() {
                         className="w-full px-4 py-3.5 rounded-xl border border-border/60 bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium appearance-none"
                       >
                         <option value="">{t("partenaires.f_city_placeholder")}</option>
-                        {VILLES.map((v) => <option key={v} value={v}>{v}</option>)}
+                        {VILLES.map((v) => (
+                          <option key={v} value={v}>
+                            {v}
+                          </option>
+                        ))}
                       </select>
-                      <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                      <ChevronDown
+                        size={16}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+                      />
                     </div>
-                    {errors.ville && <p className="text-xs text-destructive mt-1.5">{errors.ville}</p>}
+                    {errors.ville && (
+                      <p className="text-xs text-destructive mt-1.5">{errors.ville}</p>
+                    )}
                   </div>
 
                   {/* Tel + Email grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-bold tracking-wider uppercase text-foreground/60 mb-2">
-                        {t("partenaires.f_phone")} <span style={{ color: "var(--primary)" }}>*</span>
+                        {t("partenaires.f_phone")}{" "}
+                        <span style={{ color: "var(--primary)" }}>*</span>
                       </label>
                       <input
                         type="tel"
@@ -322,11 +412,14 @@ export default function PartenairesPage() {
                         placeholder={t("partenaires.f_phone_placeholder")}
                         className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                       />
-                      {errors.telephone && <p className="text-xs text-destructive mt-1.5">{errors.telephone}</p>}
+                      {errors.telephone && (
+                        <p className="text-xs text-destructive mt-1.5">{errors.telephone}</p>
+                      )}
                     </div>
                     <div>
                       <label className="block text-xs font-bold tracking-wider uppercase text-foreground/60 mb-2">
-                        {t("partenaires.f_email")} <span style={{ color: "var(--primary)" }}>*</span>
+                        {t("partenaires.f_email")}{" "}
+                        <span style={{ color: "var(--primary)" }}>*</span>
                       </label>
                       <input
                         type="email"
@@ -335,21 +428,32 @@ export default function PartenairesPage() {
                         placeholder={t("partenaires.f_email_placeholder")}
                         className="w-full px-4 py-3.5 rounded-xl border border-border/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                       />
-                      {errors.email && <p className="text-xs text-destructive mt-1.5">{errors.email}</p>}
+                      {errors.email && (
+                        <p className="text-xs text-destructive mt-1.5">{errors.email}</p>
+                      )}
                     </div>
                   </div>
 
                   {submitError && (
-                    <p className="text-sm text-destructive bg-destructive/5 px-4 py-3 rounded-xl">{submitError}</p>
+                    <p className="text-sm text-destructive bg-destructive/5 px-4 py-3 rounded-xl">
+                      {submitError}
+                    </p>
                   )}
 
                   <button
                     type="submit"
                     disabled={loading}
                     className="w-full py-4 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 mt-2"
-                    style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 4px 20px rgba(139,26,46,0.25)" }}
+                    style={{
+                      background: "var(--primary, #8B1A2E)",
+                      boxShadow: "0 4px 20px rgba(139,26,46,0.25)",
+                    }}
                   >
-                    {loading ? <Loader2 size={18} className="animate-spin" /> : <ArrowRight size={18} />}
+                    {loading ? (
+                      <Loader2 size={18} className="animate-spin" />
+                    ) : (
+                      <ArrowRight size={18} />
+                    )}
                     {loading ? t("partenaires.submitting") : t("partenaires.submit")}
                   </button>
 
@@ -383,7 +487,9 @@ export default function PartenairesPage() {
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                     className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left hover:bg-secondary/30 transition-colors"
                   >
-                    <span className="font-semibold text-foreground text-sm leading-snug">{t(qKey)}</span>
+                    <span className="font-semibold text-foreground text-sm leading-snug">
+                      {t(qKey)}
+                    </span>
                     <motion.div
                       animate={{ rotate: openFaq === i ? 180 : 0 }}
                       transition={{ duration: 0.25 }}
@@ -401,7 +507,9 @@ export default function PartenairesPage() {
                         transition={{ duration: 0.28, ease: "easeInOut" }}
                         className="overflow-hidden"
                       >
-                        <p className="px-6 pb-5 text-muted-foreground text-sm leading-[1.75] border-t border-border/40 pt-4">{t(aKey)}</p>
+                        <p className="px-6 pb-5 text-muted-foreground text-sm leading-[1.75] border-t border-border/40 pt-4">
+                          {t(aKey)}
+                        </p>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -421,13 +529,18 @@ export default function PartenairesPage() {
             className="font-display font-bold text-white leading-tight mb-4"
             style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)" }}
           >
-            {t("partenaires.closing_title_line1")}<br />{t("partenaires.closing_title_line2")}
+            {t("partenaires.closing_title_line1")}
+            <br />
+            {t("partenaires.closing_title_line2")}
           </h2>
           <p className="text-white/50 text-lg mb-10">{t("partenaires.closing_subtitle")}</p>
           <button
             onClick={scrollToForm}
             className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl font-bold text-base text-white hover:-translate-y-1 transition-all duration-300"
-            style={{ background: "var(--primary, #8B1A2E)", boxShadow: "0 8px 32px rgba(139,26,46,0.45)" }}
+            style={{
+              background: "var(--primary, #8B1A2E)",
+              boxShadow: "0 8px 32px rgba(139,26,46,0.45)",
+            }}
           >
             <ArrowRight size={18} />
             {t("partenaires.hero_cta")}

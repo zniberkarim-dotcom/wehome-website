@@ -2,7 +2,16 @@ import { useState } from "react";
 import { useSearch, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { SlidersHorizontal, X, ChevronLeft, ChevronRight, Search, User, LayoutList, Map } from "lucide-react";
+import {
+  SlidersHorizontal,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  User,
+  LayoutList,
+  Map,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -18,15 +27,21 @@ import {
   type FilterParams,
 } from "@/lib/data";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 const SORT_KEYS = [
-  { value: "recent",    labelKey: "biens.sort_recent" },
-  { value: "prix_asc",  labelKey: "biens.sort_price_asc" },
+  { value: "recent", labelKey: "biens.sort_recent" },
+  { value: "prix_asc", labelKey: "biens.sort_price_asc" },
   { value: "prix_desc", labelKey: "biens.sort_price_desc" },
-  { value: "surface",   labelKey: "biens.sort_surface" },
+  { value: "surface", labelKey: "biens.sort_surface" },
 ];
 
 const ROOM_COUNT_OPTIONS = [1, 2, 3, 4, 5] as const;
@@ -36,26 +51,26 @@ const SALONS_COUNT_OPTIONS = [1, 2, 3, 4] as const;
 /** Backend values (kept as-is in DB) paired with i18n keys for display.
  *  Toggle state continues to use the FR backend value — only the label is translated. */
 const ETAT_OPTIONS: { value: string; labelKey: string }[] = [
-  { value: "Neuf",       labelKey: "biens.condition_new" },
-  { value: "Bon état",   labelKey: "biens.condition_good" },
-  { value: "À rénover",  labelKey: "biens.condition_renovate" },
+  { value: "Neuf", labelKey: "biens.condition_new" },
+  { value: "Bon état", labelKey: "biens.condition_good" },
+  { value: "À rénover", labelKey: "biens.condition_renovate" },
 ];
 const FEATURE_OPTIONS: { value: string; labelKey: string }[] = [
   { value: "Cuisine équipée", labelKey: "biens.feature_kitchen" },
-  { value: "Climatisation",   labelKey: "biens.feature_ac" },
-  { value: "Chauffage",       labelKey: "biens.feature_heating" },
-  { value: "Ascenseur",       labelKey: "biens.feature_elevator" },
-  { value: "Concierge",       labelKey: "biens.feature_concierge" },
-  { value: "Gardien",         labelKey: "biens.feature_doorman" },
-  { value: "Sécurité 24/7",   labelKey: "biens.feature_security" },
-  { value: "Balcon",          labelKey: "biens.feature_balcony" },
-  { value: "Terrasse",        labelKey: "biens.feature_terrace" },
-  { value: "Jardin",          labelKey: "biens.feature_garden" },
-  { value: "Piscine",         labelKey: "biens.feature_pool" },
-  { value: "Parking",         labelKey: "biens.feature_parking" },
-  { value: "Garage",          labelKey: "biens.feature_garage" },
-  { value: "Vue mer",         labelKey: "biens.feature_sea_view" },
-  { value: "Vue dégagée",     labelKey: "biens.feature_clear_view" },
+  { value: "Climatisation", labelKey: "biens.feature_ac" },
+  { value: "Chauffage", labelKey: "biens.feature_heating" },
+  { value: "Ascenseur", labelKey: "biens.feature_elevator" },
+  { value: "Concierge", labelKey: "biens.feature_concierge" },
+  { value: "Gardien", labelKey: "biens.feature_doorman" },
+  { value: "Sécurité 24/7", labelKey: "biens.feature_security" },
+  { value: "Balcon", labelKey: "biens.feature_balcony" },
+  { value: "Terrasse", labelKey: "biens.feature_terrace" },
+  { value: "Jardin", labelKey: "biens.feature_garden" },
+  { value: "Piscine", labelKey: "biens.feature_pool" },
+  { value: "Parking", labelKey: "biens.feature_parking" },
+  { value: "Garage", labelKey: "biens.feature_garage" },
+  { value: "Vue mer", labelKey: "biens.feature_sea_view" },
+  { value: "Vue dégagée", labelKey: "biens.feature_clear_view" },
 ];
 
 // ── Filter panel (desktop sidebar + mobile sheet) ─────────────────────────────
@@ -64,9 +79,7 @@ const FEATURE_OPTIONS: { value: string; labelKey: string }[] = [
  *  so the URL stays clean. */
 function toggleInArray<T>(arr: T[] | undefined, value: T): T[] | undefined {
   const current = arr ?? [];
-  const next = current.includes(value)
-    ? current.filter((x) => x !== value)
-    : [...current, value];
+  const next = current.includes(value) ? current.filter((x) => x !== value) : [...current, value];
   return next.length ? next : undefined;
 }
 
@@ -101,11 +114,13 @@ function FilterPanel({
       {/* Transaction */}
       <FilterGroup label={t("biens.transaction")}>
         <div className="flex gap-2">
-          {([
-            { labelKey: "biens.transaction_all",  value: undefined          },
-            { labelKey: "biens.transaction_buy",  value: "Vente" as const   },
-            { labelKey: "biens.transaction_rent", value: "Location" as const},
-          ] as const).map((opt) => (
+          {(
+            [
+              { labelKey: "biens.transaction_all", value: undefined },
+              { labelKey: "biens.transaction_buy", value: "Vente" as const },
+              { labelKey: "biens.transaction_rent", value: "Location" as const },
+            ] as const
+          ).map((opt) => (
             <button
               key={opt.labelKey}
               onClick={() => set({ transaction: opt.value })}
@@ -135,7 +150,11 @@ function FilterPanel({
       {/* Type de bien — multi-select */}
       <FilterGroup
         label={t("biens.property_type")}
-        hint={params.types?.length ? t("biens.selected", { count: params.types.length }) : t("biens.multiple_choices")}
+        hint={
+          params.types?.length
+            ? t("biens.selected", { count: params.types.length })
+            : t("biens.multiple_choices")
+        }
       >
         <div className="flex flex-wrap gap-1.5">
           {PROPERTY_TYPES.map((t) => {
@@ -190,7 +209,9 @@ function FilterPanel({
             min={0}
             placeholder={t("biens.min")}
             value={params.surface_min ?? ""}
-            onChange={(e) => set({ surface_min: e.target.value ? Number(e.target.value) : undefined })}
+            onChange={(e) =>
+              set({ surface_min: e.target.value ? Number(e.target.value) : undefined })
+            }
             className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
           />
           <input
@@ -199,7 +220,9 @@ function FilterPanel({
             min={0}
             placeholder={t("biens.max")}
             value={params.surface_max ?? ""}
-            onChange={(e) => set({ surface_max: e.target.value ? Number(e.target.value) : undefined })}
+            onChange={(e) =>
+              set({ surface_max: e.target.value ? Number(e.target.value) : undefined })
+            }
             className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
           />
         </div>
@@ -296,7 +319,11 @@ function FilterPanel({
       {/* Équipements — multi-select */}
       <FilterGroup
         label={t("biens.features")}
-        hint={params.features?.length ? t("biens.selected", { count: params.features.length }) : t("biens.multiple_choices")}
+        hint={
+          params.features?.length
+            ? t("biens.selected", { count: params.features.length })
+            : t("biens.multiple_choices")
+        }
       >
         <div className="flex flex-wrap gap-1.5">
           {FEATURE_OPTIONS.map((f) => {
@@ -385,8 +412,7 @@ function Pagination({
   } else {
     pages.push(1);
     if (page > 3) pages.push("…");
-    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++)
-      pages.push(i);
+    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) pages.push(i);
     if (page < totalPages - 2) pages.push("…");
     pages.push(totalPages);
   }
@@ -402,7 +428,12 @@ function Pagination({
       </button>
       {pages.map((p, i) =>
         p === "…" ? (
-          <span key={`e${i}`} className="w-9 h-9 flex items-center justify-center text-muted-foreground">…</span>
+          <span
+            key={`e${i}`}
+            className="w-9 h-9 flex items-center justify-center text-muted-foreground"
+          >
+            …
+          </span>
         ) : (
           <button
             key={p}
@@ -440,7 +471,11 @@ export default function BiensPage() {
   const params = parseFilterParams(search);
   const page = params.page ?? 1;
 
-  const { data: result, isLoading, isError } = useQuery({
+  const {
+    data: result,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["properties", search],
     queryFn: () => fetchProperties(params),
   });
@@ -500,7 +535,10 @@ export default function BiensPage() {
                   <p className="font-display font-bold text-lg mb-6">{t("biens.filters_title")}</p>
                   <FilterPanel
                     params={params}
-                    onUpdate={(next) => { updateParams(next); setMobileOpen(false); }}
+                    onUpdate={(next) => {
+                      updateParams(next);
+                      setMobileOpen(false);
+                    }}
                   />
                 </SheetContent>
               </Sheet>
@@ -524,8 +562,12 @@ export default function BiensPage() {
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20">
                     <User size={12} />
                     {filteredAgent.prenom} {filteredAgent.nom}
-                    <button onClick={() => updateParams({ ...params, agent_id: undefined, page: undefined })}
-                      className="ml-0.5 hover:text-destructive transition-colors">
+                    <button
+                      onClick={() =>
+                        updateParams({ ...params, agent_id: undefined, page: undefined })
+                      }
+                      className="ml-0.5 hover:text-destructive transition-colors"
+                    >
                       <X size={12} />
                     </button>
                   </span>
@@ -562,13 +604,20 @@ export default function BiensPage() {
 
               {/* Sort — hidden in map view on small screens */}
               {viewMode === "list" && (
-                <Select value={params.sort ?? "recent"} onValueChange={(v) => updateParams({ ...params, sort: v as FilterParams["sort"], page: undefined })}>
+                <Select
+                  value={params.sort ?? "recent"}
+                  onValueChange={(v) =>
+                    updateParams({ ...params, sort: v as FilterParams["sort"], page: undefined })
+                  }
+                >
                   <SelectTrigger className="w-[160px] h-9 text-sm rounded-lg">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {SORT_KEYS.map((o) => (
-                      <SelectItem key={o.value} value={o.value}>{t(o.labelKey)}</SelectItem>
+                      <SelectItem key={o.value} value={o.value}>
+                        {t(o.labelKey)}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -582,7 +631,9 @@ export default function BiensPage() {
             {/* Desktop sidebar */}
             <aside className="hidden lg:block w-64 shrink-0">
               <div className="sticky top-24 bg-card border border-border rounded-2xl shadow-sm flex flex-col max-h-[calc(100vh-7rem)]">
-                <p className="font-display font-bold text-base px-5 pt-5 pb-3 border-b border-border/40 shrink-0">{t("biens.filters_title")}</p>
+                <p className="font-display font-bold text-base px-5 pt-5 pb-3 border-b border-border/40 shrink-0">
+                  {t("biens.filters_title")}
+                </p>
                 <div className="overflow-y-auto px-5 py-4 flex-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-border/60 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
                   <FilterPanel params={params} onUpdate={updateParams} />
                 </div>
@@ -608,11 +659,17 @@ export default function BiensPage() {
                     />
                   )}
                   {!isLoading && properties.length === 0 && (
-                    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center py-16">
+                    <motion.div
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-center py-16"
+                    >
                       <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
                         <Search size={28} className="text-muted-foreground" />
                       </div>
-                      <h2 className="text-xl font-display font-bold text-foreground mb-2">{t("biens.no_results")}</h2>
+                      <h2 className="text-xl font-display font-bold text-foreground mb-2">
+                        {t("biens.no_results")}
+                      </h2>
                       <p className="text-muted-foreground">{t("biens.broaden_search")}</p>
                     </motion.div>
                   )}
@@ -623,7 +680,10 @@ export default function BiensPage() {
                   {isLoading ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       {Array.from({ length: 6 }).map((_, i) => (
-                        <div key={i} className="bg-card rounded-3xl overflow-hidden border border-border animate-pulse">
+                        <div
+                          key={i}
+                          className="bg-card rounded-3xl overflow-hidden border border-border animate-pulse"
+                        >
                           <div className="aspect-[4/5] bg-muted" />
                           <div className="p-6 space-y-3">
                             <div className="h-4 bg-muted rounded w-3/4" />
@@ -637,7 +697,11 @@ export default function BiensPage() {
                       <p className="text-muted-foreground">{t("biens.load_error")}</p>
                     </div>
                   ) : properties.length === 0 ? (
-                    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center py-24">
+                    <motion.div
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-center py-24"
+                    >
                       <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
                         <Search size={28} className="text-muted-foreground" />
                       </div>

@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Outfit:wght@100..900&family=Noto+Sans+SC:wght@300..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Outfit:wght@100..900&family=Noto+Sans+SC:wght@300..900&display=swap");
 @import "tailwindcss";
 
 @theme inline {
   /* Noto Sans SC is appended so CJK glyphs render automatically when present */
-  --font-sans: 'DM Sans', 'Noto Sans SC', sans-serif;
-  --font-display: 'Outfit', 'Noto Sans SC', sans-serif;
+  --font-sans: "DM Sans", "Noto Sans SC", sans-serif;
+  --font-display: "Outfit", "Noto Sans SC", sans-serif;
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -104,16 +104,51 @@
   body {
     @apply bg-background text-foreground font-sans antialiased selection:bg-primary/20 selection:text-primary;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
     @apply tracking-tight font-semibold;
   }
 }
 
 /* Custom Gradients for Property Placeholders - using brand burgundy + charcoal */
-.mesh-gradient-1 { background: radial-gradient(at 0% 0%, hsla(345,68%,33%,0.7) 0px, transparent 50%), radial-gradient(at 100% 100%, hsla(220,18%,45%,0.6) 0px, transparent 50%); background-color: #f8f4f5; }
-.mesh-gradient-2 { background: radial-gradient(at 100% 0%, hsla(38,60%,50%,0.7) 0px, transparent 50%), radial-gradient(at 0% 100%, hsla(345,68%,33%,0.6) 0px, transparent 50%); background-color: #faf6f0; }
-.mesh-gradient-3 { background: radial-gradient(at 50% 0%, hsla(220,18%,28%,0.8) 0px, transparent 50%), radial-gradient(at 50% 100%, hsla(345,40%,60%,0.5) 0px, transparent 50%); background-color: #f0ecee; }
-.mesh-gradient-4 { background: radial-gradient(at 0% 50%, hsla(345,68%,33%,0.8) 0px, transparent 50%), radial-gradient(at 100% 50%, hsla(220,20%,70%,0.6) 0px, transparent 50%); background-color: #f5f1f2; }
-.mesh-gradient-5 { background: radial-gradient(at 100% 100%, hsla(220,18%,28%,0.7) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(345,30%,80%,0.8) 0px, transparent 50%); background-color: #eee9eb; }
-.mesh-gradient-6 { background: radial-gradient(at 50% 50%, hsla(38,60%,50%,0.5) 0px, transparent 50%), radial-gradient(at 0% 100%, hsla(345,68%,33%,0.7) 0px, transparent 50%); background-color: #faf8f5; }
+.mesh-gradient-1 {
+  background:
+    radial-gradient(at 0% 0%, hsla(345, 68%, 33%, 0.7) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(220, 18%, 45%, 0.6) 0px, transparent 50%);
+  background-color: #f8f4f5;
+}
+.mesh-gradient-2 {
+  background:
+    radial-gradient(at 100% 0%, hsla(38, 60%, 50%, 0.7) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(345, 68%, 33%, 0.6) 0px, transparent 50%);
+  background-color: #faf6f0;
+}
+.mesh-gradient-3 {
+  background:
+    radial-gradient(at 50% 0%, hsla(220, 18%, 28%, 0.8) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, hsla(345, 40%, 60%, 0.5) 0px, transparent 50%);
+  background-color: #f0ecee;
+}
+.mesh-gradient-4 {
+  background:
+    radial-gradient(at 0% 50%, hsla(345, 68%, 33%, 0.8) 0px, transparent 50%),
+    radial-gradient(at 100% 50%, hsla(220, 20%, 70%, 0.6) 0px, transparent 50%);
+  background-color: #f5f1f2;
+}
+.mesh-gradient-5 {
+  background:
+    radial-gradient(at 100% 100%, hsla(220, 18%, 28%, 0.7) 0px, transparent 50%),
+    radial-gradient(at 0% 0%, hsla(345, 30%, 80%, 0.8) 0px, transparent 50%);
+  background-color: #eee9eb;
+}
+.mesh-gradient-6 {
+  background:
+    radial-gradient(at 50% 50%, hsla(38, 60%, 50%, 0.5) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(345, 68%, 33%, 0.7) 0px, transparent 50%);
+  background-color: #faf8f5;
+}

@@ -78,16 +78,11 @@ export function useFavorites() {
     cachedKey = JSON.stringify(cachedSnapshot);
   }, []);
 
-  const isFavorite = useCallback(
-    (id: string) => favoriteIds.includes(id),
-    [favoriteIds]
-  );
+  const isFavorite = useCallback((id: string) => favoriteIds.includes(id), [favoriteIds]);
 
   const toggleFavorite = useCallback((id: string) => {
     const current = readStorage();
-    const next = current.includes(id)
-      ? current.filter((x) => x !== id)
-      : [id, ...current];
+    const next = current.includes(id) ? current.filter((x) => x !== id) : [id, ...current];
     writeStorage(next);
   }, []);
 

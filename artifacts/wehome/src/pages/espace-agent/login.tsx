@@ -68,7 +68,9 @@ export default function PortalLoginPage() {
           {!showReset ? (
             <>
               <h1 className="text-2xl font-display font-bold text-foreground mb-1">Se connecter</h1>
-              <p className="text-muted-foreground text-sm mb-7">Accédez à votre tableau de bord agent.</p>
+              <p className="text-muted-foreground text-sm mb-7">
+                Accédez à votre tableau de bord agent.
+              </p>
 
               {error && (
                 <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 rounded-xl p-3.5 mb-5 text-sm text-red-700">
@@ -117,7 +119,11 @@ export default function PortalLoginPage() {
 
                 <button
                   type="button"
-                  onClick={() => { setShowReset(true); setResetEmail(email); setError(null); }}
+                  onClick={() => {
+                    setShowReset(true);
+                    setResetEmail(email);
+                    setError(null);
+                  }}
                   className="text-xs text-primary hover:underline"
                 >
                   Mot de passe oublié ?
@@ -136,11 +142,19 @@ export default function PortalLoginPage() {
             </>
           ) : (
             <>
-              <button onClick={() => { setShowReset(false); setResetSent(false); setError(null); }}
-                className="text-sm text-muted-foreground hover:text-foreground mb-5 flex items-center gap-1">
+              <button
+                onClick={() => {
+                  setShowReset(false);
+                  setResetSent(false);
+                  setError(null);
+                }}
+                className="text-sm text-muted-foreground hover:text-foreground mb-5 flex items-center gap-1"
+              >
                 ← Retour
               </button>
-              <h2 className="text-xl font-display font-bold text-foreground mb-1">Mot de passe oublié</h2>
+              <h2 className="text-xl font-display font-bold text-foreground mb-1">
+                Mot de passe oublié
+              </h2>
               <p className="text-muted-foreground text-sm mb-6">
                 Entrez votre email pour recevoir un lien de réinitialisation.
               </p>
@@ -186,7 +200,10 @@ export default function PortalLoginPage() {
 
         <p className="text-center text-sm text-muted-foreground mt-6">
           Pas encore partenaire ?{" "}
-          <Link href="/espace-agent/inscription" className="text-primary font-semibold hover:underline">
+          <Link
+            href="/espace-agent/inscription"
+            className="text-primary font-semibold hover:underline"
+          >
             Rejoindre le réseau →
           </Link>
         </p>

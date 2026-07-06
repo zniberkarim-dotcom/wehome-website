@@ -83,7 +83,9 @@ export function LanguageSwitcher({ onDark = false }: Props) {
                     )}
                   >
                     <span className="flex items-center gap-2">
-                      <span aria-hidden className="text-base leading-none">{meta.flag}</span>
+                      <span aria-hidden className="text-base leading-none">
+                        {meta.flag}
+                      </span>
                       <span>{meta.native}</span>
                     </span>
                     {active && <Check size={14} className="text-primary" />}

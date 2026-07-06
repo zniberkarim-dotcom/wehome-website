@@ -35,7 +35,12 @@ import { useToast } from "@/hooks/use-toast";
    pour qu'on retrouve facilement la conversion côté CRM.
    ──────────────────────────────────────────────────────────────────────────── */
 
-type PackKey = "essentiel" | "signature" | "conciergerie" | "location-express" | "location-cle-en-main";
+type PackKey =
+  | "essentiel"
+  | "signature"
+  | "conciergerie"
+  | "location-express"
+  | "location-cle-en-main";
 
 interface SalePack {
   key: PackKey;
@@ -253,8 +258,10 @@ export default function ServicesProPage() {
     message: "",
   });
 
-  const setField = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-    setForm((s) => ({ ...s, [k]: e.target.value }));
+  const setField =
+    (k: keyof typeof form) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+      setForm((s) => ({ ...s, [k]: e.target.value }));
 
   function packLabel(key: PackKey): string {
     const all = [...SALE_PACKS, ...RENTAL_PACKS];
@@ -264,7 +271,10 @@ export default function ServicesProPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.name || !form.phone) {
-      toast({ title: "Champs requis", description: "Merci d'indiquer au moins votre nom et votre téléphone." });
+      toast({
+        title: "Champs requis",
+        description: "Merci d'indiquer au moins votre nom et votre téléphone.",
+      });
       return;
     }
     setSubmitting(true);
@@ -345,11 +355,15 @@ export default function ServicesProPage() {
               <span className="text-primary">avec les armes d'une agence pro.</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-10">
-              Photos IA retouchées, home staging virtuel, visite 3D immersive, conseil pro. Tout ce qui fait qu'un bien se vend en 30 jours au lieu de 6 mois — pour une fraction de la commission d'une agence.
+              Photos IA retouchées, home staging virtuel, visite 3D immersive, conseil pro. Tout ce
+              qui fait qu'un bien se vend en 30 jours au lieu de 6 mois — pour une fraction de la
+              commission d'une agence.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
-                onClick={() => document.getElementById("packs")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() =>
+                  document.getElementById("packs")?.scrollIntoView({ behavior: "smooth" })
+                }
                 className="px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-lg flex items-center gap-3 shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
                 Voir les packs
@@ -369,19 +383,27 @@ export default function ServicesProPage() {
             {/* Trust strip */}
             <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-display font-bold text-primary mb-1">- 50 %</div>
+                <div className="text-3xl md:text-4xl font-display font-bold text-primary mb-1">
+                  - 50 %
+                </div>
                 <div className="text-sm text-muted-foreground">vs commission agence</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-display font-bold text-primary mb-1">48 h</div>
+                <div className="text-3xl md:text-4xl font-display font-bold text-primary mb-1">
+                  48 h
+                </div>
                 <div className="text-sm text-muted-foreground">de mise en ligne</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-display font-bold text-primary mb-1">90 j</div>
+                <div className="text-3xl md:text-4xl font-display font-bold text-primary mb-1">
+                  90 j
+                </div>
                 <div className="text-sm text-muted-foreground">garantie résultat</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-display font-bold text-primary mb-1">7+</div>
+                <div className="text-3xl md:text-4xl font-display font-bold text-primary mb-1">
+                  7+
+                </div>
                 <div className="text-sm text-muted-foreground">portails de diffusion</div>
               </div>
             </div>
@@ -423,17 +445,25 @@ export default function ServicesProPage() {
                     </div>
                   )}
 
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${
-                    pack.featured ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"
-                  }`}>
+                  <div
+                    className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${
+                      pack.featured
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-primary/10 text-primary"
+                    }`}
+                  >
                     <Icon size={28} />
                   </div>
 
-                  <h3 className="text-2xl font-display font-bold text-foreground mb-2">{pack.name}</h3>
+                  <h3 className="text-2xl font-display font-bold text-foreground mb-2">
+                    {pack.name}
+                  </h3>
                   <p className="text-sm text-muted-foreground mb-6">{pack.tagline}</p>
 
                   <div className="mb-8">
-                    <div className="text-4xl font-display font-bold text-foreground">{pack.price}</div>
+                    <div className="text-4xl font-display font-bold text-foreground">
+                      {pack.price}
+                    </div>
                     {pack.priceDetail && (
                       <div className="text-sm text-muted-foreground mt-1">{pack.priceDetail}</div>
                     )}
@@ -480,7 +510,9 @@ export default function ServicesProPage() {
 
           <div className="bg-card rounded-3xl border border-border overflow-hidden shadow-xl">
             <div className="grid grid-cols-4 gap-0 bg-secondary/50 border-b border-border">
-              <div className="p-4 md:p-6 font-semibold text-sm md:text-base text-foreground">Critère</div>
+              <div className="p-4 md:p-6 font-semibold text-sm md:text-base text-foreground">
+                Critère
+              </div>
               <div className="p-4 md:p-6 text-center font-bold text-sm md:text-base text-primary bg-primary/5">
                 WeHome Pro
               </div>
@@ -556,7 +588,9 @@ export default function ServicesProPage() {
                   <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 mt-2">
                     <Icon size={24} />
                   </div>
-                  <h3 className="font-display font-bold text-lg text-foreground mb-2">{step.title}</h3>
+                  <h3 className="font-display font-bold text-lg text-foreground mb-2">
+                    {step.title}
+                  </h3>
                   <p className="text-sm text-muted-foreground">{step.desc}</p>
                 </motion.div>
               );
@@ -577,7 +611,8 @@ export default function ServicesProPage() {
               Packs spécial location
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Même logique : on rend votre annonce irrésistible, et si vous voulez, on gère tout jusqu'à la signature du bail.
+              Même logique : on rend votre annonce irrésistible, et si vous voulez, on gère tout
+              jusqu'à la signature du bail.
             </p>
           </div>
 
@@ -596,10 +631,14 @@ export default function ServicesProPage() {
                   <div className="w-14 h-14 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mb-6">
                     <Icon size={28} />
                   </div>
-                  <h3 className="text-2xl font-display font-bold text-foreground mb-2">{pack.name}</h3>
+                  <h3 className="text-2xl font-display font-bold text-foreground mb-2">
+                    {pack.name}
+                  </h3>
                   <p className="text-sm text-muted-foreground mb-6">{pack.tagline}</p>
                   <div className="mb-8">
-                    <div className="text-3xl font-display font-bold text-foreground">{pack.price}</div>
+                    <div className="text-3xl font-display font-bold text-foreground">
+                      {pack.price}
+                    </div>
                     {pack.priceDetail && (
                       <div className="text-sm text-muted-foreground mt-1">{pack.priceDetail}</div>
                     )}
@@ -642,7 +681,9 @@ export default function ServicesProPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Pack sélectionné — pills */}
               <div>
-                <label className="block text-sm font-semibold text-foreground mb-3">Pack souhaité</label>
+                <label className="block text-sm font-semibold text-foreground mb-3">
+                  Pack souhaité
+                </label>
                 <div className="flex flex-wrap gap-2">
                   {[...SALE_PACKS, ...RENTAL_PACKS].map((p) => (
                     <button
@@ -756,7 +797,8 @@ export default function ServicesProPage() {
               </button>
 
               <p className="text-xs text-muted-foreground text-center">
-                En envoyant ce formulaire, vous acceptez d'être contacté par WeHome au sujet de votre demande. Aucun engagement financier à ce stade.
+                En envoyant ce formulaire, vous acceptez d'être contacté par WeHome au sujet de
+                votre demande. Aucun engagement financier à ce stade.
               </p>
             </form>
           </div>
@@ -821,7 +863,11 @@ export default function ServicesProPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <button
-                  onClick={() => document.getElementById("service-pro-form")?.scrollIntoView({ behavior: "smooth" })}
+                  onClick={() =>
+                    document
+                      .getElementById("service-pro-form")
+                      ?.scrollIntoView({ behavior: "smooth" })
+                  }
                   className="px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-lg flex items-center gap-3 shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 >
                   Réserver maintenant
@@ -849,7 +895,15 @@ export default function ServicesProPage() {
 
 /* ──────────────── Helpers ──────────────── */
 
-function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
+function Field({
+  label,
+  required,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <label className="block">
       <span className="block text-sm font-semibold text-foreground mb-2">
@@ -863,10 +917,18 @@ function Field({ label, required, children }: { label: string; required?: boolea
 
 function CellValue({ value, positive }: { value: boolean | string; positive?: boolean }) {
   if (value === true) {
-    return <Check size={20} className={`mx-auto ${positive ? "text-primary" : "text-foreground"}`} />;
+    return (
+      <Check size={20} className={`mx-auto ${positive ? "text-primary" : "text-foreground"}`} />
+    );
   }
   if (value === false) {
     return <span className="text-muted-foreground text-xl">—</span>;
   }
-  return <span className={`text-sm md:text-base ${positive ? "text-primary font-semibold" : "text-foreground"}`}>{value}</span>;
+  return (
+    <span
+      className={`text-sm md:text-base ${positive ? "text-primary font-semibold" : "text-foreground"}`}
+    >
+      {value}
+    </span>
+  );
 }

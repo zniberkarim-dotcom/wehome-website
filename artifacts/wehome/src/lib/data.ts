@@ -24,7 +24,7 @@ export interface Property {
   photos?: string[];
   reference?: string;
   agent?: string;
-  agentId?: string;        // FK to agents.id — used for agent widget on bien page
+  agentId?: string; // FK to agents.id — used for agent widget on bien page
   isNew?: boolean;
   features?: string[];
   lat?: number;
@@ -59,8 +59,8 @@ export interface FilterParams {
   transaction?: "Vente" | "Location";
   /** Multi-select: list of property types (e.g. ["Appartement", "Villa"]) */
   types?: string[];
-  city?: string;           // searches city + neighborhood
-  search?: string;         // free text
+  city?: string; // searches city + neighborhood
+  search?: string; // free text
   prix_min?: number;
   prix_max?: number;
   surface_min?: number;
@@ -75,7 +75,7 @@ export interface FilterParams {
   etat?: string[];
   is_furnished?: boolean;
   features?: string[];
-  agent_id?: string;       // filter by agent UUID
+  agent_id?: string; // filter by agent UUID
   sort?: "recent" | "prix_asc" | "prix_desc" | "surface";
   page?: number;
 }
@@ -93,7 +93,10 @@ function parseNumList(s: string | null | undefined): number[] | undefined {
 /** Helper to parse a comma-separated string list from a URL param. */
 function parseStrList(s: string | null | undefined): string[] | undefined {
   if (!s) return undefined;
-  const arr = s.split(",").map((x) => x.trim()).filter(Boolean);
+  const arr = s
+    .split(",")
+    .map((x) => x.trim())
+    .filter(Boolean);
   return arr.length ? arr : undefined;
 }
 
@@ -107,9 +110,7 @@ export function parseFilterParams(search: string): FilterParams {
   const sort = p.get("tri");
 
   // Type: prefer multi, fall back to legacy single
-  const types =
-    parseStrList(p.get("types")) ??
-    (p.get("type") ? [p.get("type")!] : undefined);
+  const types = parseStrList(p.get("types")) ?? (p.get("type") ? [p.get("type")!] : undefined);
 
   // Chambres: prefer multi, fall back to legacy chambres_min → [n, n+1, …, 5]
   let chambres = parseNumList(p.get("chambres"));
@@ -122,7 +123,7 @@ export function parseFilterParams(search: string): FilterParams {
   }
 
   return {
-    transaction: (transaction === "Vente" || transaction === "Location") ? transaction : undefined,
+    transaction: transaction === "Vente" || transaction === "Location" ? transaction : undefined,
     types,
     city: p.get("ville") || undefined,
     search: p.get("q") || undefined,
@@ -137,7 +138,10 @@ export function parseFilterParams(search: string): FilterParams {
     is_furnished: p.get("meuble") === "1" ? true : undefined,
     features: parseStrList(p.get("equip")),
     agent_id: p.get("agent") || undefined,
-    sort: (sort === "recent" || sort === "prix_asc" || sort === "prix_desc" || sort === "surface") ? sort : undefined,
+    sort:
+      sort === "recent" || sort === "prix_asc" || sort === "prix_desc" || sort === "surface"
+        ? sort
+        : undefined,
     page: p.get("page") ? Math.max(1, Number(p.get("page"))) : undefined,
   };
 }
@@ -245,12 +249,17 @@ export interface SupabaseProperty {
 export function mapSupabaseProperty(p: SupabaseProperty, index: number): Property {
   const price = parseFloat(String(p.price ?? "0").replace(/[\s\u00a0,]/g, "")) || 0;
   const surface = parseFloat(String(p.surface ?? "0").replace(/[\s\u00a0,]/g, "")) || 0;
-  const surfaceConstruite = parseFloat(String(p.surface_construite ?? "0").replace(/[\s\u00a0,]/g, "")) || 0;
+  const surfaceConstruite =
+    parseFloat(String(p.surface_construite ?? "0").replace(/[\s\u00a0,]/g, "")) || 0;
   const rooms = parseInt(String(p.rooms ?? "0"), 10) || 0;
   const chambres = parseInt(String(p.chambres ?? "0"), 10) || 0;
   const salons = parseInt(String(p.salons ?? "0"), 10) || 0;
   const sallesDeBains = parseInt(String(p.salles_de_bains ?? "0"), 10) || 0;
-  const isFurnished = p.meuble === true || String(p.furnished ?? "").toLowerCase().includes("meublé");
+  const isFurnished =
+    p.meuble === true ||
+    String(p.furnished ?? "")
+      .toLowerCase()
+      .includes("meublé");
 
   // Location: prefer city/ville column when set by agent, fallback to neighborhood+city
   const cityStr = p.ville || p.city || "";
@@ -259,7 +268,8 @@ export function mapSupabaseProperty(p: SupabaseProperty, index: number): Propert
 
   // Title: prefer explicit `titre`, then description first line, then type+location
   const firstLine = p.description?.split("\n").find((l) => l.trim());
-  const title = p.titre?.trim() || firstLine?.trim() || `${p.type} ${p.neighborhood || cityStr || ""}`.trim();
+  const title =
+    p.titre?.trim() || firstLine?.trim() || `${p.type} ${p.neighborhood || cityStr || ""}`.trim();
 
   const displaySurface = surfaceConstruite > 0 ? surfaceConstruite : surface;
 
@@ -276,7 +286,7 @@ export function mapSupabaseProperty(p: SupabaseProperty, index: number): Propert
     reference: p.reference,
     title,
     type: p.type,
-    transaction: (p.transaction === "Location" ? "Location" : "Vente"),
+    transaction: p.transaction === "Location" ? "Location" : "Vente",
     location,
     price,
     isRental: p.transaction === "Location",
@@ -316,10 +326,7 @@ const PAGE_SIZE = 12;
 export async function fetchProperties(
   params?: FilterParams
 ): Promise<{ data: Property[]; total: number }> {
-  let query = supabase
-    .from("properties")
-    .select("*")
-    .eq("published", true);
+  let query = supabase.from("properties").select("*").eq("published", true);
 
   // Only require photo_status check when NOT filtering by a specific agent
   if (!params?.agent_id) {
@@ -370,7 +377,8 @@ export async function fetchProperties(
 
   // Client-side: surface
   if (params?.surface_min) results = results.filter((p) => p.surface >= params.surface_min!);
-  if (params?.surface_max) results = results.filter((p) => p.surface > 0 && p.surface <= params.surface_max!);
+  if (params?.surface_max)
+    results = results.filter((p) => p.surface > 0 && p.surface <= params.surface_max!);
 
   // Client-side: chambres (multi-select, 5 means "5 or more")
   if (params?.chambres?.length) {
@@ -409,9 +417,7 @@ export async function fetchProperties(
   // the DB doesn't yet have a dedicated column. Matches "Neuf", "Bon état", "À rénover".
   if (params?.etat?.length) {
     const wanted = new Set(params.etat.map((x) => x.toLowerCase()));
-    results = results.filter((p) =>
-      (p.features ?? []).some((f) => wanted.has(f.toLowerCase()))
-    );
+    results = results.filter((p) => (p.features ?? []).some((f) => wanted.has(f.toLowerCase())));
   }
 
   // Client-side: furnished
@@ -419,9 +425,7 @@ export async function fetchProperties(
 
   // Client-side: features (must include ALL selected features)
   if (params?.features?.length) {
-    results = results.filter((p) =>
-      params.features!.every((f) => (p.features ?? []).includes(f))
-    );
+    results = results.filter((p) => params.features!.every((f) => (p.features ?? []).includes(f)));
   }
 
   // Client-side sort (overrides default "recent" from server order)
@@ -442,11 +446,7 @@ export async function fetchProperties(
 
 /** Fetch a single property by id (published or agent-owned preview) */
 export async function fetchProperty(id: string): Promise<Property | null> {
-  const { data, error } = await supabase
-    .from("properties")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const { data, error } = await supabase.from("properties").select("*").eq("id", id).single();
 
   if (error) return null;
   return mapSupabaseProperty(data as SupabaseProperty, 0);
@@ -467,9 +467,7 @@ export async function fetchFeaturedProperties(): Promise<Property[]> {
     .select("*")
     .eq("published", true)
     .eq("photo_status", "✅ Photos OK")
-    .or(
-      `status.is.null,status.in.(${ACTIVE_PROPERTY_STATUSES.map((s) => `"${s}"`).join(",")})`
-    )
+    .or(`status.is.null,status.in.(${ACTIVE_PROPERTY_STATUSES.map((s) => `"${s}"`).join(",")})`)
     .order("is_pepite", { ascending: false, nullsFirst: false })
     .order("created_at", { ascending: false })
     .limit(3);
@@ -511,16 +509,19 @@ export async function submitAppointment(appt: {
   visitor_name: string;
   visitor_phone: string;
   visitor_email?: string;
-  appointment_date: string;  // YYYY-MM-DD
-  appointment_time: string;  // HH:MM
+  appointment_date: string; // YYYY-MM-DD
+  appointment_time: string; // HH:MM
   notes?: string;
 }): Promise<void> {
   const dateFr = (() => {
     try {
-      return new Date(`${appt.appointment_date}T${appt.appointment_time}:00`).toLocaleString("fr-FR", {
-        dateStyle: "full",
-        timeStyle: "short",
-      });
+      return new Date(`${appt.appointment_date}T${appt.appointment_time}:00`).toLocaleString(
+        "fr-FR",
+        {
+          dateStyle: "full",
+          timeStyle: "short",
+        }
+      );
     } catch {
       return `${appt.appointment_date} à ${appt.appointment_time}`;
     }
@@ -670,11 +671,7 @@ export async function submitParticulierProperty(s: ParticulierSubmission): Promi
     created_at: new Date().toISOString(),
   };
 
-  const { data, error } = await supabase
-    .from("properties")
-    .insert(row)
-    .select("id")
-    .single();
+  const { data, error } = await supabase.from("properties").insert(row).select("id").single();
   if (error) throw error;
 
   // Mirror in leads pipeline so the sales team sees a fresh seller lead immediately
@@ -683,7 +680,8 @@ export async function submitParticulierProperty(s: ParticulierSubmission): Promi
       name: fullName,
       phone: s.vendeur_telephone,
       email: s.vendeur_email,
-      notes: `[VENDEUR PARTICULIER] ${s.type} à ${s.ville} · ${s.prix} MAD\n\n${s.vendeur_message ?? ""}`.trim(),
+      notes:
+        `[VENDEUR PARTICULIER] ${s.type} à ${s.ville} · ${s.prix} MAD\n\n${s.vendeur_message ?? ""}`.trim(),
       source: "Publier mon bien",
       status: "New",
       property_reference: reference,
@@ -744,13 +742,13 @@ export interface Agent {
 
 export interface AgentProperty {
   id: string;
-  titre?: string;           // → titre column (custom listing title)
-  adresse?: string;         // → neighborhood + address columns
-  ville?: string;           // → city column
-  prix?: string;            // → price column
+  titre?: string; // → titre column (custom listing title)
+  adresse?: string; // → neighborhood + address columns
+  ville?: string; // → city column
+  prix?: string; // → price column
   type?: string;
   transaction?: string;
-  statut?: string;          // → status column  ("Actif" | "Inactif" | "Vendu" | "Loué")
+  statut?: string; // → status column  ("Actif" | "Inactif" | "Vendu" | "Loué")
   photo_principale?: string;
   photos?: string[];
   surface_construite?: string;
@@ -759,8 +757,8 @@ export interface AgentProperty {
   salons?: number;
   description?: string;
   agent_id?: string;
-  actif?: boolean;          // → published column
-  meuble?: boolean;         // → meuble column
+  actif?: boolean; // → published column
+  meuble?: boolean; // → meuble column
   features?: string[];
   lat?: number;
   lng?: number;
@@ -780,31 +778,19 @@ export async function fetchAgents(): Promise<Agent[]> {
 }
 
 export async function fetchAgentBySlug(slug: string): Promise<Agent | null> {
-  const { data, error } = await supabase
-    .from("agents")
-    .select("*")
-    .eq("slug", slug)
-    .single();
+  const { data, error } = await supabase.from("agents").select("*").eq("slug", slug).single();
   if (error) return null;
   return data as Agent;
 }
 
 export async function fetchAgentById(agentId: string): Promise<Agent | null> {
-  const { data, error } = await supabase
-    .from("agents")
-    .select("*")
-    .eq("id", agentId)
-    .single();
+  const { data, error } = await supabase.from("agents").select("*").eq("id", agentId).single();
   if (error) return null;
   return data as Agent;
 }
 
 export async function fetchMyAgent(userId: string): Promise<Agent | null> {
-  const { data, error } = await supabase
-    .from("agents")
-    .select("*")
-    .eq("user_id", userId)
-    .single();
+  const { data, error } = await supabase.from("agents").select("*").eq("user_id", userId).single();
   if (error) return null;
   return data as Agent;
 }
@@ -851,28 +837,28 @@ function toDbRow(props: Partial<AgentProperty>) {
   const row: Record<string, unknown> = {};
 
   // Direct mappings (same name in AgentProperty and DB)
-  if (props.titre       !== undefined) row.titre             = props.titre;
-  if (props.ville       !== undefined) row.ville             = props.ville;
-  if (props.type        !== undefined) row.type              = props.type;
-  if (props.transaction !== undefined) row.transaction       = props.transaction;
-  if (props.description !== undefined) row.description       = props.description;
-  if (props.chambres    !== undefined) row.chambres          = props.chambres;
-  if (props.salons      !== undefined) row.salons            = props.salons;
+  if (props.titre !== undefined) row.titre = props.titre;
+  if (props.ville !== undefined) row.ville = props.ville;
+  if (props.type !== undefined) row.type = props.type;
+  if (props.transaction !== undefined) row.transaction = props.transaction;
+  if (props.description !== undefined) row.description = props.description;
+  if (props.chambres !== undefined) row.chambres = props.chambres;
+  if (props.salons !== undefined) row.salons = props.salons;
   if (props.salles_de_bains !== undefined) row.salles_de_bains = props.salles_de_bains;
   if (props.surface_construite !== undefined) row.surface_construite = props.surface_construite;
-  if (props.photo_principale   !== undefined) row.photo_principale   = props.photo_principale;
-  if (props.photos      !== undefined) row.photos            = props.photos;
-  if (props.agent_id    !== undefined) row.agent_id          = props.agent_id;
-  if (props.meuble      !== undefined) row.meuble            = props.meuble;
+  if (props.photo_principale !== undefined) row.photo_principale = props.photo_principale;
+  if (props.photos !== undefined) row.photos = props.photos;
+  if (props.agent_id !== undefined) row.agent_id = props.agent_id;
+  if (props.meuble !== undefined) row.meuble = props.meuble;
   if (props.features !== undefined) row.features = props.features;
-  if (props.lat      !== undefined) row.lat       = props.lat;
-  if (props.lng      !== undefined) row.lng       = props.lng;
+  if (props.lat !== undefined) row.lat = props.lat;
+  if (props.lng !== undefined) row.lng = props.lng;
 
   // Field renames
-  if (props.prix   !== undefined) row.price        = props.prix;      // prix → price
-  if (props.actif  !== undefined) row.published    = props.actif;     // actif → published
-  if (props.adresse !== undefined) row.neighborhood = props.adresse;  // adresse → neighborhood
-  if (props.statut !== undefined) row.status       = props.statut;    // statut → status
+  if (props.prix !== undefined) row.price = props.prix; // prix → price
+  if (props.actif !== undefined) row.published = props.actif; // actif → published
+  if (props.adresse !== undefined) row.neighborhood = props.adresse; // adresse → neighborhood
+  if (props.statut !== undefined) row.status = props.statut; // statut → status
 
   return row;
 }
@@ -885,14 +871,10 @@ export async function createAgentProperty(
     ...toDbRow(props),
     agent_id: agentId,
     published: props.actif !== false,
-    photo_status: "✅ Photos OK",   // so it appears on public listings immediately
-    reference: `WH-${Date.now()}`,  // auto-generate reference
+    photo_status: "✅ Photos OK", // so it appears on public listings immediately
+    reference: `WH-${Date.now()}`, // auto-generate reference
   };
-  const { data, error } = await supabase
-    .from("properties")
-    .insert(row)
-    .select()
-    .single();
+  const { data, error } = await supabase.from("properties").insert(row).select().single();
   if (error) throw error;
   return data as AgentProperty;
 }
@@ -913,10 +895,7 @@ export async function updateAgentProperty(
   return data as AgentProperty;
 }
 
-export async function deleteAgentProperty(
-  propertyId: string,
-  agentId: string
-): Promise<void> {
+export async function deleteAgentProperty(propertyId: string, agentId: string): Promise<void> {
   const { error } = await supabase
     .from("properties")
     .delete()
@@ -956,7 +935,11 @@ export async function fetchAgentPropertyById(
     actif: (p as any).published !== false,
     statut: (p as any).status ?? undefined,
     photo_principale: p.photo_principale ?? (Array.isArray(p.photos) ? p.photos[0] : undefined),
-    photos: Array.isArray(p.photos) ? (p.photo_principale ? p.photos.filter(u => u !== p.photo_principale) : p.photos.slice(1)) : [],
+    photos: Array.isArray(p.photos)
+      ? p.photo_principale
+        ? p.photos.filter((u) => u !== p.photo_principale)
+        : p.photos.slice(1)
+      : [],
     meuble: p.meuble ?? false,
     features: Array.isArray(p.features) ? p.features : [],
     lat: (p as any).lat ?? undefined,
@@ -998,9 +981,7 @@ export interface EstimationLead {
 }
 
 export async function submitEstimationLead(lead: EstimationLead): Promise<void> {
-  const { error } = await supabase
-    .from("estimation_leads")
-    .insert({ ...lead, status: "new" });
+  const { error } = await supabase.from("estimation_leads").insert({ ...lead, status: "new" });
   if (error) throw error;
 }
 

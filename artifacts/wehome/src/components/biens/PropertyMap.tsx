@@ -13,24 +13,36 @@ setOptions({
 // ── Map style — warm premium light ───────────────────────────────────────────
 
 const MAP_STYLES: google.maps.MapTypeStyle[] = [
-  { featureType: "all",                     elementType: "geometry",            stylers: [{ color: "#f2ede8" }] },
-  { featureType: "all",                     elementType: "labels.icon",         stylers: [{ visibility: "off" }] },
-  { featureType: "all",                     elementType: "labels.text.fill",    stylers: [{ color: "#6b5c52" }] },
-  { featureType: "all",                     elementType: "labels.text.stroke",  stylers: [{ color: "#f2ede8" }] },
-  { featureType: "administrative",          elementType: "geometry",            stylers: [{ visibility: "off" }] },
-  { featureType: "administrative.country",  elementType: "geometry.stroke",     stylers: [{ color: "#c9b8ad" }] },
-  { featureType: "administrative.province", elementType: "geometry.stroke",     stylers: [{ color: "#d9cbc3" }] },
-  { featureType: "landscape.natural",       elementType: "geometry",            stylers: [{ color: "#e8e0d8" }] },
-  { featureType: "poi",                     elementType: "all",                 stylers: [{ visibility: "off" }] },
-  { featureType: "road",                    elementType: "geometry",            stylers: [{ color: "#ffffff" }] },
-  { featureType: "road",                    elementType: "geometry.stroke",     stylers: [{ color: "#e0d5ce" }] },
-  { featureType: "road.arterial",           elementType: "labels.text.fill",    stylers: [{ color: "#8c7b70" }] },
-  { featureType: "road.highway",            elementType: "geometry",            stylers: [{ color: "#e8ddd5" }] },
-  { featureType: "road.highway",            elementType: "labels.text.fill",    stylers: [{ color: "#8c7b70" }] },
-  { featureType: "road.local",              elementType: "labels.text.fill",    stylers: [{ color: "#b0a099" }] },
-  { featureType: "transit",                 elementType: "all",                 stylers: [{ visibility: "off" }] },
-  { featureType: "water",                   elementType: "geometry",            stylers: [{ color: "#c5d8e8" }] },
-  { featureType: "water",                   elementType: "labels.text.fill",    stylers: [{ color: "#8fafc4" }] },
+  { featureType: "all", elementType: "geometry", stylers: [{ color: "#f2ede8" }] },
+  { featureType: "all", elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+  { featureType: "all", elementType: "labels.text.fill", stylers: [{ color: "#6b5c52" }] },
+  { featureType: "all", elementType: "labels.text.stroke", stylers: [{ color: "#f2ede8" }] },
+  { featureType: "administrative", elementType: "geometry", stylers: [{ visibility: "off" }] },
+  {
+    featureType: "administrative.country",
+    elementType: "geometry.stroke",
+    stylers: [{ color: "#c9b8ad" }],
+  },
+  {
+    featureType: "administrative.province",
+    elementType: "geometry.stroke",
+    stylers: [{ color: "#d9cbc3" }],
+  },
+  { featureType: "landscape.natural", elementType: "geometry", stylers: [{ color: "#e8e0d8" }] },
+  { featureType: "poi", elementType: "all", stylers: [{ visibility: "off" }] },
+  { featureType: "road", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
+  { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#e0d5ce" }] },
+  {
+    featureType: "road.arterial",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#8c7b70" }],
+  },
+  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#e8ddd5" }] },
+  { featureType: "road.highway", elementType: "labels.text.fill", stylers: [{ color: "#8c7b70" }] },
+  { featureType: "road.local", elementType: "labels.text.fill", stylers: [{ color: "#b0a099" }] },
+  { featureType: "transit", elementType: "all", stylers: [{ visibility: "off" }] },
+  { featureType: "water", elementType: "geometry", stylers: [{ color: "#c5d8e8" }] },
+  { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#8fafc4" }] },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -62,11 +74,7 @@ function makePillSvg(label: string, highlighted = false): string {
   </svg>`;
 }
 
-function makeMarkerIcon(
-  price: number,
-  isRental: boolean,
-  highlighted = false
-): google.maps.Icon {
+function makeMarkerIcon(price: number, isRental: boolean, highlighted = false): google.maps.Icon {
   const label = formatPrice(price, isRental);
   const svg = makePillSvg(label, highlighted);
   const charWidth = 7.5;
@@ -123,7 +131,6 @@ function makeInfoHtml(p: Property): string {
     </div>
   </div>`;
 }
-
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -192,7 +199,9 @@ export function PropertyMap({ properties, className = "" }: PropertyMapProps) {
         if (!cancelled) setLoadError(String(err));
       });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

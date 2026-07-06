@@ -31,7 +31,15 @@ const FEATURES = [
   "Support dédié de l'équipe WeHome",
 ];
 
-function FadeUp({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+function FadeUp({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -51,14 +59,20 @@ export default function EspaceAgentPage() {
       <Navbar />
 
       <main className="flex-grow">
-
         {/* ── Hero ─────────────────────────────────────────────────────── */}
-        <section className="pt-28 pb-24 relative overflow-hidden" style={{ background: "linear-gradient(160deg, #0f0709 0%, #1a0c0e 60%, #1f0d0f 100%)" }}>
+        <section
+          className="pt-28 pb-24 relative overflow-hidden"
+          style={{ background: "linear-gradient(160deg, #0f0709 0%, #1a0c0e 60%, #1f0d0f 100%)" }}
+        >
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full opacity-10"
-              style={{ background: "radial-gradient(circle, #C0392B 0%, transparent 70%)" }} />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full opacity-5"
-              style={{ background: "radial-gradient(circle, #C0392B 0%, transparent 70%)" }} />
+            <div
+              className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full opacity-10"
+              style={{ background: "radial-gradient(circle, #C0392B 0%, transparent 70%)" }}
+            />
+            <div
+              className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full opacity-5"
+              style={{ background: "radial-gradient(circle, #C0392B 0%, transparent 70%)" }}
+            />
           </div>
 
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
@@ -67,7 +81,11 @@ export default function EspaceAgentPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="inline-flex items-center gap-2 mb-7 px-4 py-1.5 rounded-full border text-xs font-bold tracking-[0.18em] uppercase"
-              style={{ borderColor: "rgba(192,57,43,0.35)", color: "rgba(192,57,43,0.8)", background: "rgba(192,57,43,0.06)" }}
+              style={{
+                borderColor: "rgba(192,57,43,0.35)",
+                color: "rgba(192,57,43,0.8)",
+                background: "rgba(192,57,43,0.06)",
+              }}
             >
               <Star size={12} fill="currentColor" />
               WeHome Agent Network
@@ -80,9 +98,9 @@ export default function EspaceAgentPage() {
               className="font-display font-bold text-white mb-6"
               style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", lineHeight: 1.15 }}
             >
-              Gérez vos biens.{" "}
-              <span style={{ color: "#e05a4a" }}>Accédez à vos leads.</span>
-              <br />Développez votre activité.
+              Gérez vos biens. <span style={{ color: "#e05a4a" }}>Accédez à vos leads.</span>
+              <br />
+              Développez votre activité.
             </motion.h1>
 
             <motion.p
@@ -91,7 +109,9 @@ export default function EspaceAgentPage() {
               transition={{ duration: 0.7, delay: 0.12 }}
               className="text-white/55 text-lg leading-relaxed max-w-2xl mx-auto mb-10"
             >
-              Le portail agent WeHome vous donne accès à une plateforme professionnelle pour lister vos biens, suivre vos performances, et rejoindre le premier réseau immobilier partagé du Maroc.
+              Le portail agent WeHome vous donne accès à une plateforme professionnelle pour lister
+              vos biens, suivre vos performances, et rejoindre le premier réseau immobilier partagé
+              du Maroc.
             </motion.p>
 
             <motion.div
@@ -103,7 +123,10 @@ export default function EspaceAgentPage() {
               <Link
                 href="/espace-agent/login"
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl border-2 font-semibold text-white transition-all hover:-translate-y-0.5"
-                style={{ borderColor: "rgba(255,255,255,0.2)", background: "rgba(255,255,255,0.05)" }}
+                style={{
+                  borderColor: "rgba(255,255,255,0.2)",
+                  background: "rgba(255,255,255,0.05)",
+                }}
               >
                 Se connecter
               </Link>
@@ -123,9 +146,13 @@ export default function EspaceAgentPage() {
         <section className="py-24 bg-background">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <FadeUp className="text-center mb-16">
-              <p className="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-4">Le réseau</p>
+              <p className="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-4">
+                Le réseau
+              </p>
               <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground">
-                Tout ce dont un agent a besoin.<br />En un seul endroit.
+                Tout ce dont un agent a besoin.
+                <br />
+                En un seul endroit.
               </h2>
             </FadeUp>
 
@@ -136,7 +163,9 @@ export default function EspaceAgentPage() {
                     <div className="w-14 h-14 rounded-2xl bg-primary/8 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                       <v.icon size={26} />
                     </div>
-                    <h3 className="font-display font-bold text-xl text-foreground mb-3">{v.title}</h3>
+                    <h3 className="font-display font-bold text-xl text-foreground mb-3">
+                      {v.title}
+                    </h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">{v.body}</p>
                   </div>
                 </FadeUp>
@@ -150,12 +179,15 @@ export default function EspaceAgentPage() {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <FadeUp>
-                <p className="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-4">Ce qui est inclus</p>
+                <p className="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-4">
+                  Ce qui est inclus
+                </p>
                 <h2 className="text-3xl font-display font-bold text-foreground mb-6">
                   Un accès professionnel à la plateforme WeHome.
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Lors de l'activation de votre compte, vous bénéficiez immédiatement de toute l'infrastructure WeHome — données, visibilité, et outils de suivi.
+                  Lors de l'activation de votre compte, vous bénéficiez immédiatement de toute
+                  l'infrastructure WeHome — données, visibilité, et outils de suivi.
                 </p>
                 <Link
                   href="/espace-agent/inscription"
@@ -195,7 +227,8 @@ export default function EspaceAgentPage() {
                 Prêt à rejoindre le réseau ?
               </h2>
               <p className="text-white/50 mb-10 text-lg">
-                Soumettez votre demande en 3 minutes. Notre équipe l'examine et vous active sous 48h.
+                Soumettez votre demande en 3 minutes. Notre équipe l'examine et vous active sous
+                48h.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -216,7 +249,6 @@ export default function EspaceAgentPage() {
             </FadeUp>
           </div>
         </section>
-
       </main>
       <Footer />
     </div>
