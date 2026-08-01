@@ -1,10 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Outfit:wght@100..900&family=Noto+Sans+SC:wght@300..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Noto+Sans+SC:wght@300..900&display=swap");
 @import "tailwindcss";
 
 @theme inline {
-  /* Noto Sans SC is appended so CJK glyphs render automatically when present */
+  /* Brand Bible §4 — Display/headings carry the editorial serif voice;
+     interface/body/data stay sans for legibility (esp. financial figures).
+     Noto Sans SC is appended so CJK glyphs render automatically when present. */
   --font-sans: "DM Sans", "Noto Sans SC", sans-serif;
-  --font-display: "Outfit", "Noto Sans SC", sans-serif;
+  --font-display: "Playfair Display", "Noto Sans SC", Georgia, serif;
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -33,36 +35,50 @@
 }
 
 :root {
-  /* WeHome Brand: Burgundy #8B1A3A ≈ HSL(345, 68%, 33%) + Charcoal #3C4555 ≈ HSL(220, 18%, 28%) */
-  --background: 0 0% 99%;
-  --foreground: 220 18% 28%;
+  /* ── WeHome Brand Bible V1.0 palette ──────────────────────────────────────
+     Every value below is the exact HSL equivalent of the Bible hex (verified
+     by round-trip conversion), in the `H S% L%` form Tailwind v4 expects.
+       Crimson Atlas  #5C1428  343.3 64.3% 22%    primary / key actions only
+       Terrazzo Cream #FBF9F5  40 42.9% 97.3%     universal warm background
+       Taza Stone     #121314  210 5.3% 7.5%      primary text / structural
+       Zellige Sand   #EAE3D2  42.5 36.4% 87.1%   hairlines, dividers
+       Cedar Smoke    #565553  40 1.8% 33.1%      secondary text (see note)
+       Kasbah Ochre   #C28E48  33 51% 52%         certification badges only
+     80/15/5 — 80% cream space, 15% stone/smoke text, 5% crimson. */
+  --background: 40 42.9% 97.3%;
+  --foreground: 210 5.3% 7.5%;
 
   --card: 0 0% 100%;
-  --card-foreground: 220 18% 28%;
+  --card-foreground: 210 5.3% 7.5%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 220 18% 28%;
+  --popover-foreground: 210 5.3% 7.5%;
 
-  /* Primary = Burgundy from logo */
-  --primary: 345 68% 33%;
+  /* Primary = Crimson Atlas */
+  --primary: 343.3 64.3% 22%;
   --primary-foreground: 0 0% 100%;
 
   --secondary: 345 15% 95%;
-  --secondary-foreground: 220 18% 28%;
+  --secondary-foreground: 210 5.3% 7.5%;
 
   --muted: 220 14% 96%;
-  --muted-foreground: 220 10% 46%;
+  /* Cedar Smoke, nudged 42.5% -> 33.1% L to clear WCAG AAA (7.08:1) on
+     Terrazzo Cream. The Bible's own #6E6D6B only reaches 4.92:1 (AA, not the
+     AAA it claims); hue/saturation are preserved so the mineral tone holds. */
+  --muted-foreground: 40 1.8% 33.1%;
 
-  /* Accent = warm gold for premium feel */
+  /* Accent = warm gold. NOTE: Bible spec is Kasbah Ochre #C28E48 (33 51% 52%),
+     a near-match to the current value — left unchanged, not in this pass's scope. */
   --accent: 38 60% 50%;
   --accent-foreground: 0 0% 100%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 220 13% 91%;
-  --input: 220 13% 91%;
-  --ring: 345 68% 33%;
+  /* Zellige Sand — 1px hairline borders & dividers */
+  --border: 42.5 36.4% 87.1%;
+  --input: 42.5 36.4% 87.1%;
+  --ring: 343.3 64.3% 22%;
 
   --radius: 1rem;
 }

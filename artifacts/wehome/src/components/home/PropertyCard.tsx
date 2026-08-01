@@ -75,7 +75,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const showImage = hasImages && !currentImageFailed;
 
   return (
-    <div className="group bg-card rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col hover:-translate-y-1">
+    <div className="group bg-card rounded-[8px] overflow-hidden border border-border shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col hover:-translate-y-1">
       <div
         role="link"
         tabIndex={0}
@@ -87,7 +87,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
         }}
         onTouchStart={hasMultiple ? onTouchStart : undefined}
         onTouchEnd={hasMultiple ? onTouchEnd : undefined}
-        className={`relative aspect-[4/5] w-full overflow-hidden cursor-pointer ${!showImage ? property.gradientClass : ""}`}
+        className={`relative aspect-[4/3] w-full overflow-hidden cursor-pointer ${!showImage ? property.gradientClass : ""}`}
       >
         {hasImages &&
           imageUrls.map((url, i) => (
