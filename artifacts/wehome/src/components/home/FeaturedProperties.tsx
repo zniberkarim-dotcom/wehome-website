@@ -12,7 +12,7 @@ export function FeaturedProperties() {
   });
 
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 md:py-32 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <motion.div
@@ -62,7 +62,7 @@ export function FeaturedProperties() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ duration: 0.55, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
               >
                 <PropertyCard property={property} />
               </motion.div>
@@ -79,7 +79,7 @@ export function FeaturedProperties() {
         >
           <Link
             href="/biens"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors group shadow-lg shadow-primary/20"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors group shadow-md shadow-black/5"
           >
             Voir toutes les annonces
             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />

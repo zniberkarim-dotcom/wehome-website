@@ -159,7 +159,7 @@ export function PepiteDuMois() {
       ribbonColor: "bg-red-600 text-white",
       countdownLabel: "Fin du deal dans",
       ctaLabel: "Réserver ma visite avant la fin",
-      ctaClass: "bg-red-600 text-white hover:bg-red-700 shadow-2xl shadow-red-600/30",
+      ctaClass: "bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-black/10",
     },
     upcoming: {
       bannerBg: "bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700",
@@ -171,7 +171,7 @@ export function PepiteDuMois() {
       ribbonColor: "bg-blue-600 text-white",
       countdownLabel: "Lancement du deal dans",
       ctaLabel: "Être prévenu·e au lancement",
-      ctaClass: "bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-600/30",
+      ctaClass: "bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-black/10",
     },
     finished: {
       bannerBg: "bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700",
@@ -188,7 +188,7 @@ export function PepiteDuMois() {
   }[state];
 
   return (
-    <section className="py-20 md:py-24 bg-background">
+    <section className="py-20 md:py-28 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ─── Section heading ──────────────────────────────────────────── */}
         <div className="flex items-center gap-4 mb-6">
@@ -251,7 +251,7 @@ export function PepiteDuMois() {
         </motion.div>
 
         {/* ─── Main card ────────────────────────────────────────────────── */}
-        <div className="bg-card rounded-[2.5rem] overflow-hidden border border-border shadow-2xl flex flex-col lg:flex-row">
+        <div className="bg-card rounded-3xl overflow-hidden border border-border shadow-xl shadow-black/5 flex flex-col lg:flex-row">
           {/* Image carousel */}
           <div
             className={`group w-full lg:w-3/5 relative min-h-[400px] lg:min-h-[600px] ${!hasImages ? "bg-slate-100" : ""}`}

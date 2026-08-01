@@ -294,7 +294,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-          className="w-full max-w-5xl bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 p-4 md:p-8"
+          className="w-full max-w-5xl bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-black/5 border border-white/60 p-4 md:p-8"
         >
           {/* Tabs */}
           <div className="flex gap-2 mb-6 border-b border-border/50 pb-4">
@@ -401,7 +401,7 @@ export function Hero() {
                 <div className="md:col-span-2">
                   <button
                     onClick={handleSearch}
-                    className="w-full h-full min-h-[56px] bg-primary text-primary-foreground rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+                    className="w-full h-full min-h-[56px] bg-primary text-primary-foreground rounded-2xl font-bold flex items-center justify-center gap-2 shadow-md shadow-black/5 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
                   >
                     <Search size={20} />
                     <span>{t("hero.search")}</span>
