@@ -75,7 +75,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const showImage = hasImages && !currentImageFailed;
 
   return (
-    <div className="group bg-card rounded-[8px] overflow-hidden border border-border shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col hover:-translate-y-1">
+    <div className="group bg-card rounded-[8px] overflow-hidden border border-border shadow-sm hover:shadow-2xl transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col hover:-translate-y-1">
       <div
         role="link"
         tabIndex={0}
@@ -95,7 +95,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
               key={i}
               src={url}
               alt={`${property.title} - Photo ${i + 1}`}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${i === currentIndex ? "opacity-100" : "opacity-0"}`}
+              className={`absolute inset-0 w-full h-full object-cover transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03] ${i === currentIndex ? "opacity-100" : "opacity-0"}`}
               onError={() => handleImgError(i)}
               loading={i === 0 ? "eager" : "lazy"}
             />
@@ -181,7 +181,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
 
       <div className="p-6 flex flex-col flex-grow">
         <div className="mb-4">
-          <h3 className="text-2xl font-display font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+          <h3 className="text-2xl font-display font-bold text-foreground mb-1 group-hover:text-primary transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">
             {hasPrice ? (
               <>
                 {formatMAD(property.price)}

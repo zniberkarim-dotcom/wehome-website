@@ -16,6 +16,9 @@
   --color-popover-foreground: hsl(var(--popover-foreground));
   --color-primary: hsl(var(--primary));
   --color-primary-foreground: hsl(var(--primary-foreground));
+  /* Bible §7 — primary CTA hover is a 5% DARKEN, not an opacity fade.
+     bg-primary/90 lightens toward the page behind it, which is the opposite. */
+  --color-primary-hover: hsl(var(--primary-hover));
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
   --color-muted: hsl(var(--muted));
@@ -59,8 +62,9 @@
   --popover: 0 0% 100%;
   --popover-foreground: 210 5.3% 7.5%;
 
-  /* Primary = Crimson Atlas */
+  /* Primary = Crimson Atlas; hover = same hue/sat, lightness -5% relative */
   --primary: 343.3 64.3% 22%;
+  --primary-hover: 343.3 64.3% 20.9%;
   --primary-foreground: 0 0% 100%;
 
   --secondary: 345 15% 95%;
@@ -132,7 +136,22 @@
   h5,
   h6 {
     font-family: var(--font-display);
-    @apply tracking-tight font-semibold;
+    @apply font-semibold;
+  }
+  /* Bible §4 — tracking tightens with optical size, it is not one blanket value.
+     A serif at display size needs less negative tracking than a geometric sans;
+     the previous blanket -0.025em was compensating for an oversized H1. */
+  h1 {
+    letter-spacing: -0.02em;
+  }
+  h2 {
+    letter-spacing: -0.01em;
+  }
+  h3,
+  h4,
+  h5,
+  h6 {
+    letter-spacing: 0;
   }
 }
 

@@ -101,7 +101,7 @@ export function HowItWorks() {
               {cta && (
                 <Link
                   href={cta.href}
-                  className="inline-flex items-center gap-1.5 mt-6 text-sm font-semibold hover:underline group/link"
+                  className="relative inline-flex items-center gap-1.5 mt-6 text-sm font-semibold group/link after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.22,1,0.36,1)] hover:after:scale-x-100"
                   style={{ color: "var(--primary, #8B1A2E)" }}
                 >
                   {cta.label}

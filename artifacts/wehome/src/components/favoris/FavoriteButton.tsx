@@ -104,7 +104,7 @@ function HeartIcon({ liked, size }: { liked: boolean; size: number }) {
         <Heart
           size={size}
           className={liked ? "fill-primary text-primary" : "text-current"}
-          strokeWidth={liked ? 2.2 : 2}
+          strokeWidth={1.5}
         />
       </motion.span>
     </AnimatePresence>

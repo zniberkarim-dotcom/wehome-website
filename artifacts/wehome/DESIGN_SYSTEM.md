@@ -52,10 +52,25 @@ No saturated alert colours: success = soft olive, warning = sienna/terracotta (n
 `h1–h6` through `@layer base`. Body, labels and all financial/numeric data stay DM Sans.
 
 Type scale (Bible): H1 56/38 · H2 40/28 · H3 24/20 · Body-lg 18/16 · Body 15/14 · Caption 12/11 UPPERCASE +0.05em.
-⚠️ Open: Hero H1 currently renders **72px desktop / 48px mobile** (Bible: 56/38) and all
-headings inherit `tracking-tight` (−0.025em) from `@layer base`, vs the Bible's −0.02em (H1),
-−0.01em (H2), 0 (H3). Serif faces generally want looser tracking than geometric sans — worth
-a dedicated typographic pass.
+
+✅ **Resolved (pass 4).** Hero H1 is now `text-[38px] md:text-[46px] lg:text-[56px]` and the
+blanket `tracking-tight` was replaced with per-level tracking in `@layer base`:
+
+| | size (desktop/mobile) | tracking |
+|---|---|---|
+| H1 | 56 / 38px | −0.02em |
+| H2 | inherited scale | −0.01em |
+| H3–H6 | inherited scale | 0 |
+
+Evidence for keeping the Bible's 56px rather than the previous 72px:
+- **Playfair does not run small.** Measured cap-height 71/100em and x-height 52/100em vs
+  DM Sans 70 / 50 — i.e. optically the same size or marginally larger. The usual reason to
+  upsize a serif does not apply here, so 56px delivers a true 56px presence.
+- **72px was overflowing.** In the default locale (FR) the longest line measured 751px at
+  −0.02em inside a 672px container (**111.7%**), and ~743px even at the old cramped −0.025em.
+  It only appeared to fit because the tight tracking was compensating for the oversize.
+- At 56px / −0.02em the same line is 584px = **86.9% fill** (EN 78.6%) — a well-set measure
+  with real optical margin.
 
 ## 4. Spacing & rhythm — RESOLVED (pass 1)
 
@@ -89,8 +104,29 @@ a dedicated typographic pass.
 | Title → Crimson on hover | ✅ already present |
 | 1px border at rest | ✅ already present |
 | No shadow at rest; hover 4px lift + `rgba(18,19,20,0.04)` | ⚠️ open — still `shadow-sm` → `hover:shadow-2xl` |
-| Hover image scale 1.03 | ⚠️ open — not implemented |
+| Hover image scale 1.03 | ✅ **resolved** (pass 4) — measured 3.00% growth |
+| Favourite heart 1.5px stroke | ✅ **resolved** (pass 4) — was 2 / 2.2 |
 | Key facts on one line separated by thin dashes | ⚠️ open — currently a 4-up divided stat grid |
+
+## 9. Micro-interactions (Bible §7–8) — pass 4
+
+| Interaction | Bible | Shipped | Verified |
+|---|---|---|---|
+| Card image hover | scale 1.03 | `group-hover:scale-[1.03]`, 300ms quintic | measured **3.00%** (382.4→393.9px) |
+| Card title hover | Stone → Crimson | already present; retimed | 150ms/ease → **300ms quintic** |
+| Card wrapper | ≤400ms | was **500ms** (over ceiling) | now **300ms quintic** |
+| Search field focus | scale 1.01 + border Crimson @50% | `focus-within:scale-[1.01]`, `focus:border-primary/50` | measured **1.00%** (308.66→311.74px), icon scales with field |
+| Primary CTA hover | darken 5%, no gradient | `--primary-hover` = `343.3 64.3% 20.9%` | luminance **0.02929 → 0.02680** (genuinely darker) |
+| Ghost CTA hover | left-to-right underline | `after:` pseudo, `origin-left`, `scale-x-0 → 100` | rest `scale: 0 1`, 300ms quintic |
+
+**Why `focus-within` on the wrapper, not `focus` on the input:** each search field has an
+absolutely-positioned icon that lives in the wrapper but *outside* the input. Scaling the
+input alone would grow the box while leaving its icon behind. Scaling the wrapper moves the
+field as one unit — confirmed: icon scale tracks the wrapper at 1.01.
+
+**Primary CTA note:** the previous `hover:bg-primary/90` was an *opacity fade*, which blends
+toward the page behind it — on a light background that **lightens** the button, the opposite
+of the Bible's "darken 5%". Replaced with a real darkened token.
 
 Verified after the pass-2 change on every consumer: **`/` (FeaturedProperties)**,
 **`/biens`**, **`/favoris`**, **`/agents/:slug`** — radius 8px, ratio exactly 1.333, no
@@ -109,8 +145,9 @@ content overflow, grids unaffected, desktop + 375px mobile.
    and raised. Cost: `muted-foreground` in that section is 6.44:1 (AA) rather than 7.08:1 (AAA).
 2. **`--card` / `--popover` are pure `#FFFFFF`** and `--muted` is a cool grey (`220 14% 96%`) —
    both read slightly cold against the warm cream. Candidate for a warm-surface pass.
-3. **Type scale + tracking** — see §3.
-4. **PropertyCard remaining Bible specs** — see §8.
+3. ~~**Type scale + tracking**~~ ✅ resolved (pass 4) — see §3.
+4. **PropertyCard remaining Bible specs** — see §8 (rest-shadow and the dash-separated
+   key-facts line are still open; hover scale and heart stroke are done).
 5. ~~**Loading skeleton on `/biens`**~~ ✅ **resolved (pass 3)** — skeleton now mirrors the card
    exactly: `aspect-[4/3]` and `rounded-[8px]` (the wrapper was still `rounded-3xl`, which would
    have kept a corner-radius pop even after the ratio fix). Verified live across the
@@ -119,4 +156,7 @@ content overflow, grids unaffected, desktop + 375px mobile.
    `initial={{ x: ±20 }}` reveal offset, pushing `scrollWidth` to 379 on a 375px viewport.
    Predates this work (verified against `c6c5759`); fix by animating `opacity`+`transform`
    with `overflow-x-clip` on the section wrapper.
-7. **Buttons** — Bible wants 6px radius, flat crimson fill, 5% darken on hover.
+7. **Buttons** — 5% darken on hover ✅ done (pass 4). Still open: 6px radius (homepage CTAs
+   are 12–16px) and the hero search field rest state, which is `bg-white/50` on a `bg-white/80`
+   panel — cool white against the warm page. Warming both together is a colour decision that
+   affects the hero's whole glass panel, so it is held for sign-off rather than half-applied.
