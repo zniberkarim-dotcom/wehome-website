@@ -100,17 +100,21 @@ content overflow, grids unaffected, desktop + 375px mobile.
 
 ## Open decisions / backlog (next passes)
 
-1. **`HowItWorks` uses `bg-white`** as a full section background — now renders as a pure-white
-   band against Terrazzo Cream, which the Bible explicitly warns against ("never pure #FFFFFF").
-   On-Bible fix is to drop the band (match the page) or tint it Zellige Sand — but that changes
-   section *banding*, i.e. page composition, so it needs sign-off.
+1. ~~**`HowItWorks` uses `bg-white`**~~ ✅ **resolved (pass 3)** — now `bg-sand/50`
+   (Zellige Sand at 50% over Terrazzo Cream = `#F3EEE4`). Chosen over plain cream because
+   its neighbours are cream above (FeaturedProperties) and `bg-secondary/50` below (Services);
+   blending would have merged three near-identical fields and collapsed the mid-page structure.
+   Full-strength sand (−10.2pt lightness) read as a slab, so it is applied at 50% (−4.9pt) —
+   comparable separation to the old white band (+2.7pt), but warm and recessed instead of cool
+   and raised. Cost: `muted-foreground` in that section is 6.44:1 (AA) rather than 7.08:1 (AAA).
 2. **`--card` / `--popover` are pure `#FFFFFF`** and `--muted` is a cool grey (`220 14% 96%`) —
    both read slightly cold against the warm cream. Candidate for a warm-surface pass.
 3. **Type scale + tracking** — see §3.
 4. **PropertyCard remaining Bible specs** — see §8.
-5. **Loading skeleton on `/biens`** (`src/pages/biens.tsx`, `aspect-[4/5]`) still mirrors the
-   old card ratio → causes a small reflow when real cards (4:3) replace it. One-line fix, held
-   back because it edits another page's layout.
+5. ~~**Loading skeleton on `/biens`**~~ ✅ **resolved (pass 3)** — skeleton now mirrors the card
+   exactly: `aspect-[4/3]` and `rounded-[8px]` (the wrapper was still `rounded-3xl`, which would
+   have kept a corner-radius pop even after the ratio fix). Verified live across the
+   skeleton → real-card transition: identical radius and ratio, no reflow.
 6. **Pre-existing 4px mobile horizontal overflow** — sections below the fold rest at their
    `initial={{ x: ±20 }}` reveal offset, pushing `scrollWidth` to 379 on a 375px viewport.
    Predates this work (verified against `c6c5759`); fix by animating `opacity`+`transform`

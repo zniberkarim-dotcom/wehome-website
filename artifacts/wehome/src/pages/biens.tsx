@@ -682,9 +682,9 @@ export default function BiensPage() {
                       {Array.from({ length: 6 }).map((_, i) => (
                         <div
                           key={i}
-                          className="bg-card rounded-3xl overflow-hidden border border-border animate-pulse"
+                          className="bg-card rounded-[8px] overflow-hidden border border-border animate-pulse"
                         >
-                          <div className="aspect-[4/5] bg-muted" />
+                          <div className="aspect-[4/3] bg-muted" />
                           <div className="p-6 space-y-3">
                             <div className="h-4 bg-muted rounded w-3/4" />
                             <div className="h-3 bg-muted rounded w-1/2" />

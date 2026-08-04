@@ -28,6 +28,11 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
+  /* Zellige Sand under its own name — same value as --border, but that token is
+     semantically a hairline colour. Use bg-sand/NN for recessed warm panels so
+     section bands never fall back to pure white (Bible §3). */
+  --color-sand: hsl(var(--border));
+
   --radius-xl: calc(var(--radius) + 4px);
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
