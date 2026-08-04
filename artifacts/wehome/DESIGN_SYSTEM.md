@@ -9,6 +9,39 @@ Philosophy: **Clarity over decoration · Proof over promise · Fluid tactile rea
 
 ---
 
+## ⚠️ Standing rules — shipping (read before any commit)
+
+**1. `package.json` and `pnpm-lock.yaml` ship together, always.**
+Vercel installs with `--frozen-lockfile`. Any commit that touches a `package.json`
+(adding/removing/bumping a dependency *or a script*) **must** include the regenerated
+root `pnpm-lock.yaml` in the *same* commit. Before pushing such a commit, run from the
+repo root and confirm it exits 0:
+
+```
+pnpm install --frozen-lockfile
+```
+
+This is the exact command Vercel runs. `pnpm run build` passing locally proves **nothing**
+about this — a non-frozen local install tolerates drift, and `vite build` never touches
+eslint. Commit `a3466d8` added 5 eslint devDependencies without the lockfile; every deploy
+from that commit onward failed at the install step with `ERR_PNPM_OUTDATED_LOCKFILE`,
+and four subsequent passes were reported as "live" when none of them had deployed.
+
+**2. Nothing is "live" without a confirmed Vercel deployment status.**
+A green local build is not a deploy. When a build fails, Vercel keeps serving the previous
+successful deployment **silently** — the site looks fine and nothing surfaces the failure.
+Before reporting a change as shipped, confirm one of:
+- Vercel dashboard → project → Deployments → the commit SHA shows **Ready** (not Failed/Error), or
+- `vercel ls` / `vercel inspect <url> --logs` if the CLI is authenticated, or
+- fetch production and assert on a value the change actually introduced
+  (e.g. after the pass-2 font swap, production `index.html` must contain `Playfair+Display`
+  and must *not* contain `Outfit`).
+
+If production cannot be reached from the working environment, say so and hand the check to
+the user — do not infer "live" from a local build.
+
+---
+
 ## 1. Where tokens live
 
 - Tailwind v4 theme: `src/index.css` → `@theme inline { … }` (maps `--color-*` → HSL vars).
