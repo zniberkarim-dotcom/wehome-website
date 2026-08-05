@@ -275,7 +275,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
         <div className="pt-4 mt-2">
           <Link
             href={`/bien/${property.id}`}
-            className="w-full py-3 rounded-xl bg-secondary hover:bg-primary hover:text-white text-secondary-foreground font-semibold flex items-center justify-center gap-2 transition-all duration-300 group/btn"
+            className="w-full py-3 rounded-[6px] bg-secondary hover:bg-primary hover:text-white text-secondary-foreground font-semibold flex items-center justify-center gap-2 transition-all duration-300 group/btn"
           >
             {t("card.see_details")}
             <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />

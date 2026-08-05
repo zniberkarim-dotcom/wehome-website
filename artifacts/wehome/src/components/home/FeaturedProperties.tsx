@@ -79,7 +79,7 @@ export function FeaturedProperties() {
         >
           <Link
             href="/biens"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group shadow-md shadow-black/5"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-[6px] hover:bg-primary-hover transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group shadow-md shadow-black/5"
           >
             Voir toutes les annonces
             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />

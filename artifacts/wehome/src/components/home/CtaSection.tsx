@@ -28,7 +28,7 @@ export function CtaSection() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Link
                 href="/publier"
-                className="w-full sm:w-auto px-8 py-4 bg-primary hover:bg-primary-hover text-primary-foreground rounded-xl font-bold text-lg flex items-center justify-center gap-3 shadow-md shadow-black/5 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                className="w-full sm:w-auto px-8 py-4 bg-primary hover:bg-primary-hover text-primary-foreground rounded-[6px] font-bold text-lg flex items-center justify-center gap-3 shadow-md shadow-black/5 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
               >
                 <Key size={22} />
                 Vendre mon bien
@@ -36,7 +36,7 @@ export function CtaSection() {
 
               <Link
                 href="/acheter"
-                className="w-full sm:w-auto px-8 py-4 bg-secondary text-secondary-foreground border border-border rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:bg-secondary/80 hover:-translate-y-1 transition-all duration-300"
+                className="w-full sm:w-auto px-8 py-4 bg-secondary text-secondary-foreground border border-border rounded-[6px] font-bold text-lg flex items-center justify-center gap-3 hover:bg-secondary/80 hover:-translate-y-1 transition-all duration-300"
               >
                 <Home size={22} />
                 Trouver un bien

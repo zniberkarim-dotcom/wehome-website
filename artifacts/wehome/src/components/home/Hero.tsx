@@ -401,7 +401,7 @@ export function Hero() {
                 <div className="md:col-span-2">
                   <button
                     onClick={handleSearch}
-                    className="w-full h-full min-h-[56px] bg-primary hover:bg-primary-hover text-primary-foreground rounded-2xl font-bold flex items-center justify-center gap-2 shadow-md shadow-black/5 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                    className="w-full h-full min-h-[56px] bg-primary hover:bg-primary-hover text-primary-foreground rounded-[6px] font-bold flex items-center justify-center gap-2 shadow-md shadow-black/5 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
                   >
                     <Search size={20} />
                     <span>{t("hero.search")}</span>
