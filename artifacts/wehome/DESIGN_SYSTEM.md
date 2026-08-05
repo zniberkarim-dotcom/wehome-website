@@ -136,7 +136,7 @@ Evidence for keeping the Bible's 56px rather than the previous 72px:
 | Image ratio 4:3 | ✅ **resolved** (pass 2) |
 | Title → Crimson on hover | ✅ already present |
 | 1px border at rest | ✅ already present |
-| No shadow at rest; hover 4px lift + `rgba(18,19,20,0.04)` | ⚠️ open — still `shadow-sm` → `hover:shadow-2xl` |
+| No shadow at rest; hover 4px lift + `rgba(18,19,20,0.04)` | ✅ **resolved** (pass 5) — `shadow-none` at rest (1px Zellige Sand hairline only), hover `0 4px 20px rgba(18,19,20,0.04)`; the 4px lift was already correct |
 | Hover image scale 1.03 | ✅ **resolved** (pass 4) — measured 3.00% growth |
 | Favourite heart 1.5px stroke | ✅ **resolved** (pass 4) — was 2 / 2.2 |
 | Key facts on one line separated by thin dashes | ⚠️ open — currently a 4-up divided stat grid |
@@ -185,11 +185,19 @@ content overflow, grids unaffected, desktop + 375px mobile.
    exactly: `aspect-[4/3]` and `rounded-[8px]` (the wrapper was still `rounded-3xl`, which would
    have kept a corner-radius pop even after the ratio fix). Verified live across the
    skeleton → real-card transition: identical radius and ratio, no reflow.
-6. **Pre-existing 4px mobile horizontal overflow** — sections below the fold rest at their
-   `initial={{ x: ±20 }}` reveal offset, pushing `scrollWidth` to 379 on a 375px viewport.
-   Predates this work (verified against `c6c5759`); fix by animating `opacity`+`transform`
-   with `overflow-x-clip` on the section wrapper.
-7. **Buttons** — 5% darken on hover ✅ done (pass 4). Still open: 6px radius (homepage CTAs
-   are 12–16px) and the hero search field rest state, which is `bg-white/50` on a `bg-white/80`
-   panel — cool white against the warm page. Warming both together is a colour decision that
-   affects the hero's whole glass panel, so it is held for sign-off rather than half-applied.
+6. ~~**Pre-existing 4px mobile horizontal overflow**~~ ✅ **resolved (pass 5)** — the four
+   x-axis reveals (FeaturedProperties ×2, PepiteDuMois, WhyChooseUs) now animate on `y`,
+   which cannot push layout width and matches the y-based reveal language every other
+   section already used. Fixed at the cause, not masked with `overflow-x: hidden` (which
+   would risk clipping legitimate content). Verified `scrollWidth 375 === viewport 375`.
+   **Reveals on the homepage must stay y-axis or opacity/scale only** — an x-offset on a
+   full-width block in a centred container will always reintroduce horizontal overflow.
+7. **Buttons** — 5% darken on hover ✅ done (pass 4). Hero search rest state ✅ done (pass 5):
+   the glass panel was treated as one unit and moved onto Terrazzo Cream —
+   panel `bg-background/85` + cream border, all 7 inputs and 6 filter pills `bg-background/60`,
+   focus/hover → `background`. Still open: **6px radius** (homepage CTAs are 12–16px).
+
+8. **Loud shadows** ✅ homepage is clean as of pass 5 — no `shadow-2xl` remains in
+   `src/components/home/`. It is still used on 9 other pages (a-propos, agents, estimer,
+   financement, services-pro, weoffice, espace-agent, Navbar) — candidates when those pages
+   get their own pass.
