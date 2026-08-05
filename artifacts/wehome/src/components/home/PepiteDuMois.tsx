@@ -183,7 +183,7 @@ export function PepiteDuMois() {
       ribbonColor: "bg-amber-600 text-white",
       countdownLabel: "Prochaine Pépite dans",
       ctaLabel: "Découvrir la Pépite",
-      ctaClass: "bg-foreground text-background hover:bg-primary shadow-xl",
+      ctaClass: "bg-foreground text-background hover:bg-primary shadow-lg shadow-black/10",
     },
   }[state];
 
@@ -205,7 +205,7 @@ export function PepiteDuMois() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className={`relative overflow-hidden rounded-2xl ${stateConfig.bannerBg} text-white p-5 md:p-6 mb-6 shadow-lg`}
+          className={`relative overflow-hidden rounded-2xl ${stateConfig.bannerBg} text-white p-5 md:p-6 mb-6 shadow-md shadow-black/10`}
         >
           {/* Subtle animated overlay for live state */}
           {stateConfig.bannerPulse && (
@@ -274,13 +274,13 @@ export function PepiteDuMois() {
                   <>
                     <button
                       onClick={goPrev}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-lg z-10"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-md shadow-black/10 z-10"
                     >
                       <ChevronLeft size={22} />
                     </button>
                     <button
                       onClick={goNext}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-lg z-10"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white shadow-md shadow-black/10 z-10"
                     >
                       <ChevronRight size={22} />
                     </button>
@@ -311,7 +311,7 @@ export function PepiteDuMois() {
 
             {/* Offer ribbon — diagonal across the corner */}
             <div
-              className={`absolute top-6 left-6 px-4 py-2 ${stateConfig.ribbonColor} font-bold rounded-xl shadow-2xl backdrop-blur-md flex items-center gap-2 z-10`}
+              className={`absolute top-6 left-6 px-4 py-2 ${stateConfig.ribbonColor} font-bold rounded-xl shadow-md shadow-black/10 backdrop-blur-md flex items-center gap-2 z-10`}
             >
               {state === "live" ? <Zap size={16} /> : <Sparkles size={16} />}
               <span className="text-sm">{stateConfig.ribbon}</span>
@@ -327,8 +327,8 @@ export function PepiteDuMois() {
           {/* Right column: details */}
           <div className="w-full lg:w-2/5 p-8 lg:p-12 flex flex-col justify-center bg-white">
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >

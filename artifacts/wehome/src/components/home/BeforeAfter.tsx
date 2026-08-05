@@ -187,7 +187,7 @@ export function BeforeAfter() {
         >
           <div
             ref={containerRef}
-            className="relative aspect-[16/10] md:aspect-[16/9] w-full rounded-3xl overflow-hidden shadow-2xl border border-white/40 select-none cursor-ew-resize bg-muted"
+            className="relative aspect-[16/10] md:aspect-[16/9] w-full rounded-3xl overflow-hidden shadow-lg shadow-black/5 border border-white/40 select-none cursor-ew-resize bg-muted"
             onMouseDown={onPointerDown}
             onTouchStart={onPointerDown}
           >
@@ -223,11 +223,11 @@ export function BeforeAfter() {
 
             {/* Drag handle */}
             <div
-              className="absolute top-0 bottom-0 w-1 bg-white pointer-events-none shadow-[0_0_20px_rgba(0,0,0,0.4)]"
+              className="absolute top-0 bottom-0 w-1 bg-white pointer-events-none shadow-[0_0_12px_rgba(18,19,20,0.22)]"
               style={{ left: `${position}%`, transform: "translateX(-50%)" }}
             />
             <div
-              className="absolute top-1/2 w-12 h-12 rounded-full bg-white shadow-2xl border-4 border-white flex items-center justify-center text-foreground pointer-events-none"
+              className="absolute top-1/2 w-12 h-12 rounded-full bg-white shadow-md shadow-black/10 border-4 border-white flex items-center justify-center text-foreground pointer-events-none"
               style={{ left: `${position}%`, transform: "translate(-50%, -50%)" }}
             >
               <Move size={20} />
@@ -258,7 +258,7 @@ export function BeforeAfter() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
             <Link
               href="/services-pro"
-              className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-bold bg-foreground text-background shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
+              className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-bold bg-foreground text-background shadow-md shadow-black/5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
             >
               {fallback("before_after.cta_primary", "Booster mes photos")}
               <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />

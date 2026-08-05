@@ -177,7 +177,7 @@ function BrandCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.4, delay: index * 0.08 }}
-      className={`relative rounded-3xl border ${styles.border} bg-white flex flex-col group hover:-translate-y-1 hover:shadow-2xl transition-all overflow-hidden`}
+      className={`relative rounded-3xl border ${styles.border} bg-white flex flex-col group hover:-translate-y-1 hover:shadow-lg hover:shadow-black/5 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-hidden`}
     >
       {/* ── HERO zone — branded dark/colorful banner with logo or icon+name ── */}
       <div

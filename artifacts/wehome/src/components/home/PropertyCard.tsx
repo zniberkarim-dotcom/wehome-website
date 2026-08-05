@@ -75,7 +75,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const showImage = hasImages && !currentImageFailed;
 
   return (
-    <div className="group bg-card rounded-[8px] overflow-hidden border border-border shadow-sm hover:shadow-2xl transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col hover:-translate-y-1">
+    <div className="group bg-card rounded-[8px] overflow-hidden border border-border shadow-none hover:shadow-[0_4px_20px_rgba(18,19,20,0.04)] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col hover:-translate-y-1">
       <div
         role="link"
         tabIndex={0}

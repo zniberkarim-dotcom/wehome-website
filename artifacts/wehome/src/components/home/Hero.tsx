@@ -294,7 +294,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-          className="w-full max-w-5xl bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-black/5 border border-white/60 p-4 md:p-8"
+          className="w-full max-w-5xl bg-background/85 backdrop-blur-xl rounded-3xl shadow-xl shadow-black/5 border border-background/60 p-4 md:p-8"
         >
           {/* Tabs */}
           <div className="flex gap-2 mb-6 border-b border-border/50 pb-4">
@@ -337,7 +337,7 @@ export function Hero() {
                       className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all ${
                         active
                           ? "bg-primary text-white border-primary shadow-md"
-                          : "bg-white/60 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
+                          : "bg-background/60 border-border/50 text-foreground/70 hover:bg-background hover:border-primary/40"
                       }`}
                     >
                       {c}
@@ -358,7 +358,7 @@ export function Hero() {
                     onChange={(e) => setCity(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder={t("hero.city_placeholder")}
-                    className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-foreground placeholder:text-muted-foreground font-medium"
+                    className="w-full pl-12 pr-4 py-4 rounded-2xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-foreground placeholder:text-muted-foreground font-medium"
                   />
                 </div>
 
@@ -369,7 +369,7 @@ export function Hero() {
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value)}
-                    className="w-full pl-12 pr-8 py-4 rounded-2xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-foreground font-medium appearance-none"
+                    className="w-full pl-12 pr-8 py-4 rounded-2xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-foreground font-medium appearance-none"
                   >
                     <option value="">{t("hero.type_placeholder")}</option>
                     {PROPERTY_TYPES.map((tt) => (
@@ -388,7 +388,7 @@ export function Hero() {
                     value={priceRange}
                     onChange={(e) => setPriceRange(e.target.value)}
                     disabled={!!customPrixMin || !!customPrixMax}
-                    className="w-full pl-12 pr-8 py-4 rounded-2xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-foreground font-medium appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full pl-12 pr-8 py-4 rounded-2xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-foreground font-medium appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {priceRanges.map((r) => (
                       <option key={r.value} value={r.value}>
@@ -464,7 +464,7 @@ export function Hero() {
                               isRent ? "Min — ex: 5000" : "Min — ex: 800000"
                             )}
                             min={0}
-                            className="w-full px-4 py-3 rounded-xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
+                            className="w-full px-4 py-3 rounded-xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
                           />
                           <input
                             type="number"
@@ -476,7 +476,7 @@ export function Hero() {
                               isRent ? "Max — ex: 15000" : "Max — ex: 2500000"
                             )}
                             min={0}
-                            className="w-full px-4 py-3 rounded-xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
+                            className="w-full px-4 py-3 rounded-xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
                           />
                         </div>
                         {(!!customPrixMin || !!customPrixMax) && (
@@ -503,7 +503,7 @@ export function Hero() {
                             onChange={(e) => setSurfaceMin(e.target.value)}
                             placeholder={t("hero.surface_min_placeholder")}
                             min={0}
-                            className="w-full px-4 py-3 rounded-xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
+                            className="w-full px-4 py-3 rounded-xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
                           />
                         </div>
                         <div>
@@ -517,7 +517,7 @@ export function Hero() {
                             onChange={(e) => setSurfaceMax(e.target.value)}
                             placeholder={fallback("hero.surface_max_placeholder", "ex: 200")}
                             min={0}
-                            className="w-full px-4 py-3 rounded-xl bg-white/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
+                            className="w-full px-4 py-3 rounded-xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
                           />
                         </div>
                       </div>
@@ -536,7 +536,7 @@ export function Hero() {
                                 className={`flex-1 py-3 rounded-xl text-sm font-semibold border transition-all duration-200 ${
                                   chambresMin === n
                                     ? "bg-primary text-white border-primary shadow-md"
-                                    : "bg-white/50 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
+                                    : "bg-background/60 border-border/50 text-foreground/70 hover:bg-background hover:border-primary/40"
                                 }`}
                               >
                                 {n === undefined ? t("hero.bedrooms_any") : `${n}+`}
@@ -558,7 +558,7 @@ export function Hero() {
                                 className={`flex-1 py-3 rounded-xl text-sm font-semibold border transition-all duration-200 ${
                                   sdbMin === n
                                     ? "bg-primary text-white border-primary shadow-md"
-                                    : "bg-white/50 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
+                                    : "bg-background/60 border-border/50 text-foreground/70 hover:bg-background hover:border-primary/40"
                                 }`}
                               >
                                 {n === undefined ? fallback("hero.bathrooms_any", "Tout") : `${n}+`}
@@ -582,7 +582,7 @@ export function Hero() {
                               className={`flex-1 py-3 rounded-xl text-sm font-semibold border transition-all duration-200 ${
                                 salonsMin === n
                                   ? "bg-primary text-white border-primary shadow-md"
-                                  : "bg-white/50 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
+                                  : "bg-background/60 border-border/50 text-foreground/70 hover:bg-background hover:border-primary/40"
                               }`}
                             >
                               {n === undefined ? fallback("hero.salons_any", "Tout") : `${n}+`}
@@ -601,7 +601,7 @@ export function Hero() {
                           className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-sm font-semibold transition-all duration-200 ${
                             isFurnished
                               ? "bg-primary text-white border-primary shadow-md"
-                              : "bg-white/50 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
+                              : "bg-background/60 border-border/50 text-foreground/70 hover:bg-background hover:border-primary/40"
                           }`}
                         >
                           <span
@@ -628,7 +628,7 @@ export function Hero() {
                               className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
                                 selectedFeatures.includes(f.key)
                                   ? "bg-primary text-white border-primary shadow-md"
-                                  : "bg-white/50 border-border/50 text-foreground/70 hover:bg-white hover:border-primary/40"
+                                  : "bg-background/60 border-border/50 text-foreground/70 hover:bg-background hover:border-primary/40"
                               }`}
                             >
                               {fallback(f.i18nKey, f.key)}
