@@ -358,7 +358,7 @@ export function Hero() {
                     onChange={(e) => setCity(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder={t("hero.city_placeholder")}
-                    className="w-full pl-12 pr-4 py-4 rounded-2xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-foreground placeholder:text-muted-foreground font-medium"
+                    className="w-full pl-12 pr-4 py-4 rounded-[6px] bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-foreground placeholder:text-muted-foreground font-medium"
                   />
                 </div>
 
@@ -369,7 +369,7 @@ export function Hero() {
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value)}
-                    className="w-full pl-12 pr-8 py-4 rounded-2xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-foreground font-medium appearance-none"
+                    className="w-full pl-12 pr-8 py-4 rounded-[6px] bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-foreground font-medium appearance-none"
                   >
                     <option value="">{t("hero.type_placeholder")}</option>
                     {PROPERTY_TYPES.map((tt) => (
@@ -388,7 +388,7 @@ export function Hero() {
                     value={priceRange}
                     onChange={(e) => setPriceRange(e.target.value)}
                     disabled={!!customPrixMin || !!customPrixMax}
-                    className="w-full pl-12 pr-8 py-4 rounded-2xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-foreground font-medium appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full pl-12 pr-8 py-4 rounded-[6px] bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-foreground font-medium appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {priceRanges.map((r) => (
                       <option key={r.value} value={r.value}>
@@ -464,7 +464,7 @@ export function Hero() {
                               isRent ? "Min — ex: 5000" : "Min — ex: 800000"
                             )}
                             min={0}
-                            className="w-full px-4 py-3 rounded-xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
+                            className="w-full px-4 py-3 rounded-[6px] bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
                           />
                           <input
                             type="number"
@@ -476,7 +476,7 @@ export function Hero() {
                               isRent ? "Max — ex: 15000" : "Max — ex: 2500000"
                             )}
                             min={0}
-                            className="w-full px-4 py-3 rounded-xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
+                            className="w-full px-4 py-3 rounded-[6px] bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
                           />
                         </div>
                         {(!!customPrixMin || !!customPrixMax) && (
@@ -503,7 +503,7 @@ export function Hero() {
                             onChange={(e) => setSurfaceMin(e.target.value)}
                             placeholder={t("hero.surface_min_placeholder")}
                             min={0}
-                            className="w-full px-4 py-3 rounded-xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
+                            className="w-full px-4 py-3 rounded-[6px] bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
                           />
                         </div>
                         <div>
@@ -517,7 +517,7 @@ export function Hero() {
                             onChange={(e) => setSurfaceMax(e.target.value)}
                             placeholder={fallback("hero.surface_max_placeholder", "ex: 200")}
                             min={0}
-                            className="w-full px-4 py-3 rounded-xl bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
+                            className="w-full px-4 py-3 rounded-[6px] bg-background/60 border border-border/50 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] text-sm font-medium"
                           />
                         </div>
                       </div>
