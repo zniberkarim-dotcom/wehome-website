@@ -117,7 +117,12 @@ Evidence for keeping the Bible's 56px rather than the previous 72px:
   overridden by `@theme`, so they resolve to stock 16px / 24px.
 - ✅ **PropertyCard = `rounded-[8px]`** (Bible spec) — pass 2.
 - Pass 1 tamed the two outliers (`rounded-[3rem]` / `rounded-[2.5rem]` → `rounded-3xl`).
-- ⚠️ Open: buttons are 12–16px vs the Bible's 6px; global `--radius` still 16px.
+- ✅ **CTAs = `rounded-[6px]`** (Bible §7) — pass 6. Five homepage CTAs: `CtaSection` ×2,
+  `FeaturedProperties`, `PropertyCard`, Hero search submit.
+- ⚠️ Open: global `--radius` still 16px (cards/panels deliberately stay 16–24px). Also
+  **not** converted in pass 6, deliberately: the 7 Hero form inputs (the Bible gives inputs a
+  fill and a 1px border but no radius) and the 3 `rounded-full` pill CTAs (BeforeAfter ×2,
+  Hero "Publier mon annonce") — pill → 6px is a visual-language change, not a token nudge.
 
 ## 6. Motion — RESOLVED (pass 1)
 
@@ -139,7 +144,7 @@ Evidence for keeping the Bible's 56px rather than the previous 72px:
 | No shadow at rest; hover 4px lift + `rgba(18,19,20,0.04)` | ✅ **resolved** (pass 5) — `shadow-none` at rest (1px Zellige Sand hairline only), hover `0 4px 20px rgba(18,19,20,0.04)`; the 4px lift was already correct |
 | Hover image scale 1.03 | ✅ **resolved** (pass 4) — measured 3.00% growth |
 | Favourite heart 1.5px stroke | ✅ **resolved** (pass 4) — was 2 / 2.2 |
-| Key facts on one line separated by thin dashes | ⚠️ open — currently a 4-up divided stat grid |
+| Key facts on one line separated by thin dashes | ✅ **resolved** (pass 6) — `3 Ch. · 2 Sal. · 2 SdB · 240 m²` on one baseline-aligned line. **All four items kept**: the Bible's objection was the boxy `divide-x` grid, not the item count, and `salons` is real local signal tied to a live `/biens` `salons[]` filter. Band height 74px → 54px, uniform across all cards. Logic untouched — the `Pces.` fallback (beds *and* salons absent) and the Terrain surface-only bypass are byte-identical and were regression-tested across 9 cases |
 
 ## 9. Micro-interactions (Bible §7–8) — pass 4
 
@@ -176,11 +181,34 @@ content overflow, grids unaffected, desktop + 375px mobile.
    Full-strength sand (−10.2pt lightness) read as a slab, so it is applied at 50% (−4.9pt) —
    comparable separation to the old white band (+2.7pt), but warm and recessed instead of cool
    and raised. Cost: `muted-foreground` in that section is 6.44:1 (AA) rather than 7.08:1 (AAA).
-2. **`--card` / `--popover` are pure `#FFFFFF`** and `--muted` is a cool grey (`220 14% 96%`) —
-   both read slightly cold against the warm cream. Candidate for a warm-surface pass.
+2. ~~**`--card` / `--popover` pure `#FFFFFF`, `--muted` cool grey**~~ ✅ **investigated and
+   closed (pass 6) — no change, and none warranted.** The audit called these "cold against the
+   warm cream"; measured on the rendered homepage, that claim does not hold up:
+   - **`--card` is neutral, not cool.** White vs Terrazzo Cream is **ΔE2000 2.36**, and the b\*
+     axis runs 2.15 → **0.00** — it stops at neutral rather than crossing into blue. There is no
+     cool cast to point at. All **8** homepage instances (3 PropertyCard, 3 Services, PepiteDuMois,
+     CtaSection) carry a 1px Zellige Sand border, and that border is **ΔE 7.24** from cream and
+     **ΔE 9.54** from white — 3–4× stronger than the difference it separates. So no white/cream
+     shared edge exists anywhere on the homepage; the small delta is always mediated. A card
+     reading as a slightly brighter plane is what a card is *for*.
+   - **`--muted` genuinely is cool** (`#F3F4F6` = stock Tailwind gray-100; b\* crosses to
+     **−1.08**, ΔE 3.29) — but all 3 homepage uses are unreachable at rest: `BeforeAfter` frame
+     (fully covered — a 1064×598 image content-box inside the 1066×600 border box), a
+     `hover:bg-muted` tab state, and a `Pill` that only renders in the Hero "Vendre" panel.
+   - Cross-context risk confirms leaving them alone: `bg-muted` has **162 uses / 40 files**
+     (13 shadcn primitives, 13 agent-dashboard), `bg-popover` **12 / 9** (all 9 primitives),
+     `bg-card` **49 / 25**. Bible §9 treats public site and dashboard differently, so a shared-token
+     edit is wrong for one context even where right for the other.
+   - **If a warm homepage surface is ever wanted, it needs a new token, not an edit to `--card`** —
+     homepage cards *are* `bg-card` (PropertyCard does not override it).
 3. ~~**Type scale + tracking**~~ ✅ resolved (pass 4) — see §3.
-4. **PropertyCard remaining Bible specs** — see §8 (rest-shadow and the dash-separated
-   key-facts line are still open; hover scale and heart stroke are done).
+4. ~~**PropertyCard remaining Bible specs**~~ ✅ **all resolved** — see §8. Every row in that
+   table is now done (radius, ratio, rest-shadow, hover scale, heart stroke, key-facts line).
+7. **Hardcoded `#8B1A2E` is not Crimson Atlas** (`#5C1428`) — found while removing the stat-grid
+   icons. Renders on the homepage via `Navbar.tsx:170` and `:358` (raw `style={{background}}`,
+   no token fallback). `HowItWorks.tsx` ×3 and `a-propos.tsx` use it only as a `var(--primary, …)`
+   fallback, so those are inert. Not touched in pass 6 — Navbar is outside the agreed
+   homepage-component scope. Candidate for a token-hygiene pass.
 5. ~~**Loading skeleton on `/biens`**~~ ✅ **resolved (pass 3)** — skeleton now mirrors the card
    exactly: `aspect-[4/3]` and `rounded-[8px]` (the wrapper was still `rounded-3xl`, which would
    have kept a corner-radius pop even after the ratio fix). Verified live across the
