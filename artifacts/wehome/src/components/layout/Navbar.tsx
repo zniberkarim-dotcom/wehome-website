@@ -165,10 +165,7 @@ export function Navbar() {
                         className="w-6 h-6 rounded-full object-cover"
                       />
                     ) : (
-                      <span
-                        className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
-                        style={{ background: "#8B1A2E" }}
-                      >
+                      <span className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0 bg-primary">
                         {agent.prenom?.[0]}
                         {agent.nom?.[0]}
                       </span>
@@ -353,10 +350,7 @@ export function Navbar() {
                           className="w-10 h-10 rounded-full object-cover"
                         />
                       ) : (
-                        <span
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white"
-                          style={{ background: "#8B1A2E" }}
-                        >
+                        <span className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white bg-primary">
                           {agent.prenom?.[0]}
                           {agent.nom?.[0]}
                         </span>
