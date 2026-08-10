@@ -1,13 +1,4 @@
-import {
-  MapPin,
-  Bed,
-  Bath,
-  Square,
-  ArrowRight,
-  Sofa,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { MapPin, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import { formatMAD } from "@/lib/utils";
@@ -39,7 +30,17 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const isTerrain = ["Terrain", "Bâtiment industriel", "Commerce", "Ferme"].includes(property.type);
   const hasPrice = property.price > 0;
 
-  const statCount = [showBeds || showRooms, showBaths, showSalons, true].filter(Boolean).length;
+  // Key facts read as one dash-separated line rather than a 4-up grid. Order matches the
+  // previous column order, and salons stays: it is real local signal, tied to a live /biens filter.
+  const keyFacts: { value: React.ReactNode; label: string }[] = [];
+  if (showBeds) keyFacts.push({ value: property.beds, label: t("card.stat_bedrooms_short") });
+  if (showRooms) keyFacts.push({ value: property.rooms, label: t("card.stat_rooms_short") });
+  if (showSalons) keyFacts.push({ value: property.salons, label: t("card.stat_salons_short") });
+  if (showBaths) keyFacts.push({ value: property.baths, label: t("card.stat_baths_short") });
+  keyFacts.push({
+    value: property.surface > 0 ? property.surface.toLocaleString("fr-FR") : "—",
+    label: "m²",
+  });
 
   const goNextIndex = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
@@ -208,67 +209,24 @@ export function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         {isTerrain ? (
-          <div className="flex items-center justify-center gap-2 py-4 border-y border-border/60 mt-auto">
-            <Square size={20} className="text-primary/70" />
-            <span className="text-sm font-medium">
+          <div className="flex items-baseline py-4 border-y border-border/60 mt-auto text-sm">
+            <span className="font-semibold text-foreground">
               {property.surfaceLabel || `${property.surface.toLocaleString("fr-FR")} m²`}
             </span>
           </div>
         ) : (
-          <div
-            className={`grid gap-0 py-0 border-y border-border/60 mt-auto divide-x divide-border/60 ${
-              statCount === 4
-                ? "grid-cols-4"
-                : statCount === 3
-                  ? "grid-cols-3"
-                  : statCount === 2
-                    ? "grid-cols-2"
-                    : "grid-cols-1"
-            }`}
-          >
-            {showBeds && (
-              <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
-                <Bed size={18} style={{ color: "#8B1A2E" }} />
-                <span className="text-xs font-bold text-foreground">{property.beds}</span>
-                <span className="text-[10px] text-muted-foreground">
-                  {t("card.stat_bedrooms_short")}
-                </span>
-              </div>
-            )}
-            {showRooms && (
-              <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
-                <Bed size={18} style={{ color: "#8B1A2E" }} />
-                <span className="text-xs font-bold text-foreground">{property.rooms}</span>
-                <span className="text-[10px] text-muted-foreground">
-                  {t("card.stat_rooms_short")}
-                </span>
-              </div>
-            )}
-            {showSalons && (
-              <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
-                <Sofa size={18} style={{ color: "#8B1A2E" }} />
-                <span className="text-xs font-bold text-foreground">{property.salons}</span>
-                <span className="text-[10px] text-muted-foreground">
-                  {t("card.stat_salons_short")}
-                </span>
-              </div>
-            )}
-            {showBaths && (
-              <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
-                <Bath size={18} style={{ color: "#8B1A2E" }} />
-                <span className="text-xs font-bold text-foreground">{property.baths}</span>
-                <span className="text-[10px] text-muted-foreground">
-                  {t("card.stat_baths_short")}
-                </span>
-              </div>
-            )}
-            <div className="flex flex-col items-center justify-center gap-0.5 py-3 px-2">
-              <Square size={18} style={{ color: "#8B1A2E" }} />
-              <span className="text-xs font-bold text-foreground">
-                {property.surface > 0 ? property.surface.toLocaleString("fr-FR") : "—"}
+          <div className="flex flex-wrap items-baseline gap-y-1 py-4 border-y border-border/60 mt-auto text-sm">
+            {keyFacts.map((fact, i) => (
+              <span key={fact.label} className="flex items-baseline whitespace-nowrap">
+                {i > 0 && (
+                  <span className="mx-2 text-muted-foreground/40" aria-hidden="true">
+                    ·
+                  </span>
+                )}
+                <span className="font-semibold text-foreground">{fact.value}</span>{" "}
+                <span className="text-muted-foreground">{fact.label}</span>
               </span>
-              <span className="text-[10px] text-muted-foreground">m²</span>
-            </div>
+            ))}
           </div>
         )}
 
