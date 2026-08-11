@@ -135,13 +135,47 @@ discriminator** — check that, not the CSS.
 - One curve site-wide: **`[0.22, 1, 0.36, 1]`** (quintic-out), imperceptibly close to the
   Bible's `cubic-bezier(0.16, 1, 0.3, 1)`. Reveals/hovers 250–350ms, never >400ms.
 
-## 7. Shadows — mostly resolved (pass 1)
+## 7. Shadows — RESOLVED for the homepage (passes 1, 5, 10)
 
 - No coloured glow shadows. Rest = hairline border; hover = neutral `shadow-black/5–10`.
-- ⚠️ **Correction (found pass 9): "RESOLVED" overstated it.** Two primary CTAs still carry
-  primary-tinted glows — `Hero.tsx:694` (`shadow-lg shadow-primary/25 hover:shadow-xl
-  hover:shadow-primary/40`) and `Navbar.tsx:132` (`shadow-primary/20 → /30`). Both survived
-  pass 9 untouched because only radius was approved. Not yet a decision — flagged, not fixed.
+- ✅ **The two stragglers are fixed (pass 10).** `Hero.tsx:694` (`shadow-lg shadow-primary/25
+  hover:shadow-xl hover:shadow-primary/40`) and `Navbar.tsx:132` (`shadow-primary/20 → /30`)
+  both became `shadow-md shadow-black/5 hover:shadow-lg`. Measured on the rendered element:
+  the shadow resolves to `oklab(0 0 0 / 0.05)` — pure black at 5% alpha, zero chroma.
+  **Scope is now verifiably clean: zero `shadow-primary` occurrences in `components/home/`
+  + `Navbar.tsx`.**
+- ⚠️ Out of scope, still glowing: **20+ `shadow-primary/*` across 16 files** in `src/pages`,
+  `dashboard` and `espace-agent` — incl. `agents/index.tsx:290`, `financement.tsx` ×4,
+  `publier.tsx` ×2, `DashboardLayout.tsx:101`, `MortgageCalculator.tsx:130`. Bible §9 treats
+  those contexts separately. Note these are why a bare `shadow-primary/25` grep still hits the
+  production bundle — bundle-level greps cannot prove homepage scope, only source greps can.
+
+### Primary CTA hover — one treatment, four instances (pass 10)
+
+Pass 10 also added `hover:bg-primary-hover` to both CTAs, and this was **not optional**.
+Measured first: neither had a hover-darken, so apart from `-translate-y-0.5` the coloured
+shadow ramp *was* their whole hover response. Stripping the glow alone would have removed the
+affordance — a regression wearing a refinement's clothes.
+
+All four homepage primary CTAs now read identically —
+`CtaSection:31`, `Hero:404`, `Hero:694`, `Navbar:132`:
+
+```
+bg-primary hover:bg-primary-hover … shadow-md shadow-black/5 hover:shadow-lg
+```
+
+| State | Token | Resolves to |
+|---|---|---|
+| rest | `--primary` `343.3 64.3% 22.0%` | `rgb(92, 20, 40)` `#5C1428` |
+| hover | `--primary-hover` `343.3 64.3% 20.9%` | `rgb(88, 19, 38)` `#581326` |
+
+**5.0% relative lightness darken — exactly the Bible spec.** Emitted rule verified in the built
+CSS: `.hover\:bg-primary-hover:hover{background-color:hsl(var(--primary-hover))}`.
+
+**Grep trap, cost me two false alarms:** searching built CSS for this selector needs the right
+escaping — `hover\:` is *two* characters. `grep -c 'hover\\:bg-primary-hover'` and a
+`/hover.bg-primary-hover/` regex both returned zero and looked like the utility wasn't
+generating. It was. Search the bare fragment `bg-primary-hover` and walk to the brace instead.
 
 ## 8. Property Card (Bible §7)
 
