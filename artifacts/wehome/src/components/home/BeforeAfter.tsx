@@ -258,14 +258,14 @@ export function BeforeAfter() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
             <Link
               href="/services-pro"
-              className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-bold bg-foreground text-background shadow-md shadow-black/5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+              className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-[6px] font-bold bg-foreground text-background shadow-md shadow-black/5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
             >
               {fallback("before_after.cta_primary", "Booster mes photos")}
               <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
             </Link>
             <Link
               href="/publier"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-bold border-2 border-foreground/15 text-foreground hover:border-foreground/40 hover:bg-foreground/5 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-[6px] font-bold border-2 border-foreground/15 text-foreground hover:border-foreground/40 hover:bg-foreground/5 transition-all"
             >
               {fallback("before_after.cta_secondary", "Publier mon annonce")}
             </Link>
