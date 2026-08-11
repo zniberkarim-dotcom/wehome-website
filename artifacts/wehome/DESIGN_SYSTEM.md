@@ -135,9 +135,13 @@ discriminator** — check that, not the CSS.
 - One curve site-wide: **`[0.22, 1, 0.36, 1]`** (quintic-out), imperceptibly close to the
   Bible's `cubic-bezier(0.16, 1, 0.3, 1)`. Reveals/hovers 250–350ms, never >400ms.
 
-## 7. Shadows — RESOLVED (pass 1)
+## 7. Shadows — mostly resolved (pass 1)
 
 - No coloured glow shadows. Rest = hairline border; hover = neutral `shadow-black/5–10`.
+- ⚠️ **Correction (found pass 9): "RESOLVED" overstated it.** Two primary CTAs still carry
+  primary-tinted glows — `Hero.tsx:694` (`shadow-lg shadow-primary/25 hover:shadow-xl
+  hover:shadow-primary/40`) and `Navbar.tsx:132` (`shadow-primary/20 → /30`). Both survived
+  pass 9 untouched because only radius was approved. Not yet a decision — flagged, not fixed.
 
 ## 8. Property Card (Bible §7)
 
@@ -232,12 +236,17 @@ content overflow, grids unaffected, desktop + 375px mobile.
      ("discrete tabs, neutral background, not big coloured buttons") — pill is likely *correct* here.
    - **Badge**, non-interactive: `Hero.tsx:663`.
 
-   So the 4 CTAs are a real gap, not an intentional treatment. Current state is genuinely split:
-   **5 CTAs at 6px (pass 6) vs 4 CTAs at `rounded-full`.** Converting only the 3 homepage ones
-   would leave the *most visible* CTA on the site (Navbar) as the lone pill — worse than either
-   uniform outcome. If this is taken, `Navbar.tsx:132` should ride along, after which
-   `rounded-full` means exclusively "chip / selector / badge" and shape becomes a clean semantic
-   signal.
+   ✅ **Resolved (pass 9)** — all 4 CTAs converted to `rounded-[6px]`, Navbar included on the
+   same narrow-exception logic as the colour fix (diff is 4 lines, radius only). Every chip,
+   segmented control and badge verified still `rounded-full` — measured live, 12 chips all at
+   the `rounded-full` computed value while all 4 CTAs measured exactly `6px`.
+
+   **Shape is now a semantic signal: `6px` = "this navigates or submits"; `rounded-full` =
+   "interactive but not a CTA" (chip / selector) or a badge.** 16 CTAs across passes 6–9
+   (5 + 7 inputs + 4) now share one radius.
+
+   ⚠️ Out of scope, still pills: 9 CTAs on other pages — `financement` ×3, `publier` ×2,
+   `contact` ×2, `weoffice`, `biens`. Worth a pass if site-wide consistency is ever wanted.
 5. ~~**Loading skeleton on `/biens`**~~ ✅ **resolved (pass 3)** — skeleton now mirrors the card
    exactly: `aspect-[4/3]` and `rounded-[8px]` (the wrapper was still `rounded-3xl`, which would
    have kept a corner-radius pop even after the ratio fix). Verified live across the
