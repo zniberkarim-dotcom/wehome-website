@@ -129,7 +129,7 @@ export function Navbar() {
               </Link>
               <Link
                 href="/publier"
-                className="px-6 py-2.5 rounded-[6px] font-semibold text-sm bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+                className="px-6 py-2.5 rounded-[6px] font-semibold text-sm bg-primary hover:bg-primary-hover text-primary-foreground shadow-md shadow-black/5 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
               >
                 {t("nav.publish_property")}
               </Link>

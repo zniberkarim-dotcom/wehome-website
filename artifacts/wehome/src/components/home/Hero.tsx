@@ -691,7 +691,7 @@ function VendreCta({ t }: { t: (key: string) => string }) {
 
       <Link
         href="/publier"
-        className="inline-flex items-center gap-2 mt-7 px-7 py-3.5 rounded-[6px] font-bold bg-primary text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
+        className="inline-flex items-center gap-2 mt-7 px-7 py-3.5 rounded-[6px] font-bold bg-primary hover:bg-primary-hover text-white shadow-md shadow-black/5 hover:shadow-lg hover:-translate-y-0.5 transition-all"
       >
         {fallback("hero.vendre_cta", "Publier mon annonce")}
         <ArrowRight size={18} />
