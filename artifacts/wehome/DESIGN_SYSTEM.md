@@ -119,10 +119,16 @@ Evidence for keeping the Bible's 56px rather than the previous 72px:
 - Pass 1 tamed the two outliers (`rounded-[3rem]` / `rounded-[2.5rem]` → `rounded-3xl`).
 - ✅ **CTAs = `rounded-[6px]`** (Bible §7) — pass 6. Five homepage CTAs: `CtaSection` ×2,
   `FeaturedProperties`, `PropertyCard`, Hero search submit.
-- ⚠️ Open: global `--radius` still 16px (cards/panels deliberately stay 16–24px). Also
-  **not** converted in pass 6, deliberately: the 7 Hero form inputs (the Bible gives inputs a
-  fill and a 1px border but no radius) and the 3 `rounded-full` pill CTAs (BeforeAfter ×2,
-  Hero "Publier mon annonce") — pill → 6px is a visual-language change, not a token nudge.
+- ✅ **Hero form inputs = `rounded-[6px]`** — pass 8. All 7 (city text input, type select,
+  price-range select, budget min/max, surface min/max); measured live at exactly `6px` each.
+  Radius only — fill, 1px border and the pass-4/5 focus treatment are untouched.
+- ⚠️ Open: global `--radius` still 16px (cards/panels deliberately stay 16–24px), and the
+  `rounded-full` CTA question — see backlog 8.
+
+**Verification note (pass 8):** changing input radius did **not** change the CSS bundle hash,
+because the `rounded-[6px]` utility already shipped in pass 6a and `rounded-xl`/`2xl` are still
+used elsewhere. When a change only re-points existing utilities, **the JS bundle hash is the
+discriminator** — check that, not the CSS.
 
 ## 6. Motion — RESOLVED (pass 1)
 
@@ -205,10 +211,33 @@ content overflow, grids unaffected, desktop + 375px mobile.
 4. ~~**PropertyCard remaining Bible specs**~~ ✅ **all resolved** — see §8. Every row in that
    table is now done (radius, ratio, rest-shadow, hover scale, heart stroke, key-facts line).
 7. **Hardcoded `#8B1A2E` is not Crimson Atlas** (`#5C1428`) — found while removing the stat-grid
-   icons. Renders on the homepage via `Navbar.tsx:170` and `:358` (raw `style={{background}}`,
-   no token fallback). `HowItWorks.tsx` ×3 and `a-propos.tsx` use it only as a `var(--primary, …)`
-   fallback, so those are inert. Not touched in pass 6 — Navbar is outside the agreed
-   homepage-component scope. Candidate for a token-hygiene pass.
+   icons. ✅ **Navbar resolved (pass 8)** — `Navbar.tsx:170` / `:358` (the agent-initials avatar
+   fallback) now use `bg-primary`; verified that `bg-primary` computes to `rgb(92, 20, 40)` =
+   `#5C1428`. Approved as a narrow exception because Navbar is the site header on every route.
+   ⚠️ Still hardcoded, **not** touched — `DashboardLayout.tsx:75` and `PortalLayout.tsx:160`
+   (agent dashboard / portal, which Bible §9 treats separately). `HowItWorks.tsx` ×3 and
+   `a-propos.tsx` use it only as a `var(--primary, …)` fallback, so those are inert.
+   *Scope caveat:* both Navbar sites are the initials fallback, which renders only for a
+   logged-in agent with no `photo_url` — so this was a latent stale-brand bug, not something an
+   anonymous homepage visitor was seeing.
+8. **`rounded-full` CTAs vs chips** ⚠️ open, awaiting a call. Census of pill-shaped elements
+   across homepage + layout separates cleanly into three kinds:
+   - **Genuine CTAs** (static className, `font-bold`/`semibold`, `py-2.5`–`py-3.5`, wrapped in
+     `<Link href>`, hover-lift + shadow): `BeforeAfter.tsx:261` (`/services-pro`, solid),
+     `BeforeAfter.tsx:268` (`/publier`, outlined), `Hero.tsx:694` (`/publier`, solid) — **plus
+     `Navbar.tsx:132`** (`/publier`, solid), the site-header CTA on every route.
+   - **Chips / segmented controls** (template-literal className with an active/inactive branch,
+     `text-sm`, `py-2`–`py-2.5`, `border`): `Hero.tsx:311` (Acheter/Louer/Vendre tabs),
+     `Hero.tsx:628`, `BeforeAfter.tsx:166`, `Ecosystem.tsx:237` / `:248`. These match Bible §7B
+     ("discrete tabs, neutral background, not big coloured buttons") — pill is likely *correct* here.
+   - **Badge**, non-interactive: `Hero.tsx:663`.
+
+   So the 4 CTAs are a real gap, not an intentional treatment. Current state is genuinely split:
+   **5 CTAs at 6px (pass 6) vs 4 CTAs at `rounded-full`.** Converting only the 3 homepage ones
+   would leave the *most visible* CTA on the site (Navbar) as the lone pill — worse than either
+   uniform outcome. If this is taken, `Navbar.tsx:132` should ride along, after which
+   `rounded-full` means exclusively "chip / selector / badge" and shape becomes a clean semantic
+   signal.
 5. ~~**Loading skeleton on `/biens`**~~ ✅ **resolved (pass 3)** — skeleton now mirrors the card
    exactly: `aspect-[4/3]` and `rounded-[8px]` (the wrapper was still `rounded-3xl`, which would
    have kept a corner-radius pop even after the ratio fix). Verified live across the
