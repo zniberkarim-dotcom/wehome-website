@@ -64,11 +64,13 @@ function makePillSvg(label: string, highlighted = false): string {
   const charWidth = 7.5;
   const padding = 22;
   const width = Math.max(68, Math.ceil(label.length * charWidth) + padding);
-  const bg = highlighted ? "#8B1A1A" : "#C0392B";
+  // Brand tokens, not ad-hoc reds: Crimson Atlas at rest, Taza Stone when selected.
+  // Selected stays the darker of the two, matching the previous direction.
+  const bg = highlighted ? "#121314" : "#5C1428";
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="30">
     <rect width="${width}" height="30" rx="15" fill="${bg}" />
     <text x="${width / 2}" y="20" text-anchor="middle"
-          font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="600" fill="#ffffff">
+          font-family="DM Sans,system-ui,sans-serif" font-size="12" font-weight="600" fill="#ffffff">
       ${label}
     </text>
   </svg>`;
@@ -90,10 +92,10 @@ function makeMarkerIcon(price: number, isRental: boolean, highlighted = false): 
 function makeClusterSvg(count: number): string {
   const size = count < 10 ? 36 : count < 50 ? 42 : 48;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">
-    <circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 1}" fill="#C0392B" fill-opacity="0.92"/>
+    <circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 1}" fill="#5C1428" fill-opacity="0.92"/>
     <circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 6}" fill="none" stroke="white" stroke-width="1.5" stroke-opacity="0.45"/>
     <text x="${size / 2}" y="${size / 2 + 5}" text-anchor="middle"
-          font-family="Inter,sans-serif" font-size="${count > 99 ? 11 : 13}" font-weight="700" fill="white">
+          font-family="DM Sans,sans-serif" font-size="${count > 99 ? 11 : 13}" font-weight="700" fill="white">
       ${count}
     </text>
   </svg>`;
@@ -116,7 +118,7 @@ function makeInfoHtml(p: Property): string {
   if (p.surface) specs.push(`${p.surface} m²`);
 
   return `
-  <div style="width:230px;font-family:Inter,system-ui,sans-serif;margin:-10px -14px -14px;border-radius:10px;overflow:hidden;">
+  <div style="width:230px;font-family:'DM Sans',system-ui,sans-serif;margin:-10px -14px -14px;border-radius:10px;overflow:hidden;">
     ${imgHtml}
     <div style="padding:12px 14px 14px;">
       <p style="margin:0 0 3px;font-size:13px;font-weight:700;color:#1a1208;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
@@ -124,8 +126,8 @@ function makeInfoHtml(p: Property): string {
       </p>
       <p style="margin:0 0 6px;font-size:11px;color:#8c7b70;">📍 ${p.location}</p>
       ${specs.length ? `<p style="margin:0 0 8px;font-size:11px;color:#6b5c52;">${specs.join(" &nbsp;·&nbsp; ")}</p>` : ""}
-      <p style="margin:0 0 10px;font-size:15px;font-weight:700;color:#C0392B;">${priceStr}</p>
-      <a href="/bien/${p.id}" style="display:block;text-align:center;padding:8px 12px;background:#C0392B;color:#fff;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;letter-spacing:0.02em;">
+      <p style="margin:0 0 10px;font-size:15px;font-weight:700;color:#5C1428;">${priceStr}</p>
+      <a href="/bien/${p.id}" style="display:block;text-align:center;padding:8px 12px;background:#5C1428;color:#fff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;letter-spacing:0.02em;">
         Voir le bien →
       </a>
     </div>
@@ -303,7 +305,7 @@ export function PropertyMap({ properties, className = "" }: PropertyMapProps) {
   // ── Render ────────────────────────────────────────────────────────────────
   if (loadError) {
     return (
-      <div className={`flex items-center justify-center bg-muted/30 rounded-2xl ${className}`}>
+      <div className={`flex items-center justify-center bg-sand/30 rounded-2xl ${className}`}>
         <div className="text-center p-8">
           <MapPin size={32} className="text-muted-foreground mx-auto mb-3" />
           <p className="text-sm font-medium text-foreground mb-1">Impossible de charger la carte</p>
@@ -322,7 +324,7 @@ export function PropertyMap({ properties, className = "" }: PropertyMapProps) {
 
       {/* Loading overlay */}
       {!isReady && (
-        <div className="absolute inset-0 flex items-center justify-center bg-muted/40 backdrop-blur-sm">
+        <div className="absolute inset-0 flex items-center justify-center bg-sand/40 backdrop-blur-sm">
           <div className="flex flex-col items-center gap-3">
             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
             <p className="text-sm text-muted-foreground font-medium">Chargement de la carte…</p>
