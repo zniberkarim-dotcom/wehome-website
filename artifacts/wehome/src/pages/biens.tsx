@@ -422,7 +422,7 @@ function Pagination({
       <button
         disabled={page === 1}
         onClick={() => onPage(page - 1)}
-        className="w-9 h-9 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        className="w-9 h-9 rounded-[6px] border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
       >
         <ChevronLeft size={16} />
       </button>
@@ -438,7 +438,7 @@ function Pagination({
           <button
             key={p}
             onClick={() => onPage(p as number)}
-            className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`w-9 h-9 rounded-[6px] text-sm font-medium transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
               p === page
                 ? "bg-primary text-white"
                 : "border border-border text-foreground hover:border-primary hover:text-primary"
@@ -451,7 +451,7 @@ function Pagination({
       <button
         disabled={page === totalPages}
         onClick={() => onPage(page + 1)}
-        className="w-9 h-9 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        className="w-9 h-9 rounded-[6px] border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
       >
         <ChevronRight size={16} />
       </button>
@@ -511,7 +511,7 @@ export default function BiensPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
+      <Navbar onLight />
 
       <main className="flex-grow pt-20">
         {/* Sticky results header */}
@@ -521,7 +521,7 @@ export default function BiensPage() {
               {/* Mobile filter trigger */}
               <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
                 <SheetTrigger asChild>
-                  <button className="lg:hidden flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:border-primary transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">
+                  <button className="lg:hidden flex items-center gap-2 px-3 py-2 rounded-[6px] border border-border text-sm font-medium hover:border-primary transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">
                     <SlidersHorizontal size={16} />
                     {t("biens.filters_button")}
                     {activeFilterCount > 0 && (
@@ -577,7 +577,7 @@ export default function BiensPage() {
 
             <div className="flex items-center gap-3">
               {/* View toggle */}
-              <div className="hidden sm:flex items-center border border-border rounded-lg overflow-hidden h-9">
+              <div className="hidden sm:flex items-center border border-border rounded-full overflow-hidden h-9">
                 <button
                   onClick={() => setViewMode("list")}
                   title={t("biens.list_view")}
@@ -610,7 +610,7 @@ export default function BiensPage() {
                     updateParams({ ...params, sort: v as FilterParams["sort"], page: undefined })
                   }
                 >
-                  <SelectTrigger className="w-[160px] h-9 text-sm rounded-lg">
+                  <SelectTrigger className="w-[160px] h-9 text-sm rounded-full">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
