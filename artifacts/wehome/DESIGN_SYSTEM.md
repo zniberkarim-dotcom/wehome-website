@@ -229,8 +229,15 @@ The pane is reliable for DOM/CSSOM/computed-style reads, but **not** for these:
   two different states. *This looked like an inverted active/inactive chip state on `/biens`.*
   Use a real navigation instead.
 - **Cannot screenshot when the pane is not displayed**, and cannot navigate to external hosts.
-- Canvas `fillStyle` round-tripping is a poor colour resolver for `oklab()` / `color-mix()`
-  values — a failed parse silently keeps the previous value. Read the raw computed string.
+- **Tailwind v4 emits `oklab()` / `color-mix()` for any `/opacity` utility**, and naively
+  grabbing "the first three numbers" as RGB is catastrophically wrong — `oklab(0.9999 …)` parses
+  as `rgb(1, 0, 0)`, i.e. near-black instead of white. This produced four separate false readings
+  this session (a "#010000 sticky band", a 16.70 contrast on invisible text, a 20.97 on `/favoris`,
+  and inverted chip fills). Canvas `fillStyle` round-tripping is no better — a failed parse
+  silently keeps the previous value, so errors carry across loop iterations.
+  **What works:** for a lightness check, read `oklab()`'s *first component directly* — it already
+  is perceptual L, 0–1. For an exact contrast figure, compute it from the known token values
+  offline rather than parsing anything the browser hands back.
 
 ## 8. Property Card (Bible §7)
 
@@ -307,11 +314,92 @@ card ever sees. Left as-is deliberately.
 1280 / 640 / 375**, no wrapping, no price overflow, `scrollWidth === viewport` at every width —
 including 284px cards at the `sm` breakpoint, 25% narrower than any homepage card.
 
-⚠️ Still at 16px on this page, not approved in pass 1: pagination (×3), mobile filter trigger,
-view-toggle container, sort `SelectTrigger`.
+### Pass 2 — shape semantics completed
 
-⚠️ `#C0392B` is still hardcoded in **11 other files** — `a-propos`, `agents/index`, `network`,
-`partenaires`, and 7× `espace-agent`. A bigger backlog than the `shadow-primary` one in §7.
+The last four 16px controls, split by **what they do** rather than lumped together:
+
+| Control | Behaviour | Radius |
+|---|---|---|
+| Pagination prev / numbers / next | executes (advances the page) | `rounded-[6px]` |
+| Mobile filter trigger | executes (opens the panel) | `rounded-[6px]` |
+| View-toggle container (grid/map) | selects | `rounded-full` |
+| Sort `SelectTrigger` | selects | `rounded-full` |
+
+**Zero `rounded-lg` remains on the page.** Two elements still measure 16px and both are
+*correct*: the filter sidebar is a **panel** (§5 keeps cards/panels at 16–24px), and the
+`LanguageSwitcher` "FR" button lives outside this page — it is a selector, so it likely wants
+`rounded-full` whenever that component gets a pass.
+
+**The full radius rule, now settled across passes 6–9 and /biens 1–2:**
+`6px` = executes (CTA, submit, pagination, reset, opens a panel) ·
+`rounded-full` = selects (chip, segmented control, toggle, sort) or is a badge ·
+`8px` = PropertyCard · `16–24px` = panels and cards.
+
+---
+
+## 11. Navbar — the `onLight` prop (/biens pass 2)
+
+**The bug.** The Navbar had exactly one "not scrolled" appearance, tuned for the homepage hero
+gradient: transparent bar, white text, dark drop-shadows. It had no notion of *"not scrolled,
+but not over a hero."* On a light page that treatment measures:
+
+| Route | Backdrop | Contrast |
+|---|---|---|
+| `/biens`, `/services-pro` | Terrazzo Cream | **1.05 : 1** |
+| `/favoris` | `bg-secondary/40` | ~1.05 : 1 |
+| `/financement` | `#FFFFFF` | **1.00 : 1** |
+
+AA needs 4.5:1. The text was effectively invisible; only `textShadow 0 1px 4px rgba(0,0,0,0.35)`
+made it faintly perceptible — exactly the "washed out" symptom.
+
+**Two things that are easy to get wrong here.**
+
+1. **It is not "every non-homepage page."** Measured all 13 public routes at scroll 0 by sampling
+   what actually paints behind the header: **9 render a dark gradient/image and correctly need
+   white text** — `/`, `/a-propos`, `/agents`, `/contact`, `/estimer`, `/publier`, `/network`,
+   `/partenaires`, `/weoffice`. Only **4** are broken. A `pathname === "/"` check would have
+   regressed the other 9. Note these are CSS *gradients*, not `<img>` heroes, so grepping page
+   source for image markup finds nothing — this has to be measured at runtime.
+2. **It is not only the nav links.** Six elements shared the same hero-tuned branch: the links,
+   the Logo drop-shadow, the favoris icon, `LanguageSwitcher onDark`, the agent-zone divider, and
+   the agent/portal button. Recolouring only the text would have left white icons on cream.
+
+**The fix.** One optional prop defaulting to today's behaviour, and one derived boolean:
+
+```tsx
+export function Navbar({ onLight = false }: { onLight?: boolean }) {
+  const solid = isScrolled || onLight;
+```
+
+All six appearance branches read `solid`. **`isScrolled` still drives state and the `py-3`/`py-5`
+height**, deliberately — so the four pages keep their exact current spacing and there is no
+layout shift. `onLight` is set on `/biens`, `/favoris`, `/financement`, `/services-pro`.
+
+Result: **1.05 → 10.00 : 1** (AAA) on cream, **1.00 → 9.98 : 1** on `/financement`. Re-measured
+all 13 routes after the change: the 4 render solid, all 9 hero pages unchanged.
+
+> Any new page with a light top must pass `onLight`. The default is the hero treatment because
+> 9 of 13 routes want it — but that means the failure mode for a new page is silent and invisible
+> text. Measure a new page's header at scroll 0 before shipping it.
+
+---
+
+## Known debt (cross-page, deliberately not fixed in a page pass)
+
+Consolidated so it does not get lost. None of this is in scope for a single page's pass; each
+item wants its own sweep.
+
+| Debt | Scale | Detail |
+|---|---|---|
+| **Legacy red `#C0392B`** | **11 files** | `a-propos`, `agents/index`, `network`, `partenaires`, and 7× `espace-agent` (`dashboard/biens`, `dashboard/leads`, `dashboard/performance`, `dashboard/profil`, `index`, `inscription`, `login`). ΔE2000 **25.5** from Crimson Atlas — 2.4× further off than the pre-rebrand burgundy already fixed in the Navbar. Cleared from `PropertyMap` in /biens pass 1. |
+| **Coloured glow shadows** | 20+ across 16 files | `src/pages`, `dashboard`, `espace-agent` — incl. `agents/index:290`, `financement` ×4, `publier` ×2, `DashboardLayout:101`, `MortgageCalculator:130`. Homepage cleared in pass 10. |
+| **`shadow-2xl`** | 9 pages | a-propos, agents, estimer, financement, services-pro, weoffice, espace-agent. Homepage cleared in pass 5. |
+| **Pill-shaped CTAs** | 9 CTAs | `financement` ×3, `publier` ×2, `contact` ×2, `weoffice`, `biens`. Should be `rounded-[6px]` per the radius rule above. |
+| **Hardcoded `#8B1A2E`** | 2 files | `DashboardLayout:75`, `PortalLayout:160`. Navbar cleared in pass 8. |
+| **`LanguageSwitcher` "FR" button** | 1 | Measures 16px (`rounded-lg`); it is a selector, so it wants `rounded-full`. |
+
+**Not design debt — a data gap:** the `/biens` map renders empty because seeded properties have
+no `lat`/`lng`. Supabase-side, tracked separately, explicitly out of this workstream.
 
 ---
 
