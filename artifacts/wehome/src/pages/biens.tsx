@@ -124,10 +124,10 @@ function FilterPanel({
             <button
               key={opt.labelKey}
               onClick={() => set({ transaction: opt.value })}
-              className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
+              className={`flex-1 py-2 rounded-full text-sm font-medium border transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 params.transaction === opt.value
-                  ? "bg-primary text-white"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  ? "bg-primary text-white border-primary"
+                  : "bg-background text-muted-foreground border-border hover:bg-sand/50"
               }`}
             >
               {t(opt.labelKey)}
@@ -143,7 +143,7 @@ function FilterPanel({
           placeholder={t("biens.city_placeholder")}
           value={params.city ?? ""}
           onChange={(e) => set({ city: e.target.value || undefined })}
-          className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+          className="w-full px-3 py-2.5 rounded-[6px] bg-background border border-border/50 focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 text-sm transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
         />
       </FilterGroup>
 
@@ -163,10 +163,10 @@ function FilterPanel({
               <button
                 key={t}
                 onClick={() => set({ types: toggleInArray(params.types, t) })}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   active
                     ? "bg-primary text-white border-primary"
-                    : "bg-muted/50 text-muted-foreground border-border hover:bg-muted/80"
+                    : "bg-background text-muted-foreground border-border hover:bg-sand/50"
                 }`}
               >
                 {t}
@@ -186,7 +186,7 @@ function FilterPanel({
             placeholder={t("biens.min")}
             value={params.prix_min ?? ""}
             onChange={(e) => set({ prix_min: e.target.value ? Number(e.target.value) : undefined })}
-            className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
+            className="w-full px-3 py-2.5 rounded-[6px] bg-background border border-border/50 focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 text-sm tabular-nums transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
           <input
             type="number"
@@ -195,7 +195,7 @@ function FilterPanel({
             placeholder={t("biens.max")}
             value={params.prix_max ?? ""}
             onChange={(e) => set({ prix_max: e.target.value ? Number(e.target.value) : undefined })}
-            className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
+            className="w-full px-3 py-2.5 rounded-[6px] bg-background border border-border/50 focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 text-sm tabular-nums transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
         </div>
       </FilterGroup>
@@ -212,7 +212,7 @@ function FilterPanel({
             onChange={(e) =>
               set({ surface_min: e.target.value ? Number(e.target.value) : undefined })
             }
-            className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
+            className="w-full px-3 py-2.5 rounded-[6px] bg-background border border-border/50 focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 text-sm tabular-nums transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
           <input
             type="number"
@@ -223,7 +223,7 @@ function FilterPanel({
             onChange={(e) =>
               set({ surface_max: e.target.value ? Number(e.target.value) : undefined })
             }
-            className="w-full px-3 py-2.5 rounded-xl bg-muted/50 border border-border/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm tabular-nums transition-all"
+            className="w-full px-3 py-2.5 rounded-[6px] bg-background border border-border/50 focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 text-sm tabular-nums transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
           />
         </div>
       </FilterGroup>
@@ -237,10 +237,10 @@ function FilterPanel({
               <button
                 key={n}
                 onClick={() => set({ chambres: toggleInArray(params.chambres, n) })}
-                className={`py-2 rounded-xl text-xs font-bold border transition-colors ${
+                className={`py-2 rounded-full text-xs font-bold border transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   active
                     ? "bg-primary text-white border-primary"
-                    : "bg-muted/50 text-foreground/80 border-border hover:bg-muted/80"
+                    : "bg-background text-foreground/80 border-border hover:bg-sand/50"
                 }`}
               >
                 {n === 5 ? "5+" : n}
@@ -259,10 +259,10 @@ function FilterPanel({
               <button
                 key={n}
                 onClick={() => set({ sdb: toggleInArray(params.sdb, n) })}
-                className={`py-2 rounded-xl text-xs font-bold border transition-colors ${
+                className={`py-2 rounded-full text-xs font-bold border transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   active
                     ? "bg-primary text-white border-primary"
-                    : "bg-muted/50 text-foreground/80 border-border hover:bg-muted/80"
+                    : "bg-background text-foreground/80 border-border hover:bg-sand/50"
                 }`}
               >
                 {n === 4 ? "4+" : n}
@@ -281,10 +281,10 @@ function FilterPanel({
               <button
                 key={`salon-${n}`}
                 onClick={() => set({ salons: toggleInArray(params.salons, n) })}
-                className={`py-2 rounded-xl text-xs font-bold border transition-colors ${
+                className={`py-2 rounded-full text-xs font-bold border transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   active
                     ? "bg-primary text-white border-primary"
-                    : "bg-muted/50 text-foreground/80 border-border hover:bg-muted/80"
+                    : "bg-background text-foreground/80 border-border hover:bg-sand/50"
                 }`}
               >
                 {n === 4 ? "4+" : n}
@@ -303,10 +303,10 @@ function FilterPanel({
               <button
                 key={s.value}
                 onClick={() => set({ etat: toggleInArray(params.etat, s.value) })}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   active
                     ? "bg-primary text-white border-primary"
-                    : "bg-muted/50 text-muted-foreground border-border hover:bg-muted/80"
+                    : "bg-background text-muted-foreground border-border hover:bg-sand/50"
                 }`}
               >
                 {t(s.labelKey)}
@@ -332,10 +332,10 @@ function FilterPanel({
               <button
                 key={f.value}
                 onClick={() => set({ features: toggleInArray(params.features, f.value) })}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   active
                     ? "bg-primary text-white border-primary"
-                    : "bg-muted/50 text-muted-foreground border-border hover:bg-muted/80"
+                    : "bg-background text-muted-foreground border-border hover:bg-sand/50"
                 }`}
               >
                 {t(f.labelKey)}
@@ -358,7 +358,7 @@ function FilterPanel({
       {hasActiveFilters && (
         <button
           onClick={() => onUpdate({ sort: params.sort })}
-          className="w-full py-2.5 rounded-xl border border-border text-sm text-muted-foreground hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
+          className="w-full py-2.5 rounded-[6px] border border-border text-sm text-muted-foreground hover:border-primary hover:text-primary transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] flex items-center justify-center gap-2"
         >
           <X size={14} />
           {t("biens.reset_filters")}
@@ -380,7 +380,7 @@ function FilterGroup({
   return (
     <div>
       <div className="flex items-baseline justify-between mb-2">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-[0.05em]">
           {label}
         </p>
         {hint && <span className="text-[10px] text-muted-foreground/70">{hint}</span>}
@@ -422,7 +422,7 @@ function Pagination({
       <button
         disabled={page === 1}
         onClick={() => onPage(page - 1)}
-        className="w-9 h-9 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="w-9 h-9 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
       >
         <ChevronLeft size={16} />
       </button>
@@ -438,7 +438,7 @@ function Pagination({
           <button
             key={p}
             onClick={() => onPage(p as number)}
-            className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
+            className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
               p === page
                 ? "bg-primary text-white"
                 : "border border-border text-foreground hover:border-primary hover:text-primary"
@@ -451,7 +451,7 @@ function Pagination({
       <button
         disabled={page === totalPages}
         onClick={() => onPage(page + 1)}
-        className="w-9 h-9 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="w-9 h-9 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
       >
         <ChevronRight size={16} />
       </button>
@@ -515,13 +515,13 @@ export default function BiensPage() {
 
       <main className="flex-grow pt-20">
         {/* Sticky results header */}
-        <div className="bg-white border-b border-border/50 sticky top-[64px] z-30">
+        <div className="bg-sand/50 border-b border-border sticky top-[64px] z-30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               {/* Mobile filter trigger */}
               <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
                 <SheetTrigger asChild>
-                  <button className="lg:hidden flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:border-primary transition-colors">
+                  <button className="lg:hidden flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm font-medium hover:border-primary transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">
                     <SlidersHorizontal size={16} />
                     {t("biens.filters_button")}
                     {activeFilterCount > 0 && (
@@ -566,7 +566,7 @@ export default function BiensPage() {
                       onClick={() =>
                         updateParams({ ...params, agent_id: undefined, page: undefined })
                       }
-                      className="ml-0.5 hover:text-destructive transition-colors"
+                      className="ml-0.5 hover:text-destructive transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
                     >
                       <X size={12} />
                     </button>
@@ -581,10 +581,10 @@ export default function BiensPage() {
                 <button
                   onClick={() => setViewMode("list")}
                   title={t("biens.list_view")}
-                  className={`w-9 h-9 flex items-center justify-center transition-colors ${
+                  className={`w-9 h-9 flex items-center justify-center transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     viewMode === "list"
                       ? "bg-primary text-white"
-                      : "text-muted-foreground hover:bg-muted"
+                      : "text-muted-foreground hover:bg-sand/50"
                   }`}
                 >
                   <LayoutList size={16} />
@@ -592,10 +592,10 @@ export default function BiensPage() {
                 <button
                   onClick={() => setViewMode("map")}
                   title={t("biens.map_view")}
-                  className={`w-9 h-9 flex items-center justify-center transition-colors border-l border-border ${
+                  className={`w-9 h-9 flex items-center justify-center transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] border-l border-border ${
                     viewMode === "map"
                       ? "bg-primary text-white"
-                      : "text-muted-foreground hover:bg-muted"
+                      : "text-muted-foreground hover:bg-sand/50"
                   }`}
                 >
                   <Map size={16} />
@@ -648,10 +648,10 @@ export default function BiensPage() {
                   key="map-view"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 >
                   {isLoading ? (
-                    <div className="h-[calc(100vh-200px)] min-h-[500px] bg-muted/30 rounded-2xl border border-border animate-pulse" />
+                    <div className="h-[calc(100vh-200px)] min-h-[500px] bg-sand/30 rounded-2xl border border-border animate-pulse" />
                   ) : (
                     <PropertyMap
                       properties={properties}
@@ -662,9 +662,10 @@ export default function BiensPage() {
                     <motion.div
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                       className="text-center py-16"
                     >
-                      <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                      <div className="w-16 h-16 rounded-full bg-sand/50 flex items-center justify-center mx-auto mb-4">
                         <Search size={28} className="text-muted-foreground" />
                       </div>
                       <h2 className="text-xl font-display font-bold text-foreground mb-2">
@@ -678,16 +679,26 @@ export default function BiensPage() {
                 /* ── List view ── */
                 <>
                   {isLoading ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                       {Array.from({ length: 6 }).map((_, i) => (
                         <div
                           key={i}
                           className="bg-card rounded-[8px] overflow-hidden border border-border animate-pulse"
                         >
-                          <div className="aspect-[4/3] bg-muted" />
-                          <div className="p-6 space-y-3">
-                            <div className="h-4 bg-muted rounded w-3/4" />
-                            <div className="h-3 bg-muted rounded w-1/2" />
+                          <div className="aspect-[4/3] bg-sand/40" />
+                          {/* Mirrors the real card: price, title, location, stat line, CTA */}
+                          <div className="p-6">
+                            <div className="mb-4 space-y-2">
+                              <div className="h-8 bg-sand/40 rounded w-2/5" />
+                              <div className="h-4 bg-sand/40 rounded w-3/4" />
+                              <div className="h-3.5 bg-sand/40 rounded w-1/2" />
+                            </div>
+                            <div className="py-4 border-y border-border/60">
+                              <div className="h-4 bg-sand/40 rounded w-2/3" />
+                            </div>
+                            <div className="pt-4 mt-2">
+                              <div className="h-11 bg-sand/40 rounded-[6px]" />
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -700,9 +711,10 @@ export default function BiensPage() {
                     <motion.div
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                       className="text-center py-24"
                     >
-                      <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                      <div className="w-16 h-16 rounded-full bg-sand/50 flex items-center justify-center mx-auto mb-4">
                         <Search size={28} className="text-muted-foreground" />
                       </div>
                       <h2 className="text-xl font-display font-bold text-foreground mb-2">
@@ -716,7 +728,7 @@ export default function BiensPage() {
                       {activeFilterCount > 0 && (
                         <button
                           onClick={() => updateParams({ sort: params.sort })}
-                          className="mt-6 px-6 py-2.5 rounded-full border border-border text-sm font-medium hover:border-primary hover:text-primary transition-colors"
+                          className="mt-6 px-6 py-2.5 rounded-[6px] border border-border text-sm font-medium hover:border-primary hover:text-primary transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
                         >
                           {t("biens.reset_filters")}
                         </button>
@@ -724,13 +736,17 @@ export default function BiensPage() {
                     </motion.div>
                   ) : (
                     <>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         {properties.map((property, i) => (
                           <motion.div
                             key={property.id}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: Math.min(i * 0.05, 0.3) }}
+                            transition={{
+                              duration: 0.3,
+                              delay: Math.min(i * 0.05, 0.3),
+                              ease: [0.22, 1, 0.36, 1],
+                            }}
                           >
                             <PropertyCard property={property} />
                           </motion.div>
