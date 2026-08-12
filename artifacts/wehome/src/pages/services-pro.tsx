@@ -331,7 +331,7 @@ export default function ServicesProPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar onLight />
 
       {/* HERO */}
       <section className="relative pt-32 pb-20 overflow-hidden">

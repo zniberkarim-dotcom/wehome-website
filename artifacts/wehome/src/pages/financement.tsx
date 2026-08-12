@@ -355,7 +355,7 @@ export default function FinancementPage() {
   const [leadModalCtx, setLeadModalCtx] = useState<"mortgage" | "capacity" | null>(null);
   return (
     <div className="min-h-screen flex flex-col bg-[#f6f5f3]">
-      <Navbar />
+      <Navbar onLight />
 
       {/* ── Slim header bar — stays above fold ───────────────────────────── */}
       <div className="pt-20 pb-5 bg-white border-b border-border/40">

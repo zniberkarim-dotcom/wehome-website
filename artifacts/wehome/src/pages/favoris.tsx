@@ -57,7 +57,7 @@ export default function FavorisPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
+      <Navbar onLight />
 
       {/* Header */}
       <section className="pt-32 pb-10 md:pt-36 md:pb-14 bg-secondary/40 border-b border-border/50">

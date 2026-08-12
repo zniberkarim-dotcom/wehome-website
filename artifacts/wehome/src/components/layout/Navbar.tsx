@@ -10,7 +10,11 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useFavorites } from "@/hooks/useFavorites";
 
-export function Navbar() {
+/** `onLight` — set by pages that have no dark hero behind the header. The unscrolled
+ *  treatment (transparent bar, white text, dark drop-shadows) is tuned for the homepage
+ *  hero gradient; over a light page background it measures 1.0–1.05:1 contrast, i.e.
+ *  effectively invisible. Such pages render the solid treatment instead. */
+export function Navbar({ onLight = false }: { onLight?: boolean }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [agentMenuOpen, setAgentMenuOpen] = useState(false);
@@ -54,32 +58,34 @@ export function Navbar() {
     { name: t("nav.agents"), href: "/agents" },
   ];
 
-  // Shared text styles for scrolled vs transparent nav
+  // Appearance is solid whenever we are scrolled OR the page has no dark hero to sit on.
+  // Height still follows scroll alone, so `onLight` pages keep their existing spacing.
+  const solid = isScrolled || onLight;
+
+  // Shared text styles for solid vs transparent nav
   const linkClass = cn(
     "text-sm font-medium transition-colors duration-200",
-    isScrolled
+    solid
       ? "text-foreground/80 hover:text-primary"
       : "text-[rgba(255,255,255,0.92)] hover:text-white"
   );
-  const linkStyle = !isScrolled ? { textShadow: "0 1px 4px rgba(0,0,0,0.35)" } : undefined;
+  const linkStyle = !solid ? { textShadow: "0 1px 4px rgba(0,0,0,0.35)" } : undefined;
 
   return (
     <header
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300 border-b",
-        isScrolled
-          ? "bg-white/90 backdrop-blur-md border-border/50 shadow-sm py-3"
-          : "bg-transparent border-transparent py-5"
+        solid
+          ? "bg-white/90 backdrop-blur-md border-border/50 shadow-sm"
+          : "bg-transparent border-transparent",
+        isScrolled ? "py-3" : "py-5"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="z-50 relative">
-            <Logo
-              height={36}
-              className={!isScrolled ? "drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]" : ""}
-            />
+            <Logo height={36} className={!solid ? "drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]" : ""} />
           </Link>
 
           {/* Desktop nav */}
@@ -114,7 +120,7 @@ export function Navbar() {
                 aria-label={`Favoris (${favoritesCount})`}
                 className={cn(
                   "relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5",
-                  isScrolled
+                  solid
                     ? "text-foreground/80 hover:text-primary hover:bg-primary/5"
                     : "text-white/90 hover:text-white hover:bg-white/10"
                 )}
@@ -134,14 +140,14 @@ export function Navbar() {
                 {t("nav.publish_property")}
               </Link>
               {/* Language switcher */}
-              <LanguageSwitcher onDark={!isScrolled} />
+              <LanguageSwitcher onDark={!solid} />
             </div>
 
             {/* Agent zone — separator + auth */}
             <div
               className={cn(
                 "flex items-center pl-4",
-                isScrolled ? "border-l border-border/40" : "border-l border-white/20"
+                solid ? "border-l border-border/40" : "border-l border-white/20"
               )}
             >
               {loading ? null : agent ? (
@@ -151,7 +157,7 @@ export function Navbar() {
                     onClick={() => setAgentMenuOpen((o) => !o)}
                     className={cn(
                       "flex items-center gap-1.5 text-sm font-medium transition-colors duration-200 rounded-lg px-2.5 py-1.5",
-                      isScrolled
+                      solid
                         ? "text-foreground/75 hover:text-primary hover:bg-primary/5"
                         : "text-white/85 hover:text-white hover:bg-white/10"
                     )}
@@ -250,7 +256,7 @@ export function Navbar() {
                   href="/espace-agent"
                   className={cn(
                     "flex items-center gap-1.5 text-sm font-medium transition-colors duration-200",
-                    isScrolled
+                    solid
                       ? "text-foreground/55 hover:text-primary"
                       : "text-white/70 hover:text-white"
                   )}
