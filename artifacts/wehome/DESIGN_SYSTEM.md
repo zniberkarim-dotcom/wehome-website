@@ -113,8 +113,29 @@ Evidence for keeping the Bible's 56px rather than the previous 72px:
 
 ## 5. Radius
 
-- Global `--radius: 1rem` (16px). Note Tailwind's `rounded-2xl`/`rounded-3xl` are **not**
-  overridden by `@theme`, so they resolve to stock 16px / 24px.
+### ⚠️ The radius scale is non-monotonic — read this before quoting any radius
+
+`src/index.css` derives `--radius-sm/md/lg/xl` from `--radius: 1rem`, but leaves `2xl`/`3xl`
+at Tailwind stock. The resolved scale is therefore **not** in ascending order:
+
+| class | resolves to | source |
+|---|---|---|
+| `rounded-sm` | 12px | `calc(--radius - 4px)` |
+| `rounded-md` | 14px | `calc(--radius - 2px)` |
+| `rounded-lg` | **16px** | `var(--radius)` — *not* stock 8px |
+| `rounded-xl` | **20px** | `calc(--radius + 4px)` — *not* stock 12px |
+| `rounded-2xl` | 16px | stock (no `--radius-2xl` defined) |
+| `rounded-3xl` | 24px | stock |
+
+**`rounded-xl` (20px) is LARGER than `rounded-2xl` (16px), and `rounded-lg` equals it.**
+Anyone reading the classnames will assume otherwise. Always measure `borderRadius` rather
+than inferring from the class.
+
+**Correction (found during the /biens audit):** earlier passes described the homepage CTAs as
+"12–16px" (see commit `a03e37b`'s message and the old backlog note). The real values were
+`rounded-xl` = 20px and `rounded-2xl` = 16px, so the range was **16–20px → 6px**. The fixes
+were right; the recorded magnitudes were understated. Same for the pass-8 inputs — 3 were
+`rounded-2xl` (16px) and 4 were `rounded-xl` (20px), i.e. 16–20px, not 12–16px.
 - ✅ **PropertyCard = `rounded-[8px]`** (Bible spec) — pass 2.
 - Pass 1 tamed the two outliers (`rounded-[3rem]` / `rounded-[2.5rem]` → `rounded-3xl`).
 - ✅ **CTAs = `rounded-[6px]`** (Bible §7) — pass 6. Five homepage CTAs: `CtaSection` ×2,
@@ -172,10 +193,44 @@ bg-primary hover:bg-primary-hover … shadow-md shadow-black/5 hover:shadow-lg
 **5.0% relative lightness darken — exactly the Bible spec.** Emitted rule verified in the built
 CSS: `.hover\:bg-primary-hover:hover{background-color:hsl(var(--primary-hover))}`.
 
-**Grep trap, cost me two false alarms:** searching built CSS for this selector needs the right
-escaping — `hover\:` is *two* characters. `grep -c 'hover\\:bg-primary-hover'` and a
-`/hover.bg-primary-hover/` regex both returned zero and looked like the utility wasn't
-generating. It was. Search the bare fragment `bg-primary-hover` and walk to the brace instead.
+**Grep trap — this has now caused four false alarms across passes 10 and /biens 1.**
+Tailwind escapes punctuation in emitted selectors, so the human-readable class name **never**
+matches the file:
+
+| you write | CSS actually contains |
+|---|---|
+| `hover:bg-primary-hover` | `.hover\:bg-primary-hover:hover` |
+| `bg-sand/50` | `.bg-sand\/50` |
+| `tracking-[0.05em]` | `.tracking-\[0\.05em\]` — brackets **and** the dot escaped |
+
+**Reliable method:** `indexOf` a punctuation-free fragment (`bg-primary-hover`, `bg-sand`,
+`tracking-`), then walk to the enclosing braces. Or enumerate with a regex like
+`/\.tracking-[^{,]*/g`. Never conclude "the utility isn't generating" from a failed grep —
+confirm by reading the rendered element's computed style instead.
+
+Also worth knowing: slash-opacity utilities emit an **opaque fallback** outside an
+`@supports (color:color-mix(…))` block, e.g. `.bg-sand\/50{background-color:hsl(var(--border))}`
+followed by the real `color-mix(in oklab, hsl(var(--border)) 50%, transparent)`. On engines
+without `color-mix`, `/50` renders at full strength.
+
+### Preview-pane limitations (accumulated)
+
+The pane is reliable for DOM/CSSOM/computed-style reads, but **not** for these:
+
+- **Never has document focus** → `:focus` / `:focus-within` cannot match.
+- **Does not advance CSS transitions** → set `transition: none` before measuring. *This produced
+  a phantom 17px "sticky header occlusion" bug during the /biens audit: the Navbar kept its
+  80.8px unscrolled height while the sticky bar had already moved. True scrolled height is
+  64.8px, so `top-[64px]` overlaps by 0.8px — a sub-pixel seam, not a defect.*
+- **`window.scrollTo` does not emit scroll events** → scroll-driven UI stays in its initial
+  state. Fire `window.dispatchEvent(new Event('scroll'))` manually.
+- **`history.pushState` does not make Wouter re-read the search string** → the router keeps the
+  old params while `location.search` shows the new URL, so classNames and paint get read from
+  two different states. *This looked like an inverted active/inactive chip state on `/biens`.*
+  Use a real navigation instead.
+- **Cannot screenshot when the pane is not displayed**, and cannot navigate to external hosts.
+- Canvas `fillStyle` round-tripping is a poor colour resolver for `oklab()` / `color-mix()`
+  values — a failed parse silently keeps the previous value. Read the raw computed string.
 
 ## 8. Property Card (Bible §7)
 
@@ -213,6 +268,50 @@ of the Bible's "darken 5%". Replaced with a real darkened token.
 Verified after the pass-2 change on every consumer: **`/` (FeaturedProperties)**,
 **`/biens`**, **`/favoris`**, **`/agents/:slug`** — radius 8px, ratio exactly 1.333, no
 content overflow, grids unaffected, desktop + 375px mobile.
+
+---
+
+## 10. `/biens` listings page — pass 1
+
+`/biens` is also the destination of `/acheter` and `/louer` (both redirect), so it is
+high-traffic. One 758-line page plus `components/biens/PropertyMap.tsx` (consumed only here).
+
+| Item | Status |
+|---|---|
+| **P1** Map palette | ✅ marker rest `#C0392B` → **Crimson Atlas**, selected `#8B1A1A` → **Taza Stone**, cluster + info price + info CTA → Crimson Atlas. `#C0392B` measured **ΔE2000 25.5** from Crimson Atlas — 2.4× further off than the burgundy fixed in pass 8. Selected-vs-rest ΔE went 12.8 → **25.2**, so selection is *more* legible, not less |
+| **P2** Motion | ✅ 21 Tailwind transitions + all 4 framer sites now on `[0.22,1,0.36,1]` / 300ms. Page previously had **zero** of either |
+| **P4** Filter warmth | ✅ **zero `bg-muted` remains.** Verified by sweeping all 55 painted surfaces in sidebar + sticky bar: 0 cool, 55 warm-or-neutral |
+| **P5** Inputs | ✅ all 5 → `rounded-[6px] bg-background`, `focus:bg-card`, `focus:border-primary/50` |
+| **P6** Sticky band | ✅ `bg-white` → `bg-sand/50`, same value/reasoning as HowItWorks pass 3 |
+| **P7** Shapes | ✅ reset buttons → 6px (they execute); count buttons + transaction segmented → `rounded-full` (toggles, like the chips beside them) |
+| **P8** | ✅ grid `gap-8`; caption `tracking-[0.05em]`; skeleton reshaped to mirror the post-pass-6 card |
+
+**`--muted` stayed untouched.** Pass 6 closed it as "genuinely cool but unreachable at rest"
+*on the homepage*; on `/biens` it was the resting fill of the whole filter panel. The cross-context
+constraint from that investigation still holds (162 uses / 40 files / 13 shadcn primitives / 13
+dashboard), so this was fixed with **page-scoped warm classes**, never a token edit — the same
+resolution shape as the `--card` investigation.
+
+**Why the input fill is `bg-background`, not the homepage's `bg-background/60`.** The homepage
+inputs sit on a translucent glass panel over a photo; `/biens` inputs sit on a **white** (`bg-card`)
+sidebar. Measured on white: `/60` → dL **1.28**, *weaker* than the cool `bg-muted/50` it replaces
+(1.78). Full Terrazzo Cream → dL **2.03**, and it is what Bible §7B specifies for this component.
+**A pattern ported between pages must be re-measured against its new backdrop.**
+
+**`sm:grid-cols-2` is structural — do not "align" it to the homepage's 3 columns.** The sidebar
+consumes 288px (**23.7%**) of the 1216px content width; 3 columns in the remaining 928px would
+give **288px** cards vs the homepage's 384px — 25% narrower, and level with the tightest case the
+card ever sees. Left as-is deliberately.
+
+**PropertyCard needs nothing for the grid context.** Stat-line band measured **uniformly 54px at
+1280 / 640 / 375**, no wrapping, no price overflow, `scrollWidth === viewport` at every width —
+including 284px cards at the `sm` breakpoint, 25% narrower than any homepage card.
+
+⚠️ Still at 16px on this page, not approved in pass 1: pagination (×3), mobile filter trigger,
+view-toggle container, sort `SelectTrigger`.
+
+⚠️ `#C0392B` is still hardcoded in **11 other files** — `a-propos`, `agents/index`, `network`,
+`partenaires`, and 7× `espace-agent`. A bigger backlog than the `shadow-primary` one in §7.
 
 ---
 
@@ -295,7 +394,8 @@ content overflow, grids unaffected, desktop + 375px mobile.
 7. **Buttons** — 5% darken on hover ✅ done (pass 4). Hero search rest state ✅ done (pass 5):
    the glass panel was treated as one unit and moved onto Terrazzo Cream —
    panel `bg-background/85` + cream border, all 7 inputs and 6 filter pills `bg-background/60`,
-   focus/hover → `background`. Still open: **6px radius** (homepage CTAs are 12–16px).
+   focus/hover → `background`. 6px radius ✅ done (passes 6, 8, 9) — the CTAs were
+   **16–20px**, not the 12–16px originally recorded; see the radius-scale warning in §5.
 
 8. **Loud shadows** ✅ homepage is clean as of pass 5 — no `shadow-2xl` remains in
    `src/components/home/`. It is still used on 9 other pages (a-propos, agents, estimer,
