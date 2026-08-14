@@ -233,8 +233,11 @@ export interface SupabaseProperty {
   // Optional newer columns (may be null if not yet added to DB)
   is_new?: boolean | null;
   features?: string[] | null;
-  lat?: number | null;
-  lng?: number | null;
+  /** DB columns are `latitude`/`longitude`; the app-level `Property` exposes them as
+   *  `lat`/`lng`. The translation happens at this boundary only — see mapSupabaseProperty
+   *  and toDbRow. Do not rename these to lat/lng: no such columns exist. */
+  latitude?: number | null;
+  longitude?: number | null;
   address?: string | null;
   // Agent system columns
   agent_id?: string | null;
@@ -304,8 +307,8 @@ export function mapSupabaseProperty(p: SupabaseProperty, index: number): Propert
     agentId: p.agent_id ?? undefined,
     isNew: p.is_new === true,
     features: Array.isArray(p.features) ? p.features : [],
-    lat: p.lat ?? undefined,
-    lng: p.lng ?? undefined,
+    lat: p.latitude ?? undefined,
+    lng: p.longitude ?? undefined,
     address: p.address ?? undefined,
     status: (p.status as PropertyStatus | undefined) ?? "Disponible",
     isPepite: p.is_pepite === true,
@@ -833,7 +836,8 @@ export async function uploadAgentPhoto(file: File, agentId: string): Promise<str
 // ── Property CRUD (for agent dashboard) ──────────────────────────────────────
 
 /** Map AgentProperty fields → DB column names (explicit — never spreads unknown keys) */
-function toDbRow(props: Partial<AgentProperty>) {
+/** Exported for unit testing of the DB naming boundary. */
+export function toDbRow(props: Partial<AgentProperty>) {
   const row: Record<string, unknown> = {};
 
   // Direct mappings (same name in AgentProperty and DB)
@@ -851,8 +855,9 @@ function toDbRow(props: Partial<AgentProperty>) {
   if (props.agent_id !== undefined) row.agent_id = props.agent_id;
   if (props.meuble !== undefined) row.meuble = props.meuble;
   if (props.features !== undefined) row.features = props.features;
-  if (props.lat !== undefined) row.lat = props.lat;
-  if (props.lng !== undefined) row.lng = props.lng;
+  // App-level lat/lng -> DB columns latitude/longitude (the only names that exist).
+  if (props.lat !== undefined) row.latitude = props.lat;
+  if (props.lng !== undefined) row.longitude = props.lng;
 
   // Field renames
   if (props.prix !== undefined) row.price = props.prix; // prix → price
@@ -942,8 +947,8 @@ export async function fetchAgentPropertyById(
       : [],
     meuble: p.meuble ?? false,
     features: Array.isArray(p.features) ? p.features : [],
-    lat: (p as any).lat ?? undefined,
-    lng: (p as any).lng ?? undefined,
+    lat: (p as any).latitude ?? undefined,
+    lng: (p as any).longitude ?? undefined,
     created_at: p.created_at,
   };
 }

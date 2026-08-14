@@ -398,8 +398,27 @@ item wants its own sweep.
 | **Hardcoded `#8B1A2E`** | 2 files | `DashboardLayout:75`, `PortalLayout:160`. Navbar cleared in pass 8. |
 | **`LanguageSwitcher` "FR" button** | 1 | Measures 16px (`rounded-lg`); it is a selector, so it wants `rounded-full`. |
 
-**Not design debt — a data gap:** the `/biens` map renders empty because seeded properties have
-no `lat`/`lng`. Supabase-side, tracked separately, explicitly out of this workstream.
+**Correction — the empty map was NOT a data gap.** This file previously recorded the `/biens`
+map as empty "because seeded properties have no `lat`/`lng`, Supabase-side, out of scope."
+**That attribution was wrong.** Root cause, confirmed by recon against production:
+a **code/schema naming mismatch**.
+
+- The DB columns are **`latitude` / `longitude`** (`double precision`, nullable), alongside
+  `formatted_address` and `place_id`. **No table in the `public` schema has ever had `lat` or
+  `lng`** — verified via `information_schema`, and live REST probes agree
+  (`?select=lat` → **400**, `?select=latitude` → **200**, so the PostgREST cache was never stale).
+- `src/lib/data.ts` wrote `row.lat` and read `p.lat` on both mappers. The write failed with
+  `PGRST204`; the read silently yielded `undefined`, so `PropertyMap`'s
+  `typeof p.lat === "number"` filter was **always false** and the map could never render a pin —
+  even for properties that did have coordinates.
+- Fixed by translating at the DB boundary only (`data.ts`), leaving the app-level `Property` /
+  `AgentProperty` interfaces on `lat`/`lng`. No migration, no new columns.
+
+**The data situation, which is real but separate:** only **11 of 151** properties currently have
+coordinates (3 of the 28 published ones). All 151 have `place_id` and `formatted_address`, so the
+remaining rows are back-fillable from the existing geocoding pipeline. After the fix the map
+correctly reports **"3 biens sur la carte"** — matching the DB exactly, where it previously
+showed "Coordonnées GPS manquantes".
 
 ---
 
