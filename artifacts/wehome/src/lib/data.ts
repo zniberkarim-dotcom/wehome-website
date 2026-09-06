@@ -315,9 +315,72 @@ export function mapSupabaseProperty(p: SupabaseProperty, index: number): Propert
   };
 }
 
+// ── Mapper: WeHome API DTO → website Property ────────────────────────────────
+//
+// The API already did the parsing the old mapper had to do by hand: price and
+// surface arrive as numbers, `ville` is folded into `city`, and the cover shot
+// is already at the head of `photos`. What is left here is presentation —
+// building the display title and the location string, and turning zeros into
+// `undefined` so the UI can hide empty rows.
+//
+// mapSupabaseProperty stays for the agent portal, which still reads Supabase
+// directly (a later phase). The two produce the same `Property`.
+export function mapApiProperty(p: ApiProperty, index: number): Property {
+  const surface =
+    p.surfaceConstruite && p.surfaceConstruite > 0 ? p.surfaceConstruite : (p.surface ?? 0);
+  const cityStr = p.city ?? "";
+  const neighborhoodStr = p.neighborhood ?? "";
+  const location = [neighborhoodStr, cityStr].filter(Boolean).join(", ") || cityStr;
+
+  const firstLine = p.description?.split("\n").find((l) => l.trim());
+  const title =
+    p.title?.trim() || firstLine?.trim() || `${p.type ?? ""} ${neighborhoodStr || cityStr}`.trim();
+
+  const rooms = p.rooms ?? 0;
+  const beds = p.chambres ?? 0;
+  const salons = p.salons ?? 0;
+  const baths = p.sallesDeBains ?? 0;
+
+  return {
+    id: p.id ?? p.reference,
+    reference: p.reference,
+    title,
+    type: p.type ?? "",
+    transaction: p.transaction === "Location" ? "Location" : "Vente",
+    location,
+    price: p.price ?? 0,
+    isRental: p.priceKind === "rental",
+    surface,
+    furnished: p.furnished === "furnished",
+    rooms: rooms > 0 ? rooms : undefined,
+    beds: beds > 0 ? beds : undefined,
+    salons: salons > 0 ? salons : undefined,
+    baths: baths > 0 ? baths : undefined,
+    description: p.description ?? "",
+    gradientClass: g(index),
+    photos: p.photos,
+    imageCount: p.photos.length,
+    agent: p.agent?.name ?? undefined,
+    agentId: p.agent?.id ?? undefined,
+    // `is_new` was never a column; the old mapper's `p.is_new === true` was
+    // always false. Kept explicit rather than silently dropped.
+    isNew: false,
+    features: p.features,
+    lat: p.latitude ?? undefined,
+    lng: p.longitude ?? undefined,
+    // `address` is not part of the public projection: it is empty on every
+    // published row, and publishing an exact street address is a decision to
+    // take deliberately, not to inherit from an empty column.
+    address: undefined,
+    status: (p.status as PropertyStatus | undefined) ?? "Disponible",
+    isPepite: p.isPepite,
+  };
+}
+
 // ── Supabase query helpers ────────────────────────────────────────────────────
 
 import { supabase } from "./supabase";
+import { apiFetchProperties, apiFetchProperty, type ApiProperty } from "./wehome-api";
 
 const PAGE_SIZE = 12;
 
@@ -329,38 +392,19 @@ const PAGE_SIZE = 12;
 export async function fetchProperties(
   params?: FilterParams
 ): Promise<{ data: Property[]; total: number }> {
-  let query = supabase.from("properties").select("*").eq("published", true);
+  // ── TRANCHE 1 (ADR-015 Phase 2) ────────────────────────────────────────
+  // The server-side gates — published, validated photos, active lifecycle —
+  // now live in the API and are applied there. Everything below this fetch is
+  // unchanged: the same client-side filtering, sorting and pagination, on the
+  // same `Property` shape. Only where the rows come from has moved.
+  const dtos = await apiFetchProperties({
+    transaction: params?.transaction,
+    types: params?.types,
+    city: params?.city?.trim() || undefined,
+    agentId: params?.agent_id,
+  });
 
-  // Only require photo_status check when NOT filtering by a specific agent
-  if (!params?.agent_id) {
-    query = query.eq("photo_status", "✅ Photos OK");
-  }
-
-  // ── Lifecycle filter ────────────────────────────────────────────────────
-  // Hide Vendu / Loué / Retiré / Archivé from public listings.
-  // Accept rows with NULL status (legacy data) — treat as Disponible.
-  query = query.or(
-    `status.is.null,status.in.(${ACTIVE_PROPERTY_STATUSES.map((s) => `"${s}"`).join(",")})`
-  );
-
-  // Server-side exact filters
-  if (params?.transaction) query = query.eq("transaction", params.transaction);
-  if (params?.types?.length) query = query.in("type", params.types);
-  if (params?.agent_id) query = query.eq("agent_id", params.agent_id);
-
-  // Server-side text search (city + neighborhood + ville)
-  if (params?.city && params.city.trim()) {
-    const c = params.city.trim();
-    query = query.or(`city.ilike.%${c}%,neighborhood.ilike.%${c}%,ville.ilike.%${c}%`);
-  }
-
-  // Default sort: newest first
-  query = query.order("created_at", { ascending: false });
-
-  const { data, error } = await query;
-  if (error) throw error;
-
-  let results = (data as SupabaseProperty[]).map((p, i) => mapSupabaseProperty(p, i));
+  let results = dtos.map((p, i) => mapApiProperty(p, i));
 
   // Client-side: free text search
   if (params?.search) {
@@ -449,10 +493,12 @@ export async function fetchProperties(
 
 /** Fetch a single property by id (published or agent-owned preview) */
 export async function fetchProperty(id: string): Promise<Property | null> {
-  const { data, error } = await supabase.from("properties").select("*").eq("id", id).single();
-
-  if (error) return null;
-  return mapSupabaseProperty(data as SupabaseProperty, 0);
+  // ── TRANCHE 2 (ADR-015 Phase 2) ────────────────────────────────────────
+  // The API accepts the UUID this page has always been routed on, as well as
+  // the public reference. Returns null on 404, which is what the favourites
+  // page relies on to prune listings that are gone.
+  const dto = await apiFetchProperty(id);
+  return dto ? mapApiProperty(dto, 0) : null;
 }
 
 /** Fetch latest 3 published properties for the homepage.
@@ -465,18 +511,9 @@ export async function fetchProperty(id: string): Promise<Property | null> {
  *  Sold/Loué/Archivé never surface on the home page.
  */
 export async function fetchFeaturedProperties(): Promise<Property[]> {
-  const { data, error } = await supabase
-    .from("properties")
-    .select("*")
-    .eq("published", true)
-    .eq("photo_status", "✅ Photos OK")
-    .or(`status.is.null,status.in.(${ACTIVE_PROPERTY_STATUSES.map((s) => `"${s}"`).join(",")})`)
-    .order("is_pepite", { ascending: false, nullsFirst: false })
-    .order("created_at", { ascending: false })
-    .limit(3);
-
-  if (error) throw error;
-  return (data as SupabaseProperty[]).map((p, i) => mapSupabaseProperty(p, i));
+  // TRANCHE 1 — same ordering, decided by the API: pépite first, then newest.
+  const dtos = await apiFetchProperties({ pepiteFirst: true, limit: 3 });
+  return dtos.map((p, i) => mapApiProperty(p, i));
 }
 
 /** Save a lead from the contact form */
