@@ -66,46 +66,6 @@ function Overline({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ─── Team member ─────────────────────────────────────────────────────────────
-// Names stay in Latin script across all locales; only `bioKey` is translated.
-const TEAM = [
-  {
-    name: "Karim Zniber",
-    title: "CEO",
-    photo:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop&crop=face&q=80",
-    bioKey: "about.team_bio_karim",
-  },
-  {
-    name: "Basma Tazi",
-    title: "COO",
-    photo:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=500&fit=crop&crop=face&q=80",
-    bioKey: "about.team_bio_basma",
-  },
-  {
-    name: "Maha El Hamzaoui",
-    title: "CMO",
-    photo:
-      "https://ui-avatars.com/api/?name=Maha+El+Hamzaoui&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
-    bioKey: "about.team_bio_maha",
-  },
-  {
-    name: "Oumaima Dakirelah",
-    title: "CFO",
-    photo:
-      "https://ui-avatars.com/api/?name=Oumaima+Dakirelah&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
-    bioKey: "about.team_bio_oumaima",
-  },
-  {
-    name: "Abdou",
-    title: "CTO",
-    photo:
-      "https://ui-avatars.com/api/?name=Abdou&background=8B1A2E&color=fff&size=400&font-size=0.35&bold=true",
-    bioKey: "about.team_bio_abdou",
-  },
-];
-
 // ─── Commitments ─────────────────────────────────────────────────────────────
 const COMMITMENTS = [
   { n: "01", key: "about.commitment_1" },
@@ -500,68 +460,7 @@ export default function AProposPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          SECTION 6 — TEAM
-      ══════════════════════════════════════════════════════════════════════════ */}
-      <section className="bg-white py-28 md:py-40">
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-8">
-          <FadeIn className="max-w-2xl mb-6">
-            <Overline>{t("about.team_intro_overline")}</Overline>
-            <h2
-              className="font-display font-bold text-foreground leading-tight"
-              style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}
-            >
-              {t("about.team_intro_title")}
-            </h2>
-          </FadeIn>
-
-          <FadeIn delay={0.1} className="mb-20">
-            <p
-              className="text-muted-foreground leading-relaxed max-w-2xl"
-              style={{ fontSize: "1.05rem" }}
-            >
-              {t("about.team_intro_body")}
-            </p>
-          </FadeIn>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
-            {TEAM.map(({ name, title, photo, bioKey }, i) => (
-              <FadeIn key={name} delay={i * 0.1}>
-                <div className="group flex flex-col">
-                  {/* Photo */}
-                  <div className="relative overflow-hidden rounded-2xl aspect-[3/4] mb-6 bg-secondary">
-                    <img
-                      src={photo}
-                      alt={name}
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{
-                        background:
-                          "linear-gradient(to top, rgba(139,26,46,0.25) 0%, transparent 60%)",
-                      }}
-                    />
-                  </div>
-                  {/* Info */}
-                  <p className="font-display font-bold text-foreground text-lg leading-tight">
-                    {name}
-                  </p>
-                  <p
-                    className="text-sm font-semibold mt-1 mb-3"
-                    style={{ color: "var(--primary, #8B1A2E)" }}
-                  >
-                    {title}
-                  </p>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{t(bioKey)}</p>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════════════
-          SECTION 7 — COMMITMENTS
+          SECTION 6 — COMMITMENTS
       ══════════════════════════════════════════════════════════════════════════ */}
       <section className="py-28 md:py-40" style={{ background: "#0a0a0a" }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-10 lg:px-8">
@@ -598,7 +497,7 @@ export default function AProposPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          SECTION 8 — CLOSING CTA
+          SECTION 7 — CLOSING CTA
       ══════════════════════════════════════════════════════════════════════════ */}
       <section
         ref={ctaRef}
