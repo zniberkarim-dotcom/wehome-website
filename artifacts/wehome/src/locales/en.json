@@ -36,7 +36,26 @@
     "bedrooms_any": "Any",
     "furnished": "Furnished",
     "furnished_only": "Furnished only",
-    "features": "Features"
+    "features": "Features",
+    "popular_cities": "Popular cities",
+    "custom_budget": "Custom budget (MAD)",
+    "per_month": "· per month",
+    "budget_min_placeholder": "Min — e.g. 5000",
+    "budget_max_placeholder": "Max — e.g. 15000",
+    "custom_budget_active": "Custom budget on · the preset range is ignored",
+    "surface_max": "Max area (m²)",
+    "surface_max_placeholder": "e.g. 200",
+    "bathrooms_min": "Min bathrooms",
+    "bathrooms_any": "Any",
+    "salons_min": "Min living rooms",
+    "salons_any": "Any",
+    "vendre_badge": "Free · 100% online",
+    "vendre_title": "List your property in 3 minutes",
+    "vendre_sub": "Describe your property, add your photos, that's it. Our team reviews your listing within 24 hours and puts it in front of our network of qualified buyers.",
+    "vendre_pill_expert": "Expert review",
+    "vendre_pill_24h": "Live within 24h",
+    "vendre_pill_free": "100% free",
+    "vendre_cta": "List my property"
   },
   "price_ranges": {
     "any": "Any price",
@@ -678,5 +697,88 @@
     "address_line1": "Boulevard Mohammed V",
     "address_line2": "Casablanca, Morocco",
     "copyright": "© {{year}} WeHome — Morocco's real estate platform. All rights reserved."
+  },
+  "before_after": {
+    "badge": "WeHome technology",
+    "title_part1": "WeHome AI transforms",
+    "title_part2": "your listings",
+    "subtitle": "Drag the slider to see what our team can do with your photos. AI retouching, virtual home staging, blue skies guaranteed — the difference shows in five seconds.",
+    "label_before": "Before",
+    "label_after": "After WeHome",
+    "hint": "Drag the slider to compare",
+    "cta_primary": "Upgrade my photos",
+    "cta_secondary": "List my property"
+  },
+  "ecosystem": {
+    "badge": "Our ecosystem",
+    "title_part1": "Three divisions,",
+    "title_part2": "one ecosystem.",
+    "subtitle": "Residential, commercial and interiors. Each division has its own expertise, tools and team — so every project gets the treatment it deserves."
+  },
+  "stats": {
+    "clients_value": "500+",
+    "clients_label": "clients supported",
+    "cities_value": "5 cities",
+    "cities_label": "Casa · Rabat · Marrakech · Tangier · and more",
+    "prices_value": "Real time",
+    "prices_label": "Market prices, kept current",
+    "network_value": "Coming soon",
+    "network_label": "Partner agency network"
+  },
+  "services": {
+    "overline": "The platform",
+    "item1_title": "Market intelligence",
+    "item2_title": "WeHome-certified listings",
+    "item3_title": "National distribution",
+    "item1_desc": "We turn raw Moroccan transaction data into decisions you can act on — real prices per m², time to sell, neighbourhood trends. The information you deserve.",
+    "item2_desc": "Every property on our platform is visited, verified and mandated. Our standards remove phantom listings and fictional prices. Listing quality is what protects the buyer.",
+    "item3_desc": "Your property reaches our national audience — local buyers, investors, and Moroccans abroad. A reach no agency can deliver on its own.",
+    "title_part1": "What WeHome brings",
+    "title_part2": "that no one else offers.",
+    "subtitle": "Between platforms that abandon buyers and agencies short on data — WeHome is building the standard the market has been waiting for."
+  },
+  "why": {
+    "card1_title": "Real market data",
+    "card2_title": "Verified, mandated listings",
+    "card3_title": "Support from start to finish",
+    "card4_title": "The network is being built",
+    "card1_body": "We publish prices per m² by city and neighbourhood every month. Not estimates. Real Moroccan market transactions.",
+    "card2_body": "Every property listed on WeHome has been visited and mandated by an agent. No phantom listings. No duplicates.",
+    "card3_body": "From valuation to handing over the keys — a dedicated agent stays with you at every step, anywhere in Morocco.",
+    "card4_body": "We are opening our platform to partner agencies that share our standards. Morocco's first private MLS — come build it with us.",
+    "card4_cta": "Join the network",
+    "overline": "Our difference",
+    "title_part1": "Why WeHome",
+    "title_part2": "is different",
+    "sub_part1": "WeHome is not a listings platform.",
+    "sub_part2": "It is the trust infrastructure of Moroccan real estate."
+  },
+  "how": {
+    "step1_audience": "For buyers",
+    "step2_audience": "For sellers",
+    "step3_audience": "For professionals",
+    "step1_title": "Search with confidence",
+    "step2_title": "Sell at the right price",
+    "step3_title": "Are you an agency?",
+    "step1_body": "Every property is verified, visited, and presented with real market data. No duplicates. No phantom listings. Just genuine opportunities.",
+    "step2_body": "A free valuation based on real transactions in your neighbourhood. Maximum exposure across our national network. Support from start to signature.",
+    "step3_body": "WeHome is building Morocco's first shared real estate network. Join the partner agency waiting list and be among the first.",
+    "step2_cta": "Value my property →",
+    "step3_cta": "Join the network →",
+    "overline": "How WeHome works",
+    "title_part1": "One platform.",
+    "title_part2": "Three ways to benefit."
+  },
+  "cta_band": {
+    "title": "Ready to make your move?",
+    "subtitle": "Whether you are looking for your next home or want to sell at the right price, our hybrid approach delivers results.",
+    "cta_sell": "Sell my property",
+    "cta_buy": "Find a property"
+  },
+  "featured": {
+    "title": "Featured properties",
+    "subtitle": "Discover our selection of premium properties, marketed with our unique data-driven approach.",
+    "empty": "No properties available right now.",
+    "see_all": "See all listings"
   }
 }

@@ -36,7 +36,26 @@
     "bedrooms_any": "Tous",
     "furnished": "Meublé",
     "furnished_only": "Meublé uniquement",
-    "features": "Équipements"
+    "features": "Équipements",
+    "popular_cities": "Villes populaires",
+    "custom_budget": "Budget personnalisé (MAD)",
+    "per_month": "· par mois",
+    "budget_min_placeholder": "Min — ex: 5000",
+    "budget_max_placeholder": "Max — ex: 15000",
+    "custom_budget_active": "Budget personnalisé activé · la fourchette est ignorée",
+    "surface_max": "Surface max (m²)",
+    "surface_max_placeholder": "ex: 200",
+    "bathrooms_min": "Salles de bain min",
+    "bathrooms_any": "Tout",
+    "salons_min": "Salons min",
+    "salons_any": "Tout",
+    "vendre_badge": "Gratuit · 100 % en ligne",
+    "vendre_title": "Publiez votre bien en 3 minutes",
+    "vendre_sub": "Décrivez votre bien, ajoutez vos photos, c'est tout. Notre équipe valide votre annonce sous 24 h et la diffuse à notre réseau d'acheteurs qualifiés.",
+    "vendre_pill_expert": "Validation expert",
+    "vendre_pill_24h": "Mise en ligne sous 24 h",
+    "vendre_pill_free": "100 % gratuit",
+    "vendre_cta": "Publier mon annonce"
   },
   "price_ranges": {
     "any": "Tout prix",
@@ -678,5 +697,88 @@
     "address_line1": "Boulevard Mohammed V",
     "address_line2": "Casablanca, Maroc",
     "copyright": "© {{year}} WeHome — La plateforme immobilière du Maroc. Tous droits réservés."
+  },
+  "before_after": {
+    "badge": "Technologie WeHome",
+    "title_part1": "L'IA WeHome transforme",
+    "title_part2": "vos annonces",
+    "subtitle": "Glisse la barre pour voir ce que notre équipe peut faire avec tes photos. Retouche IA, home staging virtuel, ciel bleu garanti — la différence se voit en 5 secondes.",
+    "label_before": "Avant",
+    "label_after": "Après WeHome",
+    "hint": "Glisse la barre pour comparer",
+    "cta_primary": "Booster mes photos",
+    "cta_secondary": "Publier mon annonce"
+  },
+  "ecosystem": {
+    "badge": "Notre écosystème",
+    "title_part1": "Trois pôles,",
+    "title_part2": "un seul écosystème.",
+    "subtitle": "Résidentiel, professionnel et aménagement. Chaque pôle a son expertise, ses outils, son équipe — pour que chaque projet soit traité comme il le mérite."
+  },
+  "stats": {
+    "clients_value": "500+",
+    "clients_label": "clients accompagnés",
+    "cities_value": "5 villes",
+    "cities_label": "Casa · Rabat · Marra · Tanger · et plus",
+    "prices_value": "Temps réel",
+    "prices_label": "Prix du marché actualisés",
+    "network_value": "Bientôt",
+    "network_label": "Réseau d'agences partenaires"
+  },
+  "services": {
+    "overline": "La plateforme",
+    "item1_title": "Intelligence de marché",
+    "item2_title": "Biens certifiés WeHome",
+    "item3_title": "Distribution nationale",
+    "item1_desc": "Nous transformons la donnée brute des transactions marocaines en insights actionnables — prix réels au m², délais de vente, tendances par quartier. L'information que vous méritez.",
+    "item2_desc": "Chaque propriété sur notre plateforme est visitée, vérifiée, mandatée. Nos standards éliminent les annonces fantômes et les prix fictifs. La qualité du listing protège l'acheteur.",
+    "item3_desc": "Votre bien est exposé à notre audience nationale — acheteurs locaux, investisseurs, diaspora marocaine à l'étranger. Une portée que les agences isolées ne peuvent pas offrir.",
+    "title_part1": "Ce que WeHome apporte",
+    "title_part2": "que personne d'autre n'offre.",
+    "subtitle": "Entre les plateformes qui abandonnent les acheteurs et les agences qui manquent de données — WeHome construit le standard que le marché attendait."
+  },
+  "why": {
+    "card1_title": "Données de marché réelles",
+    "card2_title": "Biens vérifiés et mandatés",
+    "card3_title": "Accompagnement de bout en bout",
+    "card4_title": "Le réseau se construit",
+    "card1_body": "Nous publions les prix au m² par ville et par quartier chaque mois. Pas des estimations. Les vraies transactions du marché marocain.",
+    "card2_body": "Chaque bien listé sur WeHome a été visité et mandaté par un agent. Zéro annonce fantôme. Zéro doublon.",
+    "card3_body": "De l'estimation à la remise des clés — un agent dédié vous suit à chaque étape, où que vous soyez au Maroc.",
+    "card4_body": "Nous ouvrons notre plateforme aux agences partenaires qui partagent nos standards. Le premier MLS privé du Maroc — rejoignez l'aventure.",
+    "card4_cta": "Rejoindre le réseau",
+    "overline": "Notre différence",
+    "title_part1": "Pourquoi WeHome",
+    "title_part2": "est différent",
+    "sub_part1": "WeHome n'est pas une plateforme d'annonces.",
+    "sub_part2": "C'est l'infrastructure de confiance du marché immobilier marocain."
+  },
+  "how": {
+    "step1_audience": "Pour les acheteurs",
+    "step2_audience": "Pour les vendeurs",
+    "step3_audience": "Pour les professionnels",
+    "step1_title": "Cherchez en confiance",
+    "step2_title": "Vendez au bon prix",
+    "step3_title": "Vous êtes une agence ?",
+    "step1_body": "Tous nos biens sont vérifiés, visités, et présentés avec les vraies données du marché. Pas de doublons. Pas d'annonces fantômes. Juste des opportunités réelles.",
+    "step2_body": "Estimation gratuite basée sur les transactions réelles de votre quartier. Exposition maximale sur notre réseau national. Accompagnement de A à Z jusqu'à la signature.",
+    "step3_body": "WeHome construit le premier réseau immobilier partagé du Maroc. Rejoignez la liste d'attente des agences partenaires et soyez parmi les premiers.",
+    "step2_cta": "Estimer mon bien →",
+    "step3_cta": "Rejoindre le réseau →",
+    "overline": "Comment WeHome fonctionne",
+    "title_part1": "Une plateforme.",
+    "title_part2": "Trois façons d'en bénéficier."
+  },
+  "cta_band": {
+    "title": "Prêt à passer à l'action ?",
+    "subtitle": "Que vous cherchiez votre futur chez-vous ou que vous souhaitiez vendre votre bien au meilleur prix, notre approche hybride garantit des résultats.",
+    "cta_sell": "Vendre mon bien",
+    "cta_buy": "Trouver un bien"
+  },
+  "featured": {
+    "title": "Biens en vedette",
+    "subtitle": "Découvrez notre sélection de biens immobiliers premium, commercialisés avec notre approche data-driven unique.",
+    "empty": "Aucun bien disponible pour le moment.",
+    "see_all": "Voir toutes les annonces"
   }
 }

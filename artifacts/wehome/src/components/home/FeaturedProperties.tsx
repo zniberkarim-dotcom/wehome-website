@@ -4,8 +4,10 @@ import { PropertyCard } from "./PropertyCard";
 import { motion } from "framer-motion";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 
 export function FeaturedProperties() {
+  const { t } = useTranslation();
   const { data: properties = [], isLoading } = useQuery({
     queryKey: ["featured-properties"],
     queryFn: fetchFeaturedProperties,
@@ -22,12 +24,9 @@ export function FeaturedProperties() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
-              Biens en vedette
+              {t("featured.title")}
             </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl">
-              Découvrez notre sélection de biens immobiliers premium, commercialisés avec notre
-              approche data-driven unique.
-            </p>
+            <p className="text-muted-foreground text-lg max-w-2xl">{t("featured.subtitle")}</p>
           </motion.div>
 
           <motion.div
@@ -40,7 +39,7 @@ export function FeaturedProperties() {
               href="/biens"
               className="inline-flex items-center gap-2 text-primary font-bold hover:text-primary/80 transition-colors group"
             >
-              Voir toutes les annonces
+              {t("featured.see_all")}
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
@@ -52,7 +51,7 @@ export function FeaturedProperties() {
           </div>
         ) : properties.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-muted-foreground text-lg">Aucun bien disponible pour le moment.</p>
+            <p className="text-muted-foreground text-lg">{t("featured.empty")}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

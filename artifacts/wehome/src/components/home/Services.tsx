@@ -1,28 +1,28 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { TrendingUp, FileCheck, Globe } from "lucide-react";
 
 const SERVICES = [
   {
     icon: <TrendingUp size={32} />,
-    title: "Intelligence de marché",
-    description:
-      "Nous transformons la donnée brute des transactions marocaines en insights actionnables — prix réels au m², délais de vente, tendances par quartier. L'information que vous méritez.",
+    title: "services.item1_title",
+    description: "services.item1_desc",
   },
   {
     icon: <FileCheck size={32} />,
-    title: "Biens certifiés WeHome",
-    description:
-      "Chaque propriété sur notre plateforme est visitée, vérifiée, mandatée. Nos standards éliminent les annonces fantômes et les prix fictifs. La qualité du listing protège l'acheteur.",
+    title: "services.item2_title",
+    description: "services.item2_desc",
   },
   {
     icon: <Globe size={32} />,
-    title: "Distribution nationale",
-    description:
-      "Votre bien est exposé à notre audience nationale — acheteurs locaux, investisseurs, diaspora marocaine à l'étranger. Une portée que les agences isolées ne peuvent pas offrir.",
+    title: "services.item3_title",
+    description: "services.item3_desc",
   },
 ];
 
 export function Services() {
+  const { t } = useTranslation();
+
   return (
     <section className="py-24 md:py-32 bg-secondary/50 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
@@ -36,7 +36,7 @@ export function Services() {
             transition={{ duration: 0.5 }}
             className="text-xs font-bold tracking-[0.2em] uppercase mb-4 text-primary"
           >
-            La plateforme
+            {t("services.overline")}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -45,9 +45,9 @@ export function Services() {
             transition={{ delay: 0.05 }}
             className="text-3xl md:text-4xl font-display font-bold text-foreground mb-5"
           >
-            Ce que WeHome apporte
+            {t("services.title_part1")}
             <br />
-            que personne d'autre n'offre.
+            {t("services.title_part2")}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -56,8 +56,7 @@ export function Services() {
             transition={{ delay: 0.1 }}
             className="text-muted-foreground text-base leading-relaxed"
           >
-            Entre les plateformes qui abandonnent les acheteurs et les agences qui manquent de
-            données — WeHome construit le standard que le marché attendait.
+            {t("services.subtitle")}
           </motion.p>
         </div>
 
@@ -75,9 +74,11 @@ export function Services() {
                 {service.icon}
               </div>
               <h3 className="text-xl font-display font-bold text-foreground mb-4">
-                {service.title}
+                {t(service.title)}
               </h3>
-              <p className="text-muted-foreground leading-[1.75] text-sm">{service.description}</p>
+              <p className="text-muted-foreground leading-[1.75] text-sm">
+                {t(service.description)}
+              </p>
             </motion.div>
           ))}
         </div>

@@ -1,32 +1,35 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
 import { BarChart2, ShieldCheck, Handshake, Network } from "lucide-react";
 
 const CARDS = [
   {
     icon: BarChart2,
-    title: "Données de marché réelles",
-    body: "Nous publions les prix au m² par ville et par quartier chaque mois. Pas des estimations. Les vraies transactions du marché marocain.",
+    title: "why.card1_title",
+    body: "why.card1_body",
   },
   {
     icon: ShieldCheck,
-    title: "Biens vérifiés et mandatés",
-    body: "Chaque bien listé sur WeHome a été visité et mandaté par un agent. Zéro annonce fantôme. Zéro doublon.",
+    title: "why.card2_title",
+    body: "why.card2_body",
   },
   {
     icon: Handshake,
-    title: "Accompagnement de bout en bout",
-    body: "De l'estimation à la remise des clés — un agent dédié vous suit à chaque étape, où que vous soyez au Maroc.",
+    title: "why.card3_title",
+    body: "why.card3_body",
   },
   {
     icon: Network,
-    title: "Le réseau se construit",
-    body: "Nous ouvrons notre plateforme aux agences partenaires qui partagent nos standards. Le premier MLS privé du Maroc — rejoignez l'aventure.",
-    cta: { label: "Rejoindre le réseau", href: "/partenaires" },
+    title: "why.card4_title",
+    body: "why.card4_body",
+    cta: { label: "why.card4_cta", href: "/partenaires" },
   },
 ];
 
 export function WhyChooseUs() {
+  const { t } = useTranslation();
+
   return (
     <section className="py-24 md:py-32 bg-primary text-primary-foreground relative overflow-hidden">
       {/* Decorative circles */}
@@ -43,12 +46,12 @@ export function WhyChooseUs() {
             transition={{ duration: 0.6 }}
           >
             <p className="text-xs font-bold tracking-[0.2em] uppercase mb-4 text-white/50">
-              Notre différence
+              {t("why.overline")}
             </p>
             <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
-              Pourquoi WeHome
+              {t("why.title_part1")}
               <br />
-              est différent
+              {t("why.title_part2")}
             </h2>
           </motion.div>
           <motion.p
@@ -58,9 +61,9 @@ export function WhyChooseUs() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="text-primary-foreground/70 text-base leading-relaxed max-w-md lg:text-right"
           >
-            WeHome n'est pas une plateforme d'annonces.
+            {t("why.sub_part1")}
             <br />
-            C'est l'infrastructure de confiance du marché immobilier marocain.
+            {t("why.sub_part2")}
           </motion.p>
         </div>
 
@@ -78,14 +81,16 @@ export function WhyChooseUs() {
               <div className="w-12 h-12 rounded-2xl bg-white text-primary flex items-center justify-center mb-6 shadow-sm">
                 <Icon size={22} />
               </div>
-              <h3 className="font-display font-bold text-lg mb-3 leading-snug">{title}</h3>
-              <p className="text-primary-foreground/70 text-sm leading-[1.75] flex-grow">{body}</p>
+              <h3 className="font-display font-bold text-lg mb-3 leading-snug">{t(title)}</h3>
+              <p className="text-primary-foreground/70 text-sm leading-[1.75] flex-grow">
+                {t(body)}
+              </p>
               {cta && (
                 <Link
                   href={cta.href}
                   className="inline-flex items-center gap-1.5 mt-5 text-xs font-bold tracking-wide uppercase text-white/70 hover:text-white transition-colors"
                 >
-                  {cta.label} →
+                  {t(cta.label)} →
                 </Link>
               )}
             </motion.div>
