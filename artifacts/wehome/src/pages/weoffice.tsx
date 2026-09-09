@@ -167,7 +167,7 @@ export default function WeOfficePage() {
                 <div className="flex flex-col sm:flex-row gap-3 mt-8">
                   <a
                     href="#brief"
-                    className="group inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-bold bg-white text-slate-900 shadow-2xl hover:-translate-y-0.5 transition-all"
+                    className="group inline-flex items-center justify-center gap-2 px-7 py-4 rounded-[6px] font-bold bg-white text-slate-900 shadow-sm hover:-translate-y-0.5 transition-all"
                   >
                     {fallback("weoffice.hero_cta_primary", "Décrire mon besoin")}
                     <ArrowRight
@@ -179,7 +179,7 @@ export default function WeOfficePage() {
                     href={WEOFFICE_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-bold bg-white/10 backdrop-blur-md border border-white/30 text-white hover:bg-white/20 transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-[6px] font-bold bg-white/10 backdrop-blur-md border border-white/30 text-white hover:bg-white/20 transition-all"
                   >
                     {fallback("weoffice.hero_cta_secondary", "Voir le catalogue")}
                     <ExternalLink size={16} />
@@ -573,7 +573,7 @@ export default function WeOfficePage() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-bold bg-slate-900 text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                      className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-[6px] font-bold bg-slate-900 text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                     >
                       {submitting ? (
                         <>
@@ -637,7 +637,7 @@ export default function WeOfficePage() {
                   href={WEOFFICE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold bg-white text-slate-900 shadow-2xl hover:shadow-3xl hover:-translate-y-0.5 transition-all whitespace-nowrap"
+                  className="group inline-flex items-center justify-center gap-2 px-8 py-4 rounded-[6px] font-bold bg-white text-slate-900 shadow-sm hover:shadow-3xl hover:-translate-y-0.5 transition-all whitespace-nowrap"
                 >
                   {fallback("weoffice.final_cta", "Voir le catalogue")}
                   <ExternalLink
@@ -690,7 +690,7 @@ function FloatingCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      className={`${className} bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-4 border border-white/40`}
+      className={`${className} bg-white/95 backdrop-blur-xl rounded-2xl shadow-sm p-4 border border-white/40`}
     >
       <div className="flex items-start gap-3">
         <div

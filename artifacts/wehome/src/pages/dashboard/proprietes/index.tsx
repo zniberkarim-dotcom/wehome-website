@@ -66,7 +66,7 @@ export default function DashboardPropertiesPage() {
             </p>
           </div>
           <Link href="/dashboard/proprietes/new">
-            <button className="flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary/90 transition-colors shadow-md shadow-primary/20">
+            <button className="flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary/90 transition-colors shadow-md shadow-black/5">
               <Plus size={18} />
               Ajouter
             </button>

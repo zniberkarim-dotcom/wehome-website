@@ -219,7 +219,7 @@ export default function InscriptionPage() {
             <Link
               href="/espace-agent"
               className="block w-full py-3.5 rounded-xl font-bold text-white text-center"
-              style={{ background: "#C0392B" }}
+              style={{ background: "hsl(var(--primary))" }}
             >
               Découvrir WeHome
             </Link>
@@ -266,7 +266,7 @@ export default function InscriptionPage() {
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
                       step >= s ? "text-white" : "bg-muted text-muted-foreground"
                     }`}
-                    style={step >= s ? { background: "#C0392B" } : {}}
+                    style={step >= s ? { background: "hsl(var(--primary))" } : {}}
                   >
                     {step > s ? "✓" : s}
                   </div>
@@ -574,7 +574,7 @@ export default function InscriptionPage() {
               <button
                 onClick={goNext}
                 className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white ml-auto"
-                style={{ background: "#C0392B" }}
+                style={{ background: "hsl(var(--primary))" }}
               >
                 Continuer <ArrowRight size={16} />
               </button>
@@ -583,7 +583,7 @@ export default function InscriptionPage() {
                 onClick={handleSubmit}
                 disabled={loading || !accepted}
                 className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white ml-auto disabled:opacity-60"
-                style={{ background: "#C0392B" }}
+                style={{ background: "hsl(var(--primary))" }}
               >
                 {loading && <Loader2 size={17} className="animate-spin" />}
                 Soumettre ma demande

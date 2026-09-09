@@ -127,7 +127,7 @@ export function MortgageCalculator({
         initial={{ opacity: 0, y: 4 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="rounded-xl bg-gradient-to-br from-primary to-primary/80 text-white p-4 shadow-md shadow-primary/20"
+        className="rounded-xl bg-gradient-to-br from-primary to-primary/80 text-white p-4 shadow-md shadow-black/5"
       >
         <p className="text-xs font-semibold uppercase tracking-wide opacity-90">
           {t("mortgage.monthly_estimate")}

@@ -385,9 +385,9 @@ export default function EstimerPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.56 }}
             onClick={scrollToForm}
-            className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl font-bold text-base text-white shadow-2xl hover:-translate-y-1 transition-all duration-300"
+            className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl font-bold text-base text-white shadow-sm hover:-translate-y-1 transition-all duration-300"
             style={{
-              background: "var(--primary, #8B1A2E)",
+              background: "var(--primary, #5C1428)",
               boxShadow: "0 8px 32px rgba(139,26,46,0.5)",
             }}
           >
@@ -423,7 +423,7 @@ export default function EstimerPage() {
       ══════════════════════════════════════════════════════════════════════════ */}
       <section className="py-20 bg-secondary/30" ref={formRef}>
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <div className="bg-white rounded-3xl shadow-2xl border border-border/40 overflow-hidden">
+          <div className="bg-white rounded-3xl shadow-sm border border-border/40 overflow-hidden">
             {/* ── Progress bar ── */}
             {!success && (
               <div className="px-8 pt-8 pb-6">
@@ -433,7 +433,7 @@ export default function EstimerPage() {
                       <div className="h-1.5 flex-1 rounded-full overflow-hidden bg-border/40">
                         <motion.div
                           className="h-full rounded-full"
-                          style={{ background: "var(--primary, #8B1A2E)" }}
+                          style={{ background: "var(--primary, #5C1428)" }}
                           initial={false}
                           animate={{ width: step > s ? "100%" : step === s ? "100%" : "0%" }}
                           transition={{ duration: 0.4, ease: "easeInOut" }}
@@ -477,7 +477,7 @@ export default function EstimerPage() {
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                       >
-                        <CheckCircle2 size={40} style={{ color: "var(--primary, #8B1A2E)" }} />
+                        <CheckCircle2 size={40} style={{ color: "var(--primary, #5C1428)" }} />
                       </motion.div>
                     </div>
                     <h2 className="font-display font-bold text-foreground text-2xl mb-3">
@@ -499,7 +499,7 @@ export default function EstimerPage() {
                             : "/biens"
                         }
                         className="px-7 py-3 rounded-xl font-bold text-sm text-white hover:-translate-y-0.5 transition-all duration-200"
-                        style={{ background: "var(--primary, #8B1A2E)" }}
+                        style={{ background: "var(--primary, #5C1428)" }}
                       >
                         {quartier && quartier !== "Autre"
                           ? `${t("estimer.success_see_biens")} ${quartier}`
@@ -614,7 +614,7 @@ export default function EstimerPage() {
                       onClick={goNext}
                       className="w-full py-4 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200"
                       style={{
-                        background: "var(--primary, #8B1A2E)",
+                        background: "var(--primary, #5C1428)",
                         boxShadow: "0 4px 20px rgba(139,26,46,0.25)",
                       }}
                     >
@@ -657,7 +657,7 @@ export default function EstimerPage() {
                               {etat === value && (
                                 <div
                                   className="w-2 h-2 rounded-full"
-                                  style={{ background: "var(--primary, #8B1A2E)" }}
+                                  style={{ background: "var(--primary, #5C1428)" }}
                                 />
                               )}
                             </div>
@@ -751,7 +751,7 @@ export default function EstimerPage() {
                         onClick={goNext}
                         className="w-full py-4 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200"
                         style={{
-                          background: "var(--primary, #8B1A2E)",
+                          background: "var(--primary, #5C1428)",
                           boxShadow: "0 4px 20px rgba(139,26,46,0.25)",
                         }}
                       >
@@ -875,7 +875,7 @@ export default function EstimerPage() {
                         disabled={loading}
                         className="w-full py-4 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 mt-2"
                         style={{
-                          background: "var(--primary, #8B1A2E)",
+                          background: "var(--primary, #5C1428)",
                           boxShadow: "0 4px 20px rgba(139,26,46,0.25)",
                         }}
                       >
@@ -943,7 +943,7 @@ export default function EstimerPage() {
                     className="w-12 h-12 rounded-2xl flex items-center justify-center"
                     style={{ background: "rgba(139,26,46,0.08)" }}
                   >
-                    <Icon size={22} style={{ color: "var(--primary, #8B1A2E)" }} />
+                    <Icon size={22} style={{ color: "var(--primary, #5C1428)" }} />
                   </div>
                   <div>
                     <h3 className="font-display font-bold text-foreground text-lg mb-3">{title}</h3>
@@ -1001,7 +1001,7 @@ export default function EstimerPage() {
                   <div className="flex items-center gap-3 pt-2 border-t border-border/40">
                     <div
                       className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-                      style={{ background: "var(--primary, #8B1A2E)" }}
+                      style={{ background: "var(--primary, #5C1428)" }}
                     >
                       {author[0]}
                     </div>
@@ -1087,7 +1087,7 @@ export default function EstimerPage() {
             onClick={scrollToForm}
             className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl font-bold text-base text-white hover:-translate-y-1 transition-all duration-300"
             style={{
-              background: "var(--primary, #8B1A2E)",
+              background: "var(--primary, #5C1428)",
               boxShadow: "0 8px 32px rgba(139,26,46,0.45)",
             }}
           >

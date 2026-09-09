@@ -133,7 +133,10 @@ export default function PortalLoginPage() {
                   type="submit"
                   disabled={loading}
                   className="w-full py-3.5 rounded-xl font-bold text-white transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0 flex items-center justify-center gap-2"
-                  style={{ background: "#C0392B", boxShadow: "0 4px 16px rgba(192,57,43,0.3)" }}
+                  style={{
+                    background: "hsl(var(--primary))",
+                    boxShadow: "0 4px 16px rgba(192,57,43,0.3)",
+                  }}
                 >
                   {loading && <Loader2 size={17} className="animate-spin" />}
                   Se connecter
@@ -187,7 +190,7 @@ export default function PortalLoginPage() {
                     type="submit"
                     disabled={resetLoading}
                     className="w-full py-3.5 rounded-xl font-bold text-white disabled:opacity-60 flex items-center justify-center gap-2"
-                    style={{ background: "#C0392B" }}
+                    style={{ background: "hsl(var(--primary))" }}
                   >
                     {resetLoading && <Loader2 size={17} className="animate-spin" />}
                     Envoyer le lien

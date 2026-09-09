@@ -157,7 +157,7 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
       <div className="flex items-center gap-3 px-5 py-4 border-b border-border/60">
         <div
           className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0 overflow-hidden"
-          style={{ background: "#8B1A2E" }}
+          style={{ background: "hsl(var(--primary))" }}
         >
           {agent?.photo_url ? (
             <img src={agent.photo_url} alt={displayName} className="w-full h-full object-cover" />
@@ -184,7 +184,7 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 active
-                  ? "bg-primary text-white shadow-sm shadow-primary/25"
+                  ? "bg-primary text-white shadow-sm shadow-black/5"
                   : "text-foreground/65 hover:bg-secondary hover:text-foreground"
               }`}
             >

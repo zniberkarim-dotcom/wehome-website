@@ -396,7 +396,7 @@ export function PropertyPublishWizard({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 12 }}
         transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden"
+        className="relative bg-white rounded-3xl shadow-sm w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* ── Sticky header with progress ── */}
@@ -539,7 +539,7 @@ export function PropertyPublishWizard({
               type="button"
               onClick={handlePublish}
               disabled={publishMutation.isPending}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm text-white bg-primary hover:-translate-y-0.5 shadow-lg shadow-primary/30 hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm text-white bg-primary hover:-translate-y-0.5 shadow-lg shadow-black/5 hover:shadow-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {publishMutation.isPending ? (
                 <>
@@ -784,7 +784,7 @@ function Step2AiGenerate({
           <button
             type="button"
             onClick={onGenerate}
-            className="group relative inline-flex items-center gap-2 px-7 py-4 rounded-2xl font-bold text-white bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 shadow-xl shadow-orange-500/30 hover:shadow-2xl hover:-translate-y-0.5 transition-all"
+            className="group relative inline-flex items-center gap-2 px-7 py-4 rounded-2xl font-bold text-white bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 shadow-xl shadow-black/5/30 hover:shadow-sm hover:-translate-y-0.5 transition-all"
           >
             <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
             Générer le titre et la description

@@ -627,7 +627,7 @@ export default function DashboardPropertyEditPage() {
             <button
               type="submit"
               disabled={saving || saved}
-              className="flex-1 py-3.5 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-60 shadow-lg shadow-primary/20"
+              className="flex-1 py-3.5 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-60 shadow-lg shadow-black/5"
             >
               {saving ? (
                 <Loader2 size={18} className="animate-spin" />

@@ -59,7 +59,7 @@ function Overline({ children }: { children: React.ReactNode }) {
   return (
     <p
       className="text-xs font-bold tracking-[0.2em] uppercase mb-4"
-      style={{ color: "var(--primary, #8B1A2E)" }}
+      style={{ color: "var(--primary, #5C1428)" }}
     >
       {children}
     </p>
@@ -187,7 +187,7 @@ export default function AProposPage() {
               {/* Burgundy vertical line */}
               <div
                 className="w-[2px] rounded-full shrink-0 self-stretch"
-                style={{ background: "var(--primary, #8B1A2E)", minHeight: "100%" }}
+                style={{ background: "var(--primary, #5C1428)", minHeight: "100%" }}
               />
 
               {/* Manifesto text */}
@@ -213,7 +213,7 @@ export default function AProposPage() {
 
                 <p className="text-foreground/75">{t("about.manifesto_p3")}</p>
 
-                <p className="font-semibold" style={{ color: "var(--primary, #8B1A2E)" }}>
+                <p className="font-semibold" style={{ color: "var(--primary, #5C1428)" }}>
                   {t("about.manifesto_p4")}
                 </p>
 
@@ -227,7 +227,7 @@ export default function AProposPage() {
 
                 <p className="font-medium text-foreground/90">
                   {t("about.manifesto_p6_part1")}{" "}
-                  <span style={{ color: "var(--primary, #8B1A2E)" }}>
+                  <span style={{ color: "var(--primary, #5C1428)" }}>
                     {t("about.manifesto_p6_part2")}
                   </span>{" "}
                   {t("about.manifesto_p6_part3")}
@@ -307,7 +307,7 @@ export default function AProposPage() {
                 className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8"
                 style={{ background: "rgba(139,26,46,0.2)" }}
               >
-                <Gem size={22} style={{ color: "#C0392B" }} />
+                <Gem size={22} style={{ color: "hsl(var(--primary))" }} />
               </div>
               <h3 className="font-display font-bold text-white text-xl mb-4">
                 {t("about.section2_col3_title")}
@@ -317,7 +317,7 @@ export default function AProposPage() {
               </p>
               <div
                 className="mt-8 h-0.5 w-16 rounded-full"
-                style={{ background: "var(--primary, #8B1A2E)" }}
+                style={{ background: "var(--primary, #5C1428)" }}
               />
             </FadeIn>
           </div>
@@ -361,12 +361,12 @@ export default function AProposPage() {
               },
             ].map(({ icon: Icon, title, body, delay }) => (
               <FadeIn key={title} delay={delay}>
-                <div className="group h-full flex flex-col p-8 md:p-10 rounded-3xl border border-border/60 hover:border-primary/30 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 bg-card">
+                <div className="group h-full flex flex-col p-8 md:p-10 rounded-3xl border border-border/60 hover:border-primary/30 hover:shadow-sm hover:-translate-y-1.5 transition-all duration-500 bg-card">
                   <div
                     className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300"
                     style={{ background: "rgba(139,26,46,0.07)" }}
                   >
-                    <Icon size={24} style={{ color: "var(--primary, #8B1A2E)" }} />
+                    <Icon size={24} style={{ color: "var(--primary, #5C1428)" }} />
                   </div>
                   <h3 className="font-display font-bold text-foreground text-xl mb-5">{title}</h3>
                   <p className="text-muted-foreground leading-[1.8] text-sm flex-grow">{body}</p>
@@ -427,12 +427,12 @@ export default function AProposPage() {
                     className="w-12 h-12 rounded-2xl flex items-center justify-center mb-6"
                     style={{ background: "rgba(139,26,46,0.08)" }}
                   >
-                    <Icon size={22} style={{ color: "var(--primary, #8B1A2E)" }} />
+                    <Icon size={22} style={{ color: "var(--primary, #5C1428)" }} />
                   </div>
                   <div className="mb-6">
                     <span
                       className="font-display font-bold text-2xl"
-                      style={{ color: "var(--primary, #8B1A2E)" }}
+                      style={{ color: "var(--primary, #5C1428)" }}
                     >
                       {brand}
                     </span>
@@ -445,7 +445,7 @@ export default function AProposPage() {
                     <Link
                       href={cta.href}
                       className="inline-flex items-center gap-1.5 text-sm font-semibold hover:underline"
-                      style={{ color: "var(--primary, #8B1A2E)" }}
+                      style={{ color: "var(--primary, #5C1428)" }}
                     >
                       {cta.label} →
                     </Link>
@@ -544,9 +544,9 @@ export default function AProposPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/contact"
-                className="px-9 py-4 rounded-2xl font-bold text-base text-white shadow-xl hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
+                className="px-9 py-4 rounded-2xl font-bold text-base text-white shadow-xl hover:-translate-y-1 hover:shadow-sm transition-all duration-300"
                 style={{
-                  background: "var(--primary, #8B1A2E)",
+                  background: "var(--primary, #5C1428)",
                   boxShadow: "0 8px 32px rgba(139,26,46,0.45)",
                 }}
               >

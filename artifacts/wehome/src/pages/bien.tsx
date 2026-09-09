@@ -438,7 +438,7 @@ export default function BienPage() {
                       <div className="flex items-stretch divide-x divide-border/60 border border-border/60 rounded-2xl overflow-hidden mt-5">
                         {hasBeds && (
                           <div className="flex flex-col items-center justify-center gap-1 py-4 px-5 flex-1">
-                            <Bed size={20} style={{ color: "#8B1A2E" }} />
+                            <Bed size={20} style={{ color: "hsl(var(--primary))" }} />
                             <span className="text-sm font-bold text-foreground">
                               {property.beds}
                             </span>
@@ -449,7 +449,7 @@ export default function BienPage() {
                         )}
                         {hasRoomsFallback && (
                           <div className="flex flex-col items-center justify-center gap-1 py-4 px-5 flex-1">
-                            <Bed size={20} style={{ color: "#8B1A2E" }} />
+                            <Bed size={20} style={{ color: "hsl(var(--primary))" }} />
                             <span className="text-sm font-bold text-foreground">
                               {property.rooms}
                             </span>
@@ -460,7 +460,7 @@ export default function BienPage() {
                         )}
                         {hasSalons && (
                           <div className="flex flex-col items-center justify-center gap-1 py-4 px-5 flex-1">
-                            <Sofa size={20} style={{ color: "#8B1A2E" }} />
+                            <Sofa size={20} style={{ color: "hsl(var(--primary))" }} />
                             <span className="text-sm font-bold text-foreground">
                               {property.salons}
                             </span>
@@ -471,7 +471,7 @@ export default function BienPage() {
                         )}
                         {hasBaths && (
                           <div className="flex flex-col items-center justify-center gap-1 py-4 px-5 flex-1">
-                            <Bath size={20} style={{ color: "#8B1A2E" }} />
+                            <Bath size={20} style={{ color: "hsl(var(--primary))" }} />
                             <span className="text-sm font-bold text-foreground">
                               {property.baths}
                             </span>
@@ -482,7 +482,7 @@ export default function BienPage() {
                         )}
                         {hasSurface && (
                           <div className="flex flex-col items-center justify-center gap-1 py-4 px-5 flex-1">
-                            <Square size={20} style={{ color: "#8B1A2E" }} />
+                            <Square size={20} style={{ color: "hsl(var(--primary))" }} />
                             <span className="text-sm font-bold text-foreground">
                               {property.surface.toLocaleString("fr-FR")}
                             </span>
@@ -550,7 +550,7 @@ export default function BienPage() {
                           ) : (
                             <div
                               className="w-full h-full flex items-center justify-center text-white text-2xl font-bold"
-                              style={{ background: "#8B1A2E" }}
+                              style={{ background: "hsl(var(--primary))" }}
                             >
                               {agentData.prenom.charAt(0)}
                               {agentData.nom.charAt(0)}
@@ -588,7 +588,7 @@ export default function BienPage() {
                       <div className="space-y-2">
                         <a
                           href={`tel:${agentData.telephone || "+212653535156"}`}
-                          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-colors shadow-sm shadow-primary/20"
+                          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-colors shadow-sm shadow-black/5"
                         >
                           <Phone size={16} />
                           {agentData.telephone || "+212 6 53 53 51 56"}
@@ -658,7 +658,7 @@ export default function BienPage() {
                       <div className="flex flex-col items-center text-center gap-3 pt-1">
                         <div
                           className="w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold ring-4 ring-primary/10"
-                          style={{ background: "#8B1A2E" }}
+                          style={{ background: "hsl(var(--primary))" }}
                         >
                           {property.agent.charAt(0).toUpperCase()}
                         </div>

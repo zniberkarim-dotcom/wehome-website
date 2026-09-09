@@ -176,7 +176,7 @@ export default function NetworkPage() {
             >
               <span
                 style={{
-                  color: "#C0392B",
+                  color: "hsl(var(--primary))",
                   fontSize: "7px",
                   verticalAlign: "middle",
                   marginRight: "8px",
@@ -193,7 +193,8 @@ export default function NetworkPage() {
             >
               {t("network.hero_title_line1")}
               <br />
-              <span style={{ color: "#C0392B" }}>WeHome</span> {t("network.hero_title_line2")}
+              <span style={{ color: "hsl(var(--primary))" }}>WeHome</span>{" "}
+              {t("network.hero_title_line2")}
             </h1>
 
             <p
@@ -209,9 +210,9 @@ export default function NetworkPage() {
 
             <button
               onClick={scrollToForm}
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-white transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-[6px] font-bold text-white transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
               style={{
-                background: "#8B1A2E",
+                background: "hsl(var(--primary))",
                 boxShadow: "0 8px 32px rgba(139,26,46,0.4)",
               }}
             >
@@ -255,7 +256,7 @@ export default function NetworkPage() {
               >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center"
-                  style={{ background: "rgba(139,26,46,0.2)", color: "#C0392B" }}
+                  style={{ background: "rgba(139,26,46,0.2)", color: "hsl(var(--primary))" }}
                 >
                   {adv.icon}
                 </div>
@@ -308,7 +309,7 @@ export default function NetworkPage() {
                 {tier.active && (
                   <span
                     className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold text-white"
-                    style={{ background: "#8B1A2E" }}
+                    style={{ background: "hsl(var(--primary))" }}
                   >
                     {t("network.tier_recommended")}
                   </span>
@@ -332,7 +333,9 @@ export default function NetworkPage() {
                       <Check
                         size={15}
                         className="mt-0.5 shrink-0"
-                        style={{ color: tier.active ? "#C0392B" : "rgba(255,255,255,0.3)" }}
+                        style={{
+                          color: tier.active ? "hsl(var(--primary))" : "rgba(255,255,255,0.3)",
+                        }}
                       />
                       <span className="text-sm" style={{ color: "rgba(255,255,255,0.65)" }}>
                         {perk}
@@ -346,7 +349,7 @@ export default function NetworkPage() {
                   style={
                     tier.active
                       ? {
-                          background: "#8B1A2E",
+                          background: "hsl(var(--primary))",
                           color: "#fff",
                           boxShadow: "0 4px 20px rgba(139,26,46,0.3)",
                         }
@@ -366,7 +369,7 @@ export default function NetworkPage() {
       </section>
 
       {/* ── 4. CHIFFRES ── */}
-      <section className="py-14 px-4 sm:px-6 lg:px-8" style={{ background: "#8B1A2E" }}>
+      <section className="py-14 px-4 sm:px-6 lg:px-8" style={{ background: "hsl(var(--primary))" }}>
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
             {STATS.map((stat, i) => (
@@ -418,7 +421,7 @@ export default function NetworkPage() {
                   className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
                   style={{ background: "rgba(139,26,46,0.2)" }}
                 >
-                  <Check size={32} style={{ color: "#C0392B" }} />
+                  <Check size={32} style={{ color: "hsl(var(--primary))" }} />
                 </div>
                 <h3 className="text-2xl font-display font-bold text-white mb-3">
                   {t("network.success_title")}
@@ -438,7 +441,8 @@ export default function NetworkPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-2">
-                      {t("network.f_first_name")} <span style={{ color: "#C0392B" }}>*</span>
+                      {t("network.f_first_name")}{" "}
+                      <span style={{ color: "hsl(var(--primary))" }}>*</span>
                     </label>
                     <input
                       type="text"
@@ -456,7 +460,8 @@ export default function NetworkPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-2">
-                      {t("network.f_last_name")} <span style={{ color: "#C0392B" }}>*</span>
+                      {t("network.f_last_name")}{" "}
+                      <span style={{ color: "hsl(var(--primary))" }}>*</span>
                     </label>
                     <input
                       type="text"
@@ -478,7 +483,8 @@ export default function NetworkPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-2">
-                      {t("network.f_phone_wa")} <span style={{ color: "#C0392B" }}>*</span>
+                      {t("network.f_phone_wa")}{" "}
+                      <span style={{ color: "hsl(var(--primary))" }}>*</span>
                     </label>
                     <input
                       type="tel"
@@ -517,7 +523,7 @@ export default function NetworkPage() {
                 {/* Profil */}
                 <div>
                   <label className="block text-sm font-medium text-white/70 mb-2">
-                    {t("network.f_profile")} <span style={{ color: "#C0392B" }}>*</span>
+                    {t("network.f_profile")} <span style={{ color: "hsl(var(--primary))" }}>*</span>
                   </label>
                   <select
                     value={form.profile_type}
@@ -559,9 +565,9 @@ export default function NetworkPage() {
                           style={
                             selected
                               ? {
-                                  background: "#8B1A2E",
+                                  background: "hsl(var(--primary))",
                                   color: "#fff",
-                                  border: "1px solid #8B1A2E",
+                                  border: "1px solid hsl(var(--primary))",
                                 }
                               : {
                                   background: "rgba(255,255,255,0.05)",
@@ -580,7 +586,8 @@ export default function NetworkPage() {
                 {/* Nombre de biens */}
                 <div>
                   <label className="block text-sm font-medium text-white/70 mb-2">
-                    {t("network.f_property_count")} <span style={{ color: "#C0392B" }}>*</span>
+                    {t("network.f_property_count")}{" "}
+                    <span style={{ color: "hsl(var(--primary))" }}>*</span>
                   </label>
                   <select
                     value={form.property_count}
@@ -640,7 +647,7 @@ export default function NetworkPage() {
                   disabled={loading}
                   className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{
-                    background: "#8B1A2E",
+                    background: "hsl(var(--primary))",
                     boxShadow: "0 8px 32px rgba(139,26,46,0.35)",
                   }}
                 >

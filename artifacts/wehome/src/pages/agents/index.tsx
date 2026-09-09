@@ -78,7 +78,7 @@ export default function AgentsPage() {
                 <div className="flex flex-col sm:flex-row gap-3 mt-8">
                   <Link
                     href="/espace-agent/inscription"
-                    className="group inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-bold bg-white text-primary shadow-2xl hover:shadow-3xl hover:-translate-y-0.5 transition-all"
+                    className="group inline-flex items-center justify-center gap-2 px-7 py-4 rounded-[6px] font-bold bg-white text-primary shadow-sm hover:shadow-3xl hover:-translate-y-0.5 transition-all"
                   >
                     {fallback("agents.hero_cta_primary", "Rejoindre le réseau")}
                     <ArrowRight
@@ -90,7 +90,7 @@ export default function AgentsPage() {
                     href={whatsappRecrutement}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-bold bg-white/10 backdrop-blur-md border border-white/30 text-white hover:bg-white/20 transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-[6px] font-bold bg-white/10 backdrop-blur-md border border-white/30 text-white hover:bg-white/20 transition-all"
                   >
                     <Phone size={16} />
                     {fallback("agents.hero_cta_secondary", "Parler à un conseiller")}
@@ -287,7 +287,7 @@ export default function AgentsPage() {
             <div className="text-center mt-12">
               <Link
                 href="/espace-agent/inscription"
-                className="group inline-flex items-center gap-2 px-7 py-4 rounded-full font-bold bg-primary text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
+                className="group inline-flex items-center gap-2 px-7 py-4 rounded-[6px] font-bold bg-primary text-white shadow-lg shadow-black/5 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-0.5 transition-all"
               >
                 {fallback("agents.how_cta", "Commencer ma candidature")}
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -424,7 +424,8 @@ export default function AgentsPage() {
                             <div
                               className="w-full h-full flex items-center justify-center text-white text-5xl font-display font-bold"
                               style={{
-                                background: "linear-gradient(135deg, #8B1A2E 0%, #C0392B 100%)",
+                                background:
+                                  "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-hover)) 100%)",
                               }}
                             >
                               {agent.prenom.charAt(0)}
@@ -492,7 +493,7 @@ export default function AgentsPage() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">
                 <Link
                   href="/espace-agent/inscription"
-                  className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold bg-primary text-white shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
+                  className="group inline-flex items-center gap-2 px-8 py-4 rounded-[6px] font-bold bg-primary text-white shadow-xl shadow-black/5 hover:shadow-sm hover:shadow-black/5 hover:-translate-y-0.5 transition-all"
                 >
                   {fallback("agents.final_cta_primary", "Rejoindre le réseau WeHome")}
                   <ArrowRight
@@ -504,7 +505,7 @@ export default function AgentsPage() {
                   href={whatsappRecrutement}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold border-2 border-foreground/15 text-foreground hover:border-foreground/40 hover:bg-foreground/5 transition-all"
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-[6px] font-bold border-2 border-foreground/15 text-foreground hover:border-foreground/40 hover:bg-foreground/5 transition-all"
                 >
                   <Phone size={16} />
                   {fallback("agents.final_cta_secondary", "Discuter d'abord")}
@@ -554,7 +555,7 @@ function FloatingCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      className={`${className} bg-white rounded-2xl shadow-2xl p-4 border border-white/40`}
+      className={`${className} bg-white rounded-2xl shadow-sm p-4 border border-white/40`}
     >
       <div className="flex items-start gap-3">
         <div

@@ -97,7 +97,7 @@ export default function AgentProfilePage() {
                 ) : (
                   <div
                     className="w-full h-full flex items-center justify-center text-white text-3xl font-display font-bold"
-                    style={{ background: "#8B1A2E" }}
+                    style={{ background: "hsl(var(--primary))" }}
                   >
                     {agent.prenom.charAt(0)}
                     {agent.nom.charAt(0)}

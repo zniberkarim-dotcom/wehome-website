@@ -292,7 +292,7 @@ export function Navbar({ theme = "dark" }: { theme?: "dark" | "light" }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-0 left-0 w-full h-screen bg-background border-b border-border/50 shadow-2xl md:hidden pt-24 px-4 flex flex-col gap-4 overflow-y-auto"
+            className="absolute top-0 left-0 w-full h-screen bg-background border-b border-border/50 shadow-sm md:hidden pt-24 px-4 flex flex-col gap-4 overflow-y-auto"
           >
             {navLinks.map((link) =>
               link.external ? (

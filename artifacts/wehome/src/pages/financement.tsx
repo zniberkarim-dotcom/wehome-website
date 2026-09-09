@@ -375,7 +375,7 @@ export default function FinancementPage() {
               href={whatsappFinancement}
               target="_blank"
               rel="noopener noreferrer"
-              className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm bg-primary text-white shadow-md shadow-primary/20 hover:-translate-y-0.5 transition-all"
+              className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-full font-semibold text-sm bg-primary text-white shadow-md shadow-black/5 hover:-translate-y-0.5 transition-all"
             >
               {t("common.speak_advisor")}
               <ArrowRight size={15} />
@@ -413,7 +413,7 @@ export default function FinancementPage() {
               <button
                 type="button"
                 onClick={() => setLeadModalCtx("mortgage")}
-                className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm bg-primary text-white shadow-md shadow-primary/20 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm bg-primary text-white shadow-md shadow-black/5 hover:shadow-lg hover:-translate-y-0.5 transition-all"
               >
                 <Sparkles size={14} />
                 {t(
@@ -502,14 +502,14 @@ export default function FinancementPage() {
               href={whatsappFinancement}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-3.5 rounded-full font-bold bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all flex items-center gap-2"
+              className="px-6 py-3.5 rounded-[6px] font-bold bg-primary text-white shadow-lg shadow-black/5 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-0.5 transition-all flex items-center gap-2"
             >
               {t("common.speak_advisor")}
               <ArrowRight size={18} />
             </a>
             <Link
               href="/biens"
-              className="px-6 py-3.5 rounded-full font-bold border-2 border-foreground text-foreground hover:bg-foreground hover:text-background transition-colors"
+              className="px-6 py-3.5 rounded-[6px] font-bold border-2 border-foreground text-foreground hover:bg-foreground hover:text-background transition-colors"
             >
               {t("common.see_properties")}
             </Link>
@@ -683,7 +683,7 @@ function FinancementLeadModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-border/40 overflow-hidden"
+            className="relative w-full max-w-lg bg-white rounded-3xl shadow-sm border border-border/40 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
@@ -714,7 +714,7 @@ function FinancementLeadModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="mt-6 px-6 py-2.5 rounded-full font-semibold text-sm bg-foreground text-background hover:-translate-y-0.5 transition-all"
+                  className="mt-6 px-6 py-2.5 rounded-[6px] font-semibold text-sm bg-foreground text-background hover:-translate-y-0.5 transition-all"
                 >
                   {fallback("financement.modal_close_cta", "Fermer")}
                 </button>
@@ -840,7 +840,7 @@ function FinancementLeadModal({
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-3.5 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 bg-primary shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0"
+                    className="w-full py-3.5 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 bg-primary shadow-lg shadow-black/5 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0"
                   >
                     {submitting ? (
                       <>

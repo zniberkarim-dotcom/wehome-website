@@ -53,7 +53,7 @@ function Overline({ children }: { children: React.ReactNode }) {
   return (
     <p
       className="text-xs font-bold tracking-[0.2em] uppercase mb-4"
-      style={{ color: "var(--primary, #8B1A2E)" }}
+      style={{ color: "var(--primary, #5C1428)" }}
     >
       {children}
     </p>
@@ -175,7 +175,7 @@ export default function PartenairesPage() {
           >
             <span
               className="w-1.5 h-1.5 rounded-full animate-pulse"
-              style={{ background: "#C0392B" }}
+              style={{ background: "hsl(var(--primary))" }}
             />
             <span className="text-xs font-bold tracking-widest text-white/80 uppercase">
               {t("partenaires.hero_badge")}
@@ -213,7 +213,7 @@ export default function PartenairesPage() {
             onClick={scrollToForm}
             className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl font-bold text-base text-white hover:-translate-y-1 transition-all duration-300"
             style={{
-              background: "var(--primary, #8B1A2E)",
+              background: "var(--primary, #5C1428)",
               boxShadow: "0 8px 32px rgba(139,26,46,0.5)",
             }}
           >
@@ -267,7 +267,7 @@ export default function PartenairesPage() {
                     className="w-12 h-12 rounded-2xl flex items-center justify-center"
                     style={{ background: "rgba(139,26,46,0.08)" }}
                   >
-                    <Icon size={22} style={{ color: "var(--primary, #8B1A2E)" }} />
+                    <Icon size={22} style={{ color: "var(--primary, #5C1428)" }} />
                   </div>
                   <div>
                     <h3 className="font-display font-bold text-foreground text-xl mb-3">{title}</h3>
@@ -314,7 +314,7 @@ export default function PartenairesPage() {
                       animate={{ scale: 1 }}
                       transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                     >
-                      <CheckCircle2 size={34} style={{ color: "var(--primary, #8B1A2E)" }} />
+                      <CheckCircle2 size={34} style={{ color: "var(--primary, #5C1428)" }} />
                     </motion.div>
                   </div>
                   <h3 className="font-display font-bold text-foreground text-2xl mb-3">
@@ -445,7 +445,7 @@ export default function PartenairesPage() {
                     disabled={loading}
                     className="w-full py-4 rounded-xl font-bold text-base text-white flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 mt-2"
                     style={{
-                      background: "var(--primary, #8B1A2E)",
+                      background: "var(--primary, #5C1428)",
                       boxShadow: "0 4px 20px rgba(139,26,46,0.25)",
                     }}
                   >
@@ -538,7 +538,7 @@ export default function PartenairesPage() {
             onClick={scrollToForm}
             className="inline-flex items-center gap-2 px-9 py-4 rounded-2xl font-bold text-base text-white hover:-translate-y-1 transition-all duration-300"
             style={{
-              background: "var(--primary, #8B1A2E)",
+              background: "var(--primary, #5C1428)",
               boxShadow: "0 8px 32px rgba(139,26,46,0.45)",
             }}
           >

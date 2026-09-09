@@ -228,7 +228,7 @@ function NewBienModal({
         initial={{ opacity: 0, scale: 0.95, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 16 }}
-        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="relative bg-white rounded-3xl shadow-sm w-full max-w-2xl max-h-[90vh] overflow-y-auto"
       >
         <div className="flex items-center justify-between px-7 pt-7 pb-5 border-b border-border sticky top-0 bg-white z-10">
           <div>
@@ -446,7 +446,7 @@ function NewBienModal({
               type="submit"
               disabled={mutation.isPending}
               className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-white disabled:opacity-60"
-              style={{ background: "#C0392B" }}
+              style={{ background: "hsl(var(--primary))" }}
             >
               {(mutation.isPending || uploading) && <Loader2 size={16} className="animate-spin" />}
               Soumettre pour validation
@@ -502,7 +502,7 @@ export default function PortalBiensPage() {
                   ? "Limite de votre plan atteinte"
                   : "Publier avec l'IA — recommandé"
               }
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-white disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 transition-all shadow-lg shadow-orange-500/30"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-white disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 transition-all shadow-lg shadow-black/5/30"
               style={{
                 background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 50%, #E11D48 100%)",
               }}
@@ -539,7 +539,7 @@ export default function PortalBiensPage() {
               className="h-2 rounded-full transition-all"
               style={{
                 width: `${Math.min((activeCount / limit) * 100, 100)}%`,
-                background: activeCount >= limit ? "#e53e3e" : "#C0392B",
+                background: activeCount >= limit ? "#e53e3e" : "hsl(var(--primary))",
               }}
             />
           </div>
@@ -571,7 +571,7 @@ export default function PortalBiensPage() {
             </p>
             <button
               onClick={() => setShowAiWizard(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white shadow-lg shadow-black/5/30 hover:-translate-y-0.5 transition-all"
               style={{
                 background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 50%, #E11D48 100%)",
               }}

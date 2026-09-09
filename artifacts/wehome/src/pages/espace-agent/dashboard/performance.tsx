@@ -237,7 +237,7 @@ export default function PortalPerformancePage() {
                         <Tooltip content={<ChartTooltip />} />
                         <Bar dataKey="vues" radius={[6, 6, 0, 0]}>
                           {viewsData.map((_, i) => (
-                            <Cell key={i} fill={i === 0 ? "#C0392B" : "#e8b4b0"} />
+                            <Cell key={i} fill={i === 0 ? "#5C1428" : "#e8b4b0"} />
                           ))}
                         </Bar>
                       </BarChart>
@@ -268,9 +268,9 @@ export default function PortalPerformancePage() {
                       <Line
                         type="monotone"
                         dataKey="leads"
-                        stroke="#C0392B"
+                        stroke="#5C1428"
                         strokeWidth={2.5}
-                        dot={{ fill: "#C0392B", r: 4 }}
+                        dot={{ fill: "#5C1428", r: 4 }}
                         activeDot={{ r: 6 }}
                       />
                     </LineChart>

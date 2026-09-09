@@ -141,7 +141,7 @@ function EmptyState() {
       <p className="text-muted-foreground mt-3 leading-relaxed">{t("favoris.empty_body")}</p>
       <Link
         href="/biens"
-        className="inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-full font-bold bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all"
+        className="inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-full font-bold bg-primary text-white shadow-lg shadow-black/5 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-0.5 transition-all"
       >
         <Search size={18} />
         {t("favoris.empty_cta")}

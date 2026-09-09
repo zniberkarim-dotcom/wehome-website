@@ -203,7 +203,7 @@ export default function PortalDashboardHome() {
               Actions rapides
             </h2>
             <Link href="/espace-agent/dashboard/biens">
-              <div className="flex items-center gap-4 p-4 bg-primary text-white rounded-2xl hover:bg-primary/90 transition-colors cursor-pointer shadow-md shadow-primary/20">
+              <div className="flex items-center gap-4 p-4 bg-primary text-white rounded-2xl hover:bg-primary/90 transition-colors cursor-pointer shadow-md shadow-black/5">
                 <Plus size={22} className="shrink-0" />
                 <div>
                   <p className="font-semibold">Publier un bien</p>

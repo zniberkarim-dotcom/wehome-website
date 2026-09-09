@@ -150,7 +150,7 @@ export default function PortalProfilPage() {
             <div className="relative shrink-0">
               <div
                 className="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-md"
-                style={{ background: "#8B1A2E" }}
+                style={{ background: "hsl(var(--primary))" }}
               >
                 {currentPhoto ? (
                   <img src={currentPhoto} alt={initials} className="w-full h-full object-cover" />
@@ -325,7 +325,7 @@ export default function PortalProfilPage() {
               onClick={() => mutation.mutate()}
               disabled={mutation.isPending}
               className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white ml-auto disabled:opacity-60 hover:-translate-y-0.5 transition-all"
-              style={{ background: "#C0392B" }}
+              style={{ background: "hsl(var(--primary))" }}
             >
               {mutation.isPending && <Loader2 size={16} className="animate-spin" />}
               Sauvegarder

@@ -529,6 +529,50 @@ errors on any `<Navbar>` without an explicit `theme`. Proven by mutation: removi
 
 ---
 
+## 15. Technical backlog — cleared (director pass)
+
+| Item | Before | After |
+|---|---|---|
+| Legacy red `#C0392B` | 30 occurrences / 11 files | **0** |
+| Legacy red `#8B1A2E` | 50 / 12 files | **0** |
+| `shadow-2xl` | 18 / 9 files | **0** → `shadow-sm` |
+| Coloured glow shadows | 36 | **0** → `shadow-black/5` |
+| Pill-shaped CTAs | 17 | **0** → `rounded-[6px]` |
+
+The legacy reds were split by *how* they were used, because one substitution does not fit all:
+
+- **30 inert fallbacks** `var(--primary, #8B1A2E)` → `var(--primary, #5C1428)`. Never rendered
+  (the token always resolves), but they were the last place the wrong hex was written down.
+- **44 inline styles** → `hsl(var(--primary))`, so they now track the token.
+- **3 chart/SVG props** (recharts `fill` / `stroke` / `dot`) → the literal `#5C1428`. A CSS
+  variable is not reliably resolved in an SVG presentation attribute, so a literal is correct here.
+- **1 two-red gradient** (`#8B1A2E → #C0392B` on `agents/index`) → `--primary → --primary-hover`,
+  i.e. one red with depth instead of two different ones.
+
+**31 chips stay `rounded-full`** — the pass-9 semantic (6px executes, pill selects) is intact.
+The 17 CTAs converted are 5 more than the 9 previously counted: `px-7 py-4 rounded-full` on
+`agents/index` and `weoffice` had been missed. Each was checked for a static className and
+`font-bold`/`semibold` before converting, so no selector was caught by mistake.
+
+### ⚠️ Not applied — `#161E2E` for the AI-section badges
+
+The memo offers "flat dark `#161E2E`, or a thin Crimson border" for the former orange gradients.
+**The orange gradients are already gone** (removed the previous pass, verified in production
+rendering `#5C1428`), so the defect is fixed; what remains is a styling preference.
+
+`#161E2E` was **not** introduced, for the same reason as the Crimson hex above:
+
+- it exists nowhere in the repo and is in none of the 6 Bible tokens — it would be a 7th colour;
+- substituting the nearest token is **not** free: `#161E2E` vs Taza Stone `#121314` measures
+  **ΔE2000 9.52** — the same order as the Crimson discrepancy in §14, not a rounding difference.
+  `#161E2E` is a blue-leaning near-black; Taza Stone is neutral;
+- it comes from the same memo whose Crimson values proved approximate.
+
+Needs a decision: adopt `#161E2E` as a real token, or keep the badges on Crimson Atlas as they
+ship today. Either is one small change — but it should be chosen, not inferred.
+
+---
+
 ## Known debt (cross-page, deliberately not fixed in a page pass)
 
 Consolidated so it does not get lost. None of this is in scope for a single page's pass; each

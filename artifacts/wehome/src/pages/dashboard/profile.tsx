@@ -96,7 +96,7 @@ export default function DashboardProfilePage() {
                 ) : (
                   <div
                     className="w-full h-full flex items-center justify-center text-white text-2xl font-bold"
-                    style={{ background: "#8B1A2E" }}
+                    style={{ background: "hsl(var(--primary))" }}
                   >
                     {prenom.charAt(0)}
                     {nom.charAt(0)}
@@ -250,7 +250,7 @@ export default function DashboardProfilePage() {
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 px-8 py-3.5 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-colors disabled:opacity-60 shadow-lg shadow-primary/20"
+            className="flex items-center gap-2 px-8 py-3.5 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-colors disabled:opacity-60 shadow-lg shadow-black/5"
           >
             {saving ? (
               <Loader2 size={18} className="animate-spin" />

@@ -67,11 +67,15 @@ export default function EspaceAgentPage() {
           <div className="absolute inset-0 pointer-events-none">
             <div
               className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full opacity-10"
-              style={{ background: "radial-gradient(circle, #C0392B 0%, transparent 70%)" }}
+              style={{
+                background: "radial-gradient(circle, hsl(var(--primary)) 0%, transparent 70%)",
+              }}
             />
             <div
               className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full opacity-5"
-              style={{ background: "radial-gradient(circle, #C0392B 0%, transparent 70%)" }}
+              style={{
+                background: "radial-gradient(circle, hsl(var(--primary)) 0%, transparent 70%)",
+              }}
             />
           </div>
 
@@ -133,7 +137,10 @@ export default function EspaceAgentPage() {
               <Link
                 href="/espace-agent/inscription"
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl font-bold text-white transition-all hover:-translate-y-0.5 shadow-lg"
-                style={{ background: "#C0392B", boxShadow: "0 8px 32px rgba(192,57,43,0.4)" }}
+                style={{
+                  background: "hsl(var(--primary))",
+                  boxShadow: "0 8px 32px rgba(192,57,43,0.4)",
+                }}
               >
                 Devenir agent partenaire
                 <ArrowRight size={17} />
@@ -234,7 +241,10 @@ export default function EspaceAgentPage() {
                 <Link
                   href="/espace-agent/inscription"
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-bold text-white hover:-translate-y-0.5 transition-all"
-                  style={{ background: "#C0392B", boxShadow: "0 8px 32px rgba(192,57,43,0.4)" }}
+                  style={{
+                    background: "hsl(var(--primary))",
+                    boxShadow: "0 8px 32px rgba(192,57,43,0.4)",
+                  }}
                 >
                   Créer mon compte <ArrowRight size={17} />
                 </Link>

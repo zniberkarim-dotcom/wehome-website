@@ -364,7 +364,7 @@ export default function ServicesProPage() {
                 onClick={() =>
                   document.getElementById("packs")?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-lg flex items-center gap-3 shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                className="px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-lg flex items-center gap-3 shadow-lg shadow-black/5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
                 Voir les packs
                 <ArrowRight size={20} />
@@ -435,7 +435,7 @@ export default function ServicesProPage() {
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   className={`relative rounded-3xl p-8 border ${
                     pack.featured
-                      ? "bg-card border-primary shadow-2xl shadow-primary/20 scale-105 md:scale-100 md:-translate-y-4"
+                      ? "bg-card border-primary shadow-sm shadow-black/5 scale-105 md:scale-100 md:-translate-y-4"
                       : "bg-card border-border"
                   }`}
                 >
@@ -668,7 +668,7 @@ export default function ServicesProPage() {
       {/* FORM */}
       <section id="service-pro-form" className="py-20 bg-secondary/30">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-card rounded-3xl p-8 md:p-12 border border-border shadow-2xl">
+          <div className="bg-card rounded-3xl p-8 md:p-12 border border-border shadow-sm">
             <div className="text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-3">
                 Réservez votre pack
@@ -790,7 +790,7 @@ export default function ServicesProPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-4 bg-primary text-primary-foreground rounded-xl font-bold text-lg flex items-center justify-center gap-3 shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 disabled:opacity-60 disabled:translate-y-0"
+                className="w-full py-4 bg-primary text-primary-foreground rounded-xl font-bold text-lg flex items-center justify-center gap-3 shadow-lg shadow-black/5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 disabled:opacity-60 disabled:translate-y-0"
               >
                 {submitting ? "Envoi en cours…" : "Envoyer ma demande"}
                 {!submitting && <ArrowRight size={20} />}
@@ -850,7 +850,7 @@ export default function ServicesProPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-card rounded-[3rem] p-10 md:p-16 border border-border shadow-2xl text-center relative overflow-hidden"
+            className="bg-card rounded-[3rem] p-10 md:p-16 border border-border shadow-sm text-center relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
@@ -868,7 +868,7 @@ export default function ServicesProPage() {
                       .getElementById("service-pro-form")
                       ?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className="px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-lg flex items-center gap-3 shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                  className="px-8 py-4 bg-primary text-primary-foreground rounded-xl font-bold text-lg flex items-center gap-3 shadow-lg shadow-black/5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 >
                   Réserver maintenant
                   <ArrowRight size={20} />

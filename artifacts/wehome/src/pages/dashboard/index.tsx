@@ -62,7 +62,7 @@ export default function DashboardIndexPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.24 }}
-              className="bg-primary text-white rounded-2xl p-6 cursor-pointer hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
+              className="bg-primary text-white rounded-2xl p-6 cursor-pointer hover:bg-primary/90 transition-colors shadow-lg shadow-black/5"
             >
               <Plus size={24} className="mb-3" />
               <p className="font-display font-bold text-lg">Ajouter un bien</p>

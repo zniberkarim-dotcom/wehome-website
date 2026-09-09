@@ -273,7 +273,7 @@ export default function PortalLeadsPage() {
                         {/* Avatar */}
                         <div
                           className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0 ${isNew ? "" : "opacity-60"}`}
-                          style={{ background: "#C0392B" }}
+                          style={{ background: "hsl(var(--primary))" }}
                         >
                           {lead.name.charAt(0).toUpperCase()}
                         </div>

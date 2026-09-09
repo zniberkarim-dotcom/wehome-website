@@ -226,7 +226,7 @@ export default function PublierPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="relative bg-white rounded-3xl shadow-xl shadow-amber-900/5 border border-amber-200/50 overflow-hidden"
+            className="relative bg-white rounded-3xl shadow-xl shadow-black/5/5 border border-amber-200/50 overflow-hidden"
           >
             <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-amber-200/40 to-rose-200/40 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -left-16 -bottom-16 w-56 h-56 bg-gradient-to-tr from-primary/10 to-amber-200/30 rounded-full blur-3xl pointer-events-none" />
@@ -276,7 +276,7 @@ export default function PublierPage() {
 
               <Link
                 href="/services-pro"
-                className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold bg-foreground text-background shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all whitespace-nowrap"
+                className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-[6px] font-bold bg-foreground text-background shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all whitespace-nowrap"
               >
                 {t("publier.upsell_cta", "Découvrir les packs")}
                 <ArrowRight
@@ -604,7 +604,7 @@ export default function PublierPage() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-bold bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                    className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-[6px] font-bold bg-primary text-white shadow-lg shadow-black/5 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                   >
                     {submitting ? (
                       <>
@@ -886,7 +886,7 @@ function SuccessState({ onPublishAnother }: { onPublishAnother: () => void }) {
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
         <Link
           href="/biens"
-          className="px-6 py-3 rounded-full font-bold bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all flex items-center gap-2"
+          className="px-6 py-3 rounded-full font-bold bg-primary text-white shadow-lg shadow-black/5 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-0.5 transition-all flex items-center gap-2"
         >
           {t("publier.success_see_biens")}
           <ArrowRight size={18} />
