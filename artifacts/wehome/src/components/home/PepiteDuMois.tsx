@@ -20,6 +20,8 @@ import {
 import { formatMAD } from "@/lib/utils";
 import { useState, useCallback, useEffect } from "react";
 import { useSwipe } from "@/hooks/useSwipe";
+import { ListingDescription } from "@/components/biens/ListingDescription";
+import { useTranslation } from "react-i18next";
 
 /* ────────────────────────────────────────────────────────────────────────────
  * Pépite du Mois — "0 frais d'agence pendant 48h" signature concept.
@@ -34,7 +36,6 @@ import { useSwipe } from "@/hooks/useSwipe";
 
 const PEPITE_DEAL_START_ISO = "2026-07-01T09:00:00+01:00";
 const PEPITE_DEAL_DURATION_MS = 48 * 60 * 60 * 1000; // 48h
-const PEPITE_OFFER_LABEL = "0 frais d'agence"; // change to e.g. "−10% exceptionnel" if you alternate offers
 
 const PEPITE_DEAL_START = new Date(PEPITE_DEAL_START_ISO);
 const PEPITE_DEAL_END = new Date(PEPITE_DEAL_START.getTime() + PEPITE_DEAL_DURATION_MS);
@@ -85,6 +86,7 @@ function useCountdown() {
 }
 
 export function PepiteDuMois() {
+  const { t } = useTranslation();
   const [failedIndexes, setFailedIndexes] = useState<Set<number>>(new Set());
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -148,42 +150,47 @@ export function PepiteDuMois() {
   const showRooms = pepite.rooms !== undefined && pepite.rooms > 0;
 
   // ─── Per-state visual config ─────────────────────────────────────────────
+  const offerLabel = t("pepite.offer_label");
+
+  // ─── Per-state visual config ───────────────────────────────────────────────
   const stateConfig = {
     live: {
       bannerBg: "bg-gradient-to-r from-rose-600 via-red-600 to-rose-700",
       bannerPulse: true,
-      badgeLabel: "DEAL ACTIF",
-      headline: `${PEPITE_OFFER_LABEL.toUpperCase()} · 48H SEULEMENT`,
-      subline: "Saisissez cette opportunité avant la fin du compte à rebours",
-      ribbon: PEPITE_OFFER_LABEL,
+      badgeLabel: t("pepite.live_badge"),
+      headline: t("pepite.live_headline", { offer: offerLabel.toUpperCase() }),
+      subline: t("pepite.live_subline"),
+      ribbon: offerLabel,
       ribbonColor: "bg-red-600 text-white",
-      countdownLabel: "Fin du deal dans",
-      ctaLabel: "Réserver ma visite avant la fin",
+      countdownLabel: t("pepite.live_countdown"),
+      ctaLabel: t("pepite.live_cta"),
       ctaClass: "bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-black/10",
     },
     upcoming: {
       bannerBg: "bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700",
       bannerPulse: false,
-      badgeLabel: "BIENTÔT",
-      headline: `${PEPITE_OFFER_LABEL} arrive bientôt`,
-      subline: "Soyez prévenu·e au lancement du deal",
-      ribbon: "À venir",
+      badgeLabel: t("pepite.upcoming_badge"),
+      headline: t("pepite.upcoming_headline", { offer: offerLabel }),
+      subline: t("pepite.upcoming_subline"),
+      ribbon: t("pepite.upcoming_ribbon"),
       ribbonColor: "bg-blue-600 text-white",
-      countdownLabel: "Lancement du deal dans",
-      ctaLabel: "Être prévenu·e au lancement",
+      countdownLabel: t("pepite.upcoming_countdown"),
+      ctaLabel: t("pepite.upcoming_cta"),
       ctaClass: "bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-black/10",
     },
     finished: {
-      bannerBg: "bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700",
+      // Between deals: a waiting state, not an error. Leads with what comes next
+      // rather than with what ended, and drops the urgency-banner styling.
+      bannerBg: "bg-foreground",
       bannerPulse: false,
-      badgeLabel: "ANNONCE EXCLUSIVE",
-      headline: "Le deal du mois est terminé",
-      subline: `Prochain ${PEPITE_OFFER_LABEL} dans ${formatDuration(targetMs)}`,
-      ribbon: "Exclusivité",
-      ribbonColor: "bg-amber-600 text-white",
-      countdownLabel: "Prochaine Pépite dans",
-      ctaLabel: "Découvrir la Pépite",
-      ctaClass: "bg-foreground text-background hover:bg-primary shadow-lg shadow-black/10",
+      badgeLabel: t("pepite.finished_badge"),
+      headline: t("pepite.finished_headline"),
+      subline: t("pepite.finished_subline"),
+      ribbon: t("pepite.finished_ribbon"),
+      ribbonColor: "bg-foreground text-background",
+      countdownLabel: t("pepite.finished_countdown"),
+      ctaLabel: t("pepite.finished_cta"),
+      ctaClass: "bg-foreground text-background hover:bg-primary shadow-md shadow-black/5",
     },
   }[state];
 
@@ -196,7 +203,7 @@ export function PepiteDuMois() {
             <Award size={24} />
           </div>
           <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground">
-            La Pépite du Mois
+            {t("pepite.section_title")}
           </h2>
         </div>
 
@@ -233,18 +240,22 @@ export function PepiteDuMois() {
                 {stateConfig.countdownLabel}
               </p>
               <div className="flex gap-1.5 md:gap-2">
-                <CountdownBox value={days} label="Jours" />
-                <CountdownBox value={hours} label="Heures" />
-                <CountdownBox value={minutes} label="Min" />
-                <CountdownBox value={seconds} label="Sec" highlight={state === "live"} />
+                <CountdownBox value={days} label={t("pepite.days")} />
+                <CountdownBox value={hours} label={t("pepite.hours")} />
+                <CountdownBox value={minutes} label={t("pepite.minutes")} />
+                <CountdownBox
+                  value={seconds}
+                  label={t("pepite.seconds")}
+                  highlight={state === "live"}
+                />
               </div>
               <p className="text-[11px] opacity-80 mt-2 text-right flex items-center gap-1 justify-end">
                 <Calendar size={11} />
                 {state === "live"
-                  ? `Fin le ${formatDate(targetDate)}`
+                  ? t("pepite.ends_on", { date: formatDate(targetDate) })
                   : state === "upcoming"
-                    ? `Début le ${formatDate(targetDate)}`
-                    : `Reprise le ${formatDate(targetDate)}`}
+                    ? t("pepite.starts_on", { date: formatDate(targetDate) })
+                    : t("pepite.resumes_on", { date: formatDate(targetDate) })}
               </p>
             </div>
           </div>
@@ -320,7 +331,7 @@ export function PepiteDuMois() {
             {/* Bottom-left highlight: "Pépite du Mois" badge */}
             <div className="absolute bottom-6 left-6 px-3 py-1.5 bg-black/70 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider rounded-full flex items-center gap-1.5 z-10">
               <Award size={12} className="text-amber-300" />
-              Pépite du Mois
+              {t("pepite.photo_badge")}
             </div>
           </div>
 
@@ -335,7 +346,7 @@ export function PepiteDuMois() {
               <div className="mb-6">
                 <div className="flex gap-2 mb-3 flex-wrap">
                   <span className="text-primary font-bold tracking-wider uppercase text-xs">
-                    Annonce Exclusive
+                    {t("pepite.exclusive")}
                   </span>
                   <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded-md uppercase tracking-wider">
                     {pepite.transaction}
@@ -343,7 +354,7 @@ export function PepiteDuMois() {
                   {state === "live" && (
                     <span className="px-2 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded-md uppercase tracking-wider animate-pulse flex items-center gap-1">
                       <Zap size={9} />
-                      Deal actif
+                      {t("pepite.live_chip")}
                     </span>
                   )}
                 </div>
@@ -355,19 +366,22 @@ export function PepiteDuMois() {
                   <span className="text-lg">{pepite.location}</span>
                 </div>
                 <div className="text-4xl font-display font-bold text-primary mb-2">
-                  {hasPrice ? formatMAD(pepite.price) : pepite.priceLabel || "Prix sur demande"}
+                  {hasPrice
+                    ? formatMAD(pepite.price)
+                    : pepite.priceLabel || t("pepite.price_on_request")}
                 </div>
                 {state === "live" && hasPrice && (
                   <p className="text-sm text-red-700 font-semibold flex items-center gap-1.5">
                     <Sparkles size={13} />
-                    {PEPITE_OFFER_LABEL} si vous validez avant la fin du compte à rebours
+                    {t("pepite.offer_condition", { offer: offerLabel })}
                   </p>
                 )}
               </div>
 
-              <p className="text-muted-foreground leading-relaxed mb-8 text-base line-clamp-4">
-                {pepite.description}
-              </p>
+              <ListingDescription
+                text={pepite.description}
+                className="text-muted-foreground leading-relaxed mb-8 text-base line-clamp-4"
+              />
 
               <div className="grid grid-cols-3 gap-4 py-6 border-y border-border/80 mb-8">
                 {pepite.beds ? (
@@ -375,14 +389,18 @@ export function PepiteDuMois() {
                     <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
                       <Bed size={20} />
                     </div>
-                    <span className="font-semibold">{pepite.beds} Ch.</span>
+                    <span className="font-semibold">
+                      {pepite.beds} {t("card.stat_bedrooms_short")}
+                    </span>
                   </div>
                 ) : showRooms ? (
                   <div className="flex flex-col items-center justify-center gap-2">
                     <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
                       <LayoutGrid size={20} />
                     </div>
-                    <span className="font-semibold">{pepite.rooms} p.</span>
+                    <span className="font-semibold">
+                      {pepite.rooms} {t("card.stat_rooms_short")}
+                    </span>
                   </div>
                 ) : null}
                 {pepite.baths ? (
@@ -390,7 +408,9 @@ export function PepiteDuMois() {
                     <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-primary">
                       <Bath size={20} />
                     </div>
-                    <span className="font-semibold">{pepite.baths} SdB</span>
+                    <span className="font-semibold">
+                      {pepite.baths} {t("card.stat_baths_short")}
+                    </span>
                   </div>
                 ) : null}
                 {pepite.surface > 0 && (
@@ -414,11 +434,11 @@ export function PepiteDuMois() {
               {state === "live" && (
                 <p className="text-center text-[11px] text-muted-foreground mt-3 flex items-center justify-center gap-1">
                   <Zap size={11} className="text-red-600" />
-                  Plus que{" "}
+                  {t("pepite.time_left_prefix")}{" "}
                   <span className="font-bold text-foreground tabular-nums">
                     {pad2(hours)}h{pad2(minutes)}m{pad2(seconds)}s
                   </span>{" "}
-                  avant la fin
+                  {t("pepite.time_left_suffix")}
                 </p>
               )}
             </motion.div>
@@ -470,13 +490,4 @@ function formatDate(d: Date): string {
     hour: "2-digit",
     minute: "2-digit",
   });
-}
-
-function formatDuration(ms: number): string {
-  const days = Math.floor(ms / (24 * 60 * 60 * 1000));
-  if (days >= 1) return `${days} jour${days > 1 ? "s" : ""}`;
-  const hours = Math.floor(ms / (60 * 60 * 1000));
-  if (hours >= 1) return `${hours} h`;
-  const minutes = Math.floor(ms / (60 * 1000));
-  return `${minutes} min`;
 }

@@ -384,6 +384,78 @@ all 13 routes after the change: the 4 render solid, all 9 hero pages unchanged.
 
 ---
 
+## 12. Internationalisation — state after the site-wide audit pass
+
+**The bug was not missing English keys.** All three locales already held 636 keys each, in
+perfect parity. The marketing copy was **hardcoded in the components**, never routed through
+i18n — so switching to English changed nav, CTAs and cards, and nothing else.
+
+Two distinct causes:
+
+1. **Wired but unfed.** `Hero`, `BeforeAfter` and `Ecosystem` already used a local
+   `fallback(key, default)` helper — but **all 32 keys they referenced existed in no locale**, so
+   `fallback()` always returned the French default. These three became translatable with **zero
+   code change**: the keys just had to be written.
+2. **Not wired at all.** `StatsBar`, `Services`, `WhyChooseUs`, `HowItWorks`, `CtaSection`,
+   `FeaturedProperties` and `PepiteDuMois` had no `t()` calls. Their constant-array values are now
+   keys, resolved at render.
+
+**~200 keys added to `fr` and `en`.** French values were lifted verbatim from the existing
+defaults and verified by script — **0 drift**, so the French rendering is byte-identical.
+
+**Enum values are in the translation layer now**, not hardcoded: a `types` section covers the 12
+`PROPERTY_TYPES` (keyed by their French DB value, with the raw value as fallback so an unknown
+type from the DB still renders), plus `card.status_reserved` / `status_under_offer` /
+`status_pepite`, which `PropertyCard` had been calling with inline defaults against keys that
+did not exist.
+
+**Verified in the browser:** English 12/12 marker phrases translated, French 14/14 intact, no raw
+keys leaking in either language.
+
+> **Careful with `innerText` when checking i18n.** Overlines use `text-transform: uppercase`, so
+> `innerText` returns "HOW WEHOME WORKS", not "How WeHome works". A naive `includes()` check
+> reports a false negative. This cost one false alarm during the pass.
+
+### Chinese (zh) — known debt, deliberately left
+
+zh was out of scope for this pass and **was not touched**. It keeps its original 636 keys, so
+every section listed above resolves through `fallbackLng: "fr"` and renders **in French** for a
+Chinese visitor — the same behaviour as before, and never a raw key.
+
+Missing in zh, in rough priority order: `hero.*` (19 new), `pepite.*` (33), `services.*` (10),
+`why.*` (14), `how.*` (14), `before_after.*` (9), `stats.*` (8), `cta_band.*` (4),
+`featured.*` (4), `ecosystem.*` (4), `types.*` (12), `card.status_*` (3), `bien.back_to_listings`.
+Roughly **135 keys**. Scope separately.
+
+## 13. Sub-brand colours — scoped exception (WeOffice / WeDesign)
+
+The `Ecosystem` "three divisions" cards carry non-Bible colours: WeOffice navy
+(`from-slate-900 via-slate-800 to-black`), WeDesign black-and-gold
+(`from-black via-zinc-900 to-amber-950`, CTA `from-amber-500 to-orange-500`).
+
+**Left untouched. The evidence says deliberate, not drift:**
+
+- **WeOffice's navy is systematic, not decorative.** The internal `/weoffice` landing uses
+  `slate-900/800/700` throughout (12+ occurrences) — the card matches its own page, it is not a
+  one-off.
+- **Each division ships its own logo**: `weoffice-logo.png`, `wedesign-logo.png`,
+  `wehome-logo.png` — three distinct identities, not one palette applied three times.
+- **The code states the intent.** `Ecosystem.tsx` documents WeOffice and WeDesign as *separate
+  sites* (`weoffice.ma`, `wedesignagency.ma`), and WeDesign's colour carries the comment
+  *"Black hero with warm accent — matches the white-on-black wedesign logo"* — the colour was
+  chosen to match the logo.
+
+⚠️ **This is an evidence-based read, not an owner confirmation** — it was not possible to reach
+whoever owns the brand decision during this pass. If the brand owner says otherwise, this is the
+entry to revisit. **Do not "fix" these to Crimson Atlas without that conversation.**
+
+The **WeHome** card was a different matter and *was* corrected: it used
+`from-primary via-rose-600 to-primary`, a visibly different red from the Crimson Atlas on the same
+page's CTAs. Now `from-primary via-primary-hover to-primary` — one WeHome red, verified at
+`#5C1428`.
+
+---
+
 ## Known debt (cross-page, deliberately not fixed in a page pass)
 
 Consolidated so it does not get lost. None of this is in scope for a single page's pass; each
@@ -397,6 +469,10 @@ item wants its own sweep.
 | **Pill-shaped CTAs** | 9 CTAs | `financement` ×3, `publier` ×2, `contact` ×2, `weoffice`, `biens`. Should be `rounded-[6px]` per the radius rule above. |
 | **Hardcoded `#8B1A2E`** | 2 files | `DashboardLayout:75`, `PortalLayout:160`. Navbar cleared in pass 8. |
 | **`LanguageSwitcher` "FR" button** | 1 | Measures 16px (`rounded-lg`); it is a selector, so it wants `rounded-full`. |
+| **Chinese (zh) translation** | ~135 keys | zh was deliberately left out of the site-wide i18n pass. Everything added there resolves through `fallbackLng: "fr"` and renders **in French** for a Chinese visitor — never a raw key. Full key list in §12. |
+| **Second red / second blue in Pépite** | 2 states | `PepiteDuMois` `live` uses `bg-red-600` + `from-rose-600 via-red-600`, `upcoming` uses `bg-blue-600` + `from-blue-600 via-indigo-600`. Neither is a Bible token, and `red-600` is a **second red** next to Crimson Atlas — the same defect that was fixed on the WeHome ecosystem card. Not in the audit's listed scope, and **not currently visible** (the section renders its `finished` state). Worth a call. |
+| **Pale decorative washes** | 3 | `BeforeAfter` section background `via-amber-50/30` and blobs `bg-amber-200/20`, `bg-rose-200/20`. Off-token but very low saturation; left because the audit targeted the saturated elements. |
+| **Hardcoded `#8B1A2E` in the detail page** | 5 | `bien.tsx` quick-stats icons. Same legacy red already tracked above; kept out of this pass to stay narrow. |
 
 **Correction — the empty map was NOT a data gap.** This file previously recorded the `/biens`
 map as empty "because seeded properties have no `lat`/`lng`, Supabase-side, out of scope."

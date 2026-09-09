@@ -1,4 +1,5 @@
 import { useParams, Link } from "wouter";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -10,6 +11,7 @@ import {
   submitAppointment,
 } from "@/lib/data";
 import { formatMAD } from "@/lib/utils";
+import { ListingDescription } from "@/components/biens/ListingDescription";
 import { motion } from "framer-motion";
 import { useState, useCallback, useEffect, useMemo } from "react";
 import {
@@ -19,9 +21,6 @@ import {
   Square,
   Sofa,
   ArrowLeft,
-  Building2,
-  Layers,
-  CheckCircle2,
   Phone,
   Mail,
   ChevronLeft,
@@ -29,7 +28,6 @@ import {
   X,
   Maximize2,
   Loader2,
-  LayoutGrid,
   Send,
   CheckCircle,
   Calendar,
@@ -48,6 +46,7 @@ import { MortgageCalculator } from "@/components/financement/MortgageCalculator"
 import { FavoriteButton } from "@/components/favoris/FavoriteButton";
 
 export default function BienPage() {
+  const { t } = useTranslation();
   const params = useParams<{ id: string }>();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [failedIndexes, setFailedIndexes] = useState<Set<number>>(new Set());
@@ -151,7 +150,7 @@ export default function BienPage() {
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-colors"
             >
               <ArrowLeft size={18} />
-              Retour aux biens
+              {t("bien.back_to_listings")}
             </Link>
           </div>
         </main>
@@ -165,41 +164,6 @@ export default function BienPage() {
   const hasMultiple = validCount > 1;
 
   const hasPrice = property.price > 0;
-  const showBeds = property.beds !== undefined && property.beds > 0;
-  const showBaths = property.baths !== undefined && property.baths > 0;
-  const showSalons = property.salons !== undefined && property.salons > 0;
-  const showRooms = property.rooms !== undefined && property.rooms > 0 && !showBeds;
-
-  const specs = [
-    showBeds && {
-      icon: Bed,
-      label: `${property.beds} Chambre${(property.beds ?? 0) > 1 ? "s" : ""}`,
-      key: "beds",
-    },
-    showRooms && {
-      icon: LayoutGrid,
-      label: `${property.rooms} Pièce${(property.rooms ?? 0) > 1 ? "s" : ""}`,
-      key: "rooms",
-    },
-    showSalons && {
-      icon: Sofa,
-      label: `${property.salons} Salon${(property.salons ?? 0) > 1 ? "s" : ""}`,
-      key: "salons",
-    },
-    showBaths && {
-      icon: Bath,
-      label: `${property.baths} Salle${(property.baths ?? 0) > 1 ? "s" : ""} de bain`,
-      key: "baths",
-    },
-    property.surface > 0 && {
-      icon: Square,
-      label: property.surfaceLabel || `${property.surface.toLocaleString("fr-FR")} m²`,
-      key: "surface",
-    },
-    property.floor && { icon: Layers, label: property.floor, key: "floor" },
-    { icon: Building2, label: property.type, key: "type" },
-    property.furnished && { icon: CheckCircle2, label: "Meublé", key: "furnished" },
-  ].filter(Boolean) as { icon: typeof Bed; label: string; key: string }[];
 
   const whatsappMessage = encodeURIComponent(
     `Bonjour WeHome,\n\nJe suis intéressé(e) par le bien "${property.title}" (Réf: ${property.reference ?? property.id}) situé à ${property.location}.\n\nPouvez-vous me donner plus d'informations ?\n\nMerci !`
@@ -327,7 +291,7 @@ export default function BienPage() {
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium mb-6 transition-colors"
             >
               <ArrowLeft size={18} />
-              Retour aux biens
+              {t("bien.back_to_listings")}
             </Link>
 
             {/* Image gallery */}
@@ -394,12 +358,12 @@ export default function BienPage() {
               <div className="absolute top-6 left-6 flex flex-col gap-2 z-20">
                 {property.status === "Réservé" && (
                   <span className="px-4 py-1.5 bg-amber-500 text-white text-sm font-bold rounded-lg shadow-md uppercase tracking-wide">
-                    Réservé
+                    {t("card.status_reserved", "Réservé")}
                   </span>
                 )}
                 {property.status === "Sous compromis" && (
                   <span className="px-4 py-1.5 bg-orange-600 text-white text-sm font-bold rounded-lg shadow-md uppercase tracking-wide">
-                    Sous compromis
+                    {t("card.status_under_offer", "Sous compromis")}
                   </span>
                 )}
                 {property.isPepite && (
@@ -408,16 +372,18 @@ export default function BienPage() {
                   </span>
                 )}
                 <span className="px-4 py-1.5 bg-white/90 backdrop-blur-sm text-foreground text-sm font-bold rounded-lg shadow-sm">
-                  {property.type}
+                  {t(`types.${property.type}`, property.type)}
                 </span>
                 <span
                   className={`px-4 py-1.5 text-white text-sm font-bold rounded-lg shadow-sm ${property.transaction === "Location" ? "bg-foreground" : "bg-primary"}`}
                 >
-                  {property.transaction}
+                  {property.transaction === "Location"
+                    ? t("card.transaction_rent")
+                    : t("card.transaction_sale")}
                 </span>
                 {property.furnished && (
                   <span className="px-4 py-1.5 bg-primary/80 text-white text-sm font-bold rounded-lg shadow-sm">
-                    Meublé
+                    {t("card.furnished", "Meublé")}
                   </span>
                 )}
               </div>
@@ -476,7 +442,9 @@ export default function BienPage() {
                             <span className="text-sm font-bold text-foreground">
                               {property.beds}
                             </span>
-                            <span className="text-xs text-muted-foreground">Ch.</span>
+                            <span className="text-xs text-muted-foreground">
+                              {t("card.stat_bedrooms_short")}
+                            </span>
                           </div>
                         )}
                         {hasRoomsFallback && (
@@ -485,7 +453,9 @@ export default function BienPage() {
                             <span className="text-sm font-bold text-foreground">
                               {property.rooms}
                             </span>
-                            <span className="text-xs text-muted-foreground">Pièces</span>
+                            <span className="text-xs text-muted-foreground">
+                              {t("card.stat_rooms_short")}
+                            </span>
                           </div>
                         )}
                         {hasSalons && (
@@ -494,7 +464,9 @@ export default function BienPage() {
                             <span className="text-sm font-bold text-foreground">
                               {property.salons}
                             </span>
-                            <span className="text-xs text-muted-foreground">Sal.</span>
+                            <span className="text-xs text-muted-foreground">
+                              {t("card.stat_salons_short")}
+                            </span>
                           </div>
                         )}
                         {hasBaths && (
@@ -503,7 +475,9 @@ export default function BienPage() {
                             <span className="text-sm font-bold text-foreground">
                               {property.baths}
                             </span>
-                            <span className="text-xs text-muted-foreground">SdB</span>
+                            <span className="text-xs text-muted-foreground">
+                              {t("card.stat_baths_short")}
+                            </span>
                           </div>
                         )}
                         {hasSurface && (
@@ -520,35 +494,15 @@ export default function BienPage() {
                   })()}
                 </div>
 
-                {specs.length > 0 && (
-                  <div>
-                    <h2 className="text-xl font-display font-bold text-foreground mb-4">
-                      Caractéristiques
-                    </h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                      {specs.map((spec) => (
-                        <div
-                          key={spec.key}
-                          className="flex items-center gap-3 p-4 bg-secondary rounded-2xl"
-                        >
-                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                            <spec.icon size={20} />
-                          </div>
-                          <span className="font-medium text-foreground text-sm">{spec.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 {property.description && (
                   <div>
                     <h2 className="text-xl font-display font-bold text-foreground mb-4">
                       Description
                     </h2>
-                    <p className="text-muted-foreground leading-relaxed text-lg whitespace-pre-line">
-                      {property.description}
-                    </p>
+                    <ListingDescription
+                      text={property.description}
+                      className="text-muted-foreground leading-relaxed text-lg"
+                    />
                   </div>
                 )}
 

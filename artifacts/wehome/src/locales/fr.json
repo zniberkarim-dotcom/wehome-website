@@ -208,7 +208,10 @@
     "stat_bedrooms_short": "Ch.",
     "stat_rooms_short": "Pces.",
     "stat_salons_short": "Sal.",
-    "stat_baths_short": "SdB"
+    "stat_baths_short": "SdB",
+    "status_reserved": "Réservé",
+    "status_under_offer": "Sous compromis",
+    "status_pepite": "Pépite"
   },
   "agents": {
     "page_title": "Notre équipe d'agents",
@@ -780,5 +783,57 @@
     "subtitle": "Découvrez notre sélection de biens immobiliers premium, commercialisés avec notre approche data-driven unique.",
     "empty": "Aucun bien disponible pour le moment.",
     "see_all": "Voir toutes les annonces"
+  },
+  "types": {
+    "Villa": "Villa",
+    "Appartement": "Appartement",
+    "Penthouse": "Penthouse",
+    "Duplex": "Duplex",
+    "Triplex": "Triplex",
+    "Studio": "Studio",
+    "Bureau": "Bureau",
+    "Terrain": "Terrain",
+    "Commerce": "Commerce",
+    "Ferme": "Ferme",
+    "Rez de jardin": "Rez de jardin",
+    "Bâtiment industriel": "Bâtiment industriel"
+  },
+  "bien": {
+    "back_to_listings": "Retour aux biens"
+  },
+  "pepite": {
+    "offer_label": "0 frais d'agence",
+    "section_title": "La Pépite du Mois",
+    "photo_badge": "Pépite du Mois",
+    "exclusive": "Annonce Exclusive",
+    "price_on_request": "Prix sur demande",
+    "days": "Jours",
+    "hours": "Heures",
+    "minutes": "Min",
+    "seconds": "Sec",
+    "ends_on": "Fin le {{date}}",
+    "starts_on": "Début le {{date}}",
+    "resumes_on": "Reprise le {{date}}",
+    "offer_condition": "{{offer}} si vous validez avant la fin du compte à rebours",
+    "time_left_prefix": "Plus que",
+    "time_left_suffix": "avant la fin",
+    "live_badge": "DEAL ACTIF",
+    "live_headline": "{{offer}} · 48H SEULEMENT",
+    "live_subline": "Saisissez cette opportunité avant la fin du compte à rebours",
+    "live_countdown": "Fin du deal dans",
+    "live_cta": "Réserver ma visite avant la fin",
+    "live_chip": "Deal actif",
+    "upcoming_badge": "BIENTÔT",
+    "upcoming_headline": "{{offer}} arrive bientôt",
+    "upcoming_subline": "Soyez prévenu·e au lancement du deal",
+    "upcoming_ribbon": "À venir",
+    "upcoming_countdown": "Lancement du deal dans",
+    "upcoming_cta": "Être prévenu·e au lancement",
+    "finished_badge": "SÉLECTION DU MOIS",
+    "finished_headline": "Prochaine Pépite du Mois",
+    "finished_subline": "Le bien ci-dessous reste disponible — la prochaine offre arrive.",
+    "finished_ribbon": "Sélection du mois",
+    "finished_countdown": "Prochaine Pépite dans",
+    "finished_cta": "Découvrir la Pépite"
   }
 }

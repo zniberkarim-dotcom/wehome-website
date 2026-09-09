@@ -133,7 +133,7 @@ export function Ecosystem() {
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-foreground leading-tight">
             {fallback("ecosystem.title_part1", "Trois pôles,")}{" "}
-            <span className="bg-gradient-to-r from-primary via-blue-600 to-amber-600 bg-clip-text text-transparent">
+            <span className="text-primary">
               {fallback("ecosystem.title_part2", "un seul écosystème.")}
             </span>
           </h2>
@@ -278,8 +278,8 @@ const STYLES: Record<
   wehome: {
     border: "border-primary/20",
     // Red gradient hero — WeHome's brand signature
-    heroBg: "bg-gradient-to-br from-primary via-rose-600 to-primary",
-    heroBlob: "bg-rose-300/30",
+    heroBg: "bg-gradient-to-br from-primary via-primary-hover to-primary",
+    heroBlob: "bg-primary/20",
     icon: <HomeIcon size={28} strokeWidth={2.5} />,
     // No logoSrc → always shows the icon + "WeHome" text in white
     badge: "bg-white/20 backdrop-blur-sm text-white",

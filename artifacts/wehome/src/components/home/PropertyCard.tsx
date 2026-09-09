@@ -120,7 +120,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
             </span>
           )}
           <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded-lg shadow-sm">
-            {property.type}
+            {t(`types.${property.type}`, property.type)}
           </span>
           <span
             className={`px-3 py-1 text-white text-xs font-bold rounded-lg shadow-sm ${

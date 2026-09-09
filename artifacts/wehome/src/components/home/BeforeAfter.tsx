@@ -130,13 +130,13 @@ export function BeforeAfter() {
           transition={{ duration: 0.5 }}
           className="text-center max-w-3xl mx-auto"
         >
-          <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wide mb-5 shadow-sm">
+          <div className="inline-flex items-center gap-1.5 bg-primary text-white rounded-full px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wide mb-5 shadow-sm">
             <Sparkles size={12} />
             {fallback("before_after.badge", "Technologie WeHome")}
           </div>
           <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground leading-tight">
             {fallback("before_after.title_part1", "L'IA WeHome transforme")}{" "}
-            <span className="bg-gradient-to-r from-amber-600 to-rose-600 bg-clip-text text-transparent">
+            <span className="text-primary">
               {fallback("before_after.title_part2", "vos annonces")}
             </span>
           </h2>
@@ -169,7 +169,7 @@ export function BeforeAfter() {
                   : "bg-white border-border text-foreground/70 hover:border-foreground/40 hover:text-foreground"
               }`}
             >
-              <span className={activeIdx === idx ? "text-amber-300" : "text-primary"}>
+              <span className={activeIdx === idx ? "text-background" : "text-primary"}>
                 {ex.icon}
               </span>
               {fallback(ex.labelKey, ex.labelFallback)}
@@ -216,7 +216,7 @@ export function BeforeAfter() {
             <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
               {fallback("before_after.label_before", "Avant")}
             </div>
-            <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg">
+            <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 bg-primary text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg">
               <Sparkles size={11} />
               {fallback("before_after.label_after", "Après WeHome")}
             </div>

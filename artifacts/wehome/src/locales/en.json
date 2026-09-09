@@ -208,7 +208,10 @@
     "stat_bedrooms_short": "Bd",
     "stat_rooms_short": "Rm",
     "stat_salons_short": "Lv",
-    "stat_baths_short": "Bt"
+    "stat_baths_short": "Bt",
+    "status_reserved": "Reserved",
+    "status_under_offer": "Under offer",
+    "status_pepite": "Featured"
   },
   "agents": {
     "page_title": "Our team of agents",
@@ -780,5 +783,57 @@
     "subtitle": "Discover our selection of premium properties, marketed with our unique data-driven approach.",
     "empty": "No properties available right now.",
     "see_all": "See all listings"
+  },
+  "types": {
+    "Villa": "Villa",
+    "Appartement": "Apartment",
+    "Penthouse": "Penthouse",
+    "Duplex": "Duplex",
+    "Triplex": "Triplex",
+    "Studio": "Studio",
+    "Bureau": "Office",
+    "Terrain": "Land",
+    "Commerce": "Retail space",
+    "Ferme": "Farm",
+    "Rez de jardin": "Garden level",
+    "Bâtiment industriel": "Industrial building"
+  },
+  "bien": {
+    "back_to_listings": "Back to listings"
+  },
+  "pepite": {
+    "offer_label": "no agency fees",
+    "section_title": "Pick of the Month",
+    "photo_badge": "Pick of the Month",
+    "exclusive": "Exclusive listing",
+    "price_on_request": "Price on request",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Min",
+    "seconds": "Sec",
+    "ends_on": "Ends {{date}}",
+    "starts_on": "Starts {{date}}",
+    "resumes_on": "Returns {{date}}",
+    "offer_condition": "{{offer}} if you confirm before the countdown ends",
+    "time_left_prefix": "Only",
+    "time_left_suffix": "left",
+    "live_badge": "DEAL LIVE",
+    "live_headline": "{{offer}} · 48H ONLY",
+    "live_subline": "Take this opportunity before the countdown runs out",
+    "live_countdown": "Deal ends in",
+    "live_cta": "Book my viewing before it ends",
+    "live_chip": "Deal live",
+    "upcoming_badge": "COMING SOON",
+    "upcoming_headline": "{{offer}} is coming",
+    "upcoming_subline": "Get notified when the deal opens",
+    "upcoming_ribbon": "Coming soon",
+    "upcoming_countdown": "Deal opens in",
+    "upcoming_cta": "Notify me at launch",
+    "finished_badge": "PICK OF THE MONTH",
+    "finished_headline": "Next Pick of the Month",
+    "finished_subline": "The property below is still available — the next offer is on its way.",
+    "finished_ribbon": "This month's pick",
+    "finished_countdown": "Next pick in",
+    "finished_cta": "View the pick"
   }
 }
