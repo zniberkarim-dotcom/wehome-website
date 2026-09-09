@@ -724,9 +724,7 @@
     "cities_value": "5 cities",
     "cities_label": "Casa · Rabat · Marrakech · Tangier · and more",
     "prices_value": "Real time",
-    "prices_label": "Market prices, kept current",
-    "network_value": "Coming soon",
-    "network_label": "Partner agency network"
+    "prices_label": "Market prices, kept current"
   },
   "services": {
     "overline": "The platform",

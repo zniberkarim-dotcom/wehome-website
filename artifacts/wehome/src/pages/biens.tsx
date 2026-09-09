@@ -511,7 +511,7 @@ export default function BiensPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar onLight />
+      <Navbar theme="light" />
 
       <main className="flex-grow pt-20">
         {/* Sticky results header */}

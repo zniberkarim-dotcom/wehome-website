@@ -56,7 +56,7 @@ function FadeUp({
 export default function EspaceAgentPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
+      <Navbar theme="dark" />
 
       <main className="flex-grow">
         {/* ── Hero ─────────────────────────────────────────────────────── */}

@@ -724,9 +724,7 @@
     "cities_value": "5 villes",
     "cities_label": "Casa · Rabat · Marra · Tanger · et plus",
     "prices_value": "Temps réel",
-    "prices_label": "Prix du marché actualisés",
-    "network_value": "Bientôt",
-    "network_label": "Réseau d'agences partenaires"
+    "prices_label": "Prix du marché actualisés"
   },
   "services": {
     "overline": "La plateforme",

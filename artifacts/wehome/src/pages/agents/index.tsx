@@ -43,7 +43,7 @@ export default function AgentsPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
+      <Navbar theme="dark" />
       <main className="flex-grow">
         {/* ─── HERO — recrutement ─────────────────────────────────────── */}
         <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/85 text-white">

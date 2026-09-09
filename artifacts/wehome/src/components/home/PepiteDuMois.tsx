@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchFeaturedProperties, getPropertyImageUrls } from "@/lib/data";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Link } from "wouter";
 import {
   Award,
@@ -13,12 +13,10 @@ import {
   ChevronRight,
   Loader2,
   LayoutGrid,
-  Zap,
-  Calendar,
   Sparkles,
 } from "lucide-react";
 import { formatMAD } from "@/lib/utils";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useSwipe } from "@/hooks/useSwipe";
 import { ListingDescription } from "@/components/biens/ListingDescription";
 import { useTranslation } from "react-i18next";
@@ -33,57 +31,6 @@ import { useTranslation } from "react-i18next";
  * this exact moment. Set it slightly in the future to build anticipation,
  * or at "now" to launch the deal immediately.
  * ────────────────────────────────────────────────────────────────────────── */
-
-const PEPITE_DEAL_START_ISO = "2026-07-01T09:00:00+01:00";
-const PEPITE_DEAL_DURATION_MS = 48 * 60 * 60 * 1000; // 48h
-
-const PEPITE_DEAL_START = new Date(PEPITE_DEAL_START_ISO);
-const PEPITE_DEAL_END = new Date(PEPITE_DEAL_START.getTime() + PEPITE_DEAL_DURATION_MS);
-
-type DealState = "live" | "upcoming" | "finished";
-
-function computeDealState(now: Date): { state: DealState; targetMs: number; targetDate: Date } {
-  if (now < PEPITE_DEAL_START) {
-    return {
-      state: "upcoming",
-      targetMs: PEPITE_DEAL_START.getTime() - now.getTime(),
-      targetDate: PEPITE_DEAL_START,
-    };
-  }
-  if (now < PEPITE_DEAL_END) {
-    return {
-      state: "live",
-      targetMs: PEPITE_DEAL_END.getTime() - now.getTime(),
-      targetDate: PEPITE_DEAL_END,
-    };
-  }
-  // Deal finished — show "next pépite" countdown to the 1st of next month at 9am
-  const next = new Date(now);
-  next.setMonth(now.getMonth() + 1);
-  next.setDate(1);
-  next.setHours(9, 0, 0, 0);
-  return { state: "finished", targetMs: next.getTime() - now.getTime(), targetDate: next };
-}
-
-function breakdown(ms: number) {
-  const total = Math.max(0, ms);
-  const days = Math.floor(total / (24 * 60 * 60 * 1000));
-  const hours = Math.floor((total % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-  const minutes = Math.floor((total % (60 * 60 * 1000)) / (60 * 1000));
-  const seconds = Math.floor((total % (60 * 1000)) / 1000);
-  return { days, hours, minutes, seconds };
-}
-
-const pad2 = (n: number) => String(n).padStart(2, "0");
-
-function useCountdown() {
-  const [now, setNow] = useState(() => new Date());
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(id);
-  }, []);
-  return computeDealState(now);
-}
 
 export function PepiteDuMois() {
   const { t } = useTranslation();
@@ -100,9 +47,6 @@ export function PepiteDuMois() {
   const validCount = imageUrls.length - failedIndexes.size;
   const hasImages = validCount > 0;
   const hasMultiple = validCount > 1;
-
-  const { state, targetMs, targetDate } = useCountdown();
-  const { days, hours, minutes, seconds } = breakdown(targetMs);
 
   const goNextIndex = useCallback(
     () => setCurrentIndex((p) => (p + 1) % imageUrls.length),
@@ -150,49 +94,13 @@ export function PepiteDuMois() {
   const showRooms = pepite.rooms !== undefined && pepite.rooms > 0;
 
   // ─── Per-state visual config ─────────────────────────────────────────────
-  const offerLabel = t("pepite.offer_label");
 
   // ─── Per-state visual config ───────────────────────────────────────────────
-  const stateConfig = {
-    live: {
-      bannerBg: "bg-gradient-to-r from-rose-600 via-red-600 to-rose-700",
-      bannerPulse: true,
-      badgeLabel: t("pepite.live_badge"),
-      headline: t("pepite.live_headline", { offer: offerLabel.toUpperCase() }),
-      subline: t("pepite.live_subline"),
-      ribbon: offerLabel,
-      ribbonColor: "bg-red-600 text-white",
-      countdownLabel: t("pepite.live_countdown"),
-      ctaLabel: t("pepite.live_cta"),
-      ctaClass: "bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-black/10",
-    },
-    upcoming: {
-      bannerBg: "bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700",
-      bannerPulse: false,
-      badgeLabel: t("pepite.upcoming_badge"),
-      headline: t("pepite.upcoming_headline", { offer: offerLabel }),
-      subline: t("pepite.upcoming_subline"),
-      ribbon: t("pepite.upcoming_ribbon"),
-      ribbonColor: "bg-blue-600 text-white",
-      countdownLabel: t("pepite.upcoming_countdown"),
-      ctaLabel: t("pepite.upcoming_cta"),
-      ctaClass: "bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-black/10",
-    },
-    finished: {
-      // Between deals: a waiting state, not an error. Leads with what comes next
-      // rather than with what ended, and drops the urgency-banner styling.
-      bannerBg: "bg-foreground",
-      bannerPulse: false,
-      badgeLabel: t("pepite.finished_badge"),
-      headline: t("pepite.finished_headline"),
-      subline: t("pepite.finished_subline"),
-      ribbon: t("pepite.finished_ribbon"),
-      ribbonColor: "bg-foreground text-background",
-      countdownLabel: t("pepite.finished_countdown"),
-      ctaLabel: t("pepite.finished_cta"),
-      ctaClass: "bg-foreground text-background hover:bg-primary shadow-md shadow-black/5",
-    },
-  }[state];
+  // No deal states, no countdown: the Bible's restraint rules out an urgency mechanism.
+  // The section simply presents this month's pick, or renders nothing at all when
+  // there is none (see the early return above).
+  const ribbonLabel = t("pepite.finished_ribbon");
+  const ctaLabel = t("pepite.finished_cta");
 
   return (
     <section className="py-20 md:py-28 bg-background">
@@ -206,60 +114,6 @@ export function PepiteDuMois() {
             {t("pepite.section_title")}
           </h2>
         </div>
-
-        {/* ─── Top urgency banner ──────────────────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className={`relative overflow-hidden rounded-2xl ${stateConfig.bannerBg} text-white p-5 md:p-6 mb-6 shadow-md shadow-black/10`}
-        >
-          {/* Subtle animated overlay for live state */}
-          {stateConfig.bannerPulse && (
-            <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_50%,white_0%,transparent_40%),radial-gradient(circle_at_80%_50%,white_0%,transparent_40%)] animate-pulse pointer-events-none" />
-          )}
-
-          <div className="relative flex flex-col md:flex-row md:items-center gap-5 md:gap-8">
-            {/* Left: headline + badge */}
-            <div className="flex-1 min-w-0">
-              <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider mb-2">
-                <Zap size={11} className="text-yellow-200" />
-                {stateConfig.badgeLabel}
-              </div>
-              <p className="text-xl md:text-2xl lg:text-3xl font-display font-bold leading-tight">
-                {stateConfig.headline}
-              </p>
-              <p className="text-sm md:text-base opacity-90 mt-1.5 leading-snug">
-                {stateConfig.subline}
-              </p>
-            </div>
-
-            {/* Right: countdown */}
-            <div className="shrink-0">
-              <p className="text-[10px] uppercase tracking-wider font-bold opacity-80 mb-2 md:text-right">
-                {stateConfig.countdownLabel}
-              </p>
-              <div className="flex gap-1.5 md:gap-2">
-                <CountdownBox value={days} label={t("pepite.days")} />
-                <CountdownBox value={hours} label={t("pepite.hours")} />
-                <CountdownBox value={minutes} label={t("pepite.minutes")} />
-                <CountdownBox
-                  value={seconds}
-                  label={t("pepite.seconds")}
-                  highlight={state === "live"}
-                />
-              </div>
-              <p className="text-[11px] opacity-80 mt-2 text-right flex items-center gap-1 justify-end">
-                <Calendar size={11} />
-                {state === "live"
-                  ? t("pepite.ends_on", { date: formatDate(targetDate) })
-                  : state === "upcoming"
-                    ? t("pepite.starts_on", { date: formatDate(targetDate) })
-                    : t("pepite.resumes_on", { date: formatDate(targetDate) })}
-              </p>
-            </div>
-          </div>
-        </motion.div>
 
         {/* ─── Main card ────────────────────────────────────────────────── */}
         <div className="bg-card rounded-3xl overflow-hidden border border-border shadow-xl shadow-black/5 flex flex-col lg:flex-row">
@@ -322,10 +176,10 @@ export function PepiteDuMois() {
 
             {/* Offer ribbon — diagonal across the corner */}
             <div
-              className={`absolute top-6 left-6 px-4 py-2 ${stateConfig.ribbonColor} font-bold rounded-xl shadow-md shadow-black/10 backdrop-blur-md flex items-center gap-2 z-10`}
+              className={`absolute top-6 left-6 px-4 py-2 bg-foreground text-background font-bold rounded-xl shadow-md shadow-black/10 backdrop-blur-md flex items-center gap-2 z-10`}
             >
-              {state === "live" ? <Zap size={16} /> : <Sparkles size={16} />}
-              <span className="text-sm">{stateConfig.ribbon}</span>
+              <Sparkles size={16} />
+              <span className="text-sm">{ribbonLabel}</span>
             </div>
 
             {/* Bottom-left highlight: "Pépite du Mois" badge */}
@@ -351,12 +205,6 @@ export function PepiteDuMois() {
                   <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded-md uppercase tracking-wider">
                     {pepite.transaction}
                   </span>
-                  {state === "live" && (
-                    <span className="px-2 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded-md uppercase tracking-wider animate-pulse flex items-center gap-1">
-                      <Zap size={9} />
-                      {t("pepite.live_chip")}
-                    </span>
-                  )}
                 </div>
                 <h3 className="text-3xl lg:text-4xl font-display font-bold text-foreground mb-4">
                   {pepite.title}
@@ -370,12 +218,6 @@ export function PepiteDuMois() {
                     ? formatMAD(pepite.price)
                     : pepite.priceLabel || t("pepite.price_on_request")}
                 </div>
-                {state === "live" && hasPrice && (
-                  <p className="text-sm text-red-700 font-semibold flex items-center gap-1.5">
-                    <Sparkles size={13} />
-                    {t("pepite.offer_condition", { offer: offerLabel })}
-                  </p>
-                )}
               </div>
 
               <ListingDescription
@@ -425,22 +267,11 @@ export function PepiteDuMois() {
 
               <Link
                 href={`/bien/${pepite.id}`}
-                className={`w-full py-4 rounded-xl font-bold text-base flex items-center justify-center gap-3 transition-all duration-300 group hover:-translate-y-0.5 ${stateConfig.ctaClass}`}
+                className={`w-full py-4 rounded-xl font-bold text-base flex items-center justify-center gap-3 transition-all duration-300 group hover:-translate-y-0.5 bg-foreground text-background hover:bg-primary shadow-md shadow-black/5`}
               >
-                {stateConfig.ctaLabel}
+                {ctaLabel}
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </Link>
-
-              {state === "live" && (
-                <p className="text-center text-[11px] text-muted-foreground mt-3 flex items-center justify-center gap-1">
-                  <Zap size={11} className="text-red-600" />
-                  {t("pepite.time_left_prefix")}{" "}
-                  <span className="font-bold text-foreground tabular-nums">
-                    {pad2(hours)}h{pad2(minutes)}m{pad2(seconds)}s
-                  </span>{" "}
-                  {t("pepite.time_left_suffix")}
-                </p>
-              )}
             </motion.div>
           </div>
         </div>
@@ -452,42 +283,3 @@ export function PepiteDuMois() {
 /* ────────────────────────────────────────────────────────────────────────────
  * Sub-components
  * ────────────────────────────────────────────────────────────────────────── */
-
-function CountdownBox({
-  value,
-  label,
-  highlight = false,
-}: {
-  value: number;
-  label: string;
-  highlight?: boolean;
-}) {
-  return (
-    <div className="flex flex-col items-center min-w-[44px] md:min-w-[56px]">
-      <AnimatePresence mode="popLayout" initial={false}>
-        <motion.div
-          key={value}
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 6 }}
-          transition={{ duration: 0.18 }}
-          className={`text-2xl md:text-3xl font-display font-bold tabular-nums ${highlight ? "text-yellow-200" : "text-white"}`}
-        >
-          {pad2(value)}
-        </motion.div>
-      </AnimatePresence>
-      <span className="text-[9px] md:text-[10px] uppercase tracking-wider opacity-80 mt-0.5">
-        {label}
-      </span>
-    </div>
-  );
-}
-
-function formatDate(d: Date): string {
-  return d.toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}

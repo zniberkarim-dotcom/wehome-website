@@ -312,7 +312,7 @@ export default function EstimerPage() {
   // ─────────────────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      <Navbar />
+      <Navbar theme="dark" />
 
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 1 — HERO

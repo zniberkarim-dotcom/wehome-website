@@ -10,11 +10,15 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useFavorites } from "@/hooks/useFavorites";
 
-/** `onLight` — set by pages that have no dark hero behind the header. The unscrolled
- *  treatment (transparent bar, white text, dark drop-shadows) is tuned for the homepage
- *  hero gradient; over a light page background it measures 1.0–1.05:1 contrast, i.e.
- *  effectively invisible. Such pages render the solid treatment instead. */
-export function Navbar({ onLight = false }: { onLight?: boolean }) {
+/** `theme` — declares what the header sits on, per page.
+ *
+ *  "dark"  — a dark hero/gradient sits behind the header: transparent bar, white text.
+ *  "light" — the page has a light top: render the solid treatment instead.
+ *
+ *  Passed explicitly on every route so the choice is visible in each page rather than
+ *  inherited silently. "light" pages measured 1.0–1.05:1 contrast under the old default,
+ *  i.e. effectively invisible text. Enforced by a no-restricted-syntax rule in eslint.config.mjs. */
+export function Navbar({ theme = "dark" }: { theme?: "dark" | "light" }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [agentMenuOpen, setAgentMenuOpen] = useState(false);
@@ -59,8 +63,8 @@ export function Navbar({ onLight = false }: { onLight?: boolean }) {
   ];
 
   // Appearance is solid whenever we are scrolled OR the page has no dark hero to sit on.
-  // Height still follows scroll alone, so `onLight` pages keep their existing spacing.
-  const solid = isScrolled || onLight;
+  // Height still follows scroll alone, so "light" pages keep their existing spacing.
+  const solid = isScrolled || theme === "light";
 
   // Shared text styles for solid vs transparent nav
   const linkClass = cn(

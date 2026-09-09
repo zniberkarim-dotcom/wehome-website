@@ -125,7 +125,7 @@ export default function WeOfficePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
+      <Navbar theme="dark" />
       <main className="flex-grow">
         {/* ─── HERO ─────────────────────────────────────────────── */}
         <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">

@@ -132,7 +132,7 @@ export default function NetworkPage() {
 
   return (
     <div className="min-h-screen" style={{ background: "#0F0F0F" }}>
-      <Navbar />
+      <Navbar theme="dark" />
 
       {/* ── 1. HERO ── */}
       <section className="relative min-h-[88vh] flex items-center justify-center pt-24 pb-16 overflow-hidden">

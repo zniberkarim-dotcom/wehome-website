@@ -143,7 +143,7 @@ export default function PartenairesPage() {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      <Navbar />
+      <Navbar theme="dark" />
 
       {/* ══════════════════════════════════════════════════════════
           HERO

@@ -19,6 +19,14 @@
   /* Bible §7 — primary CTA hover is a 5% DARKEN, not an opacity fade.
      bg-primary/90 lightens toward the page behind it, which is the opposite. */
   --color-primary-hover: hsl(var(--primary-hover));
+
+  /* Sub-brand tokens — signed off as deliberate functional differentiation across the
+     group's three divisions, not palette drift. See DESIGN_SYSTEM.md §13.
+     brand-wehome is Crimson Atlas, i.e. the same value as --primary (#5C1428): the
+     residential division must never render a second, different red. */
+  --color-brand-wehome: hsl(var(--primary));
+  --color-brand-weoffice: #1e293b;
+  --color-brand-wedesign: #b89758;
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
   --color-muted: hsl(var(--muted));

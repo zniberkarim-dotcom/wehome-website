@@ -14,7 +14,7 @@ import { CtaSection } from "@/components/home/CtaSection";
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
+      <Navbar theme="dark" />
       <main className="flex-grow">
         <Hero />
         <StatsBar />

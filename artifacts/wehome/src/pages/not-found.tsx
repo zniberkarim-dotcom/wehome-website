@@ -6,7 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
+      <Navbar theme="dark" />
       <main className="flex-grow flex items-center justify-center py-24 px-4">
         <div className="text-center max-w-md">
           <h1 className="text-9xl font-display font-bold text-primary mb-4">404</h1>

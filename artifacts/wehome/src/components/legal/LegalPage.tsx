@@ -50,7 +50,7 @@ export function LegalPage({ title, subtitle, lastUpdated, sections }: Props) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
+      <Navbar theme="light" />
 
       {/* Hero */}
       <section className="relative pt-32 pb-10 md:pt-40 md:pb-14 bg-secondary/40 border-b border-border/50">

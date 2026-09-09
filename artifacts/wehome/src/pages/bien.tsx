@@ -125,7 +125,7 @@ export default function BienPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
-        <Navbar />
+        <Navbar theme="light" />
         <main className="flex-grow pt-24 pb-16 flex items-center justify-center">
           <Loader2 size={40} className="animate-spin text-primary" />
         </main>
@@ -138,7 +138,7 @@ export default function BienPage() {
   if (isError || !property) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
-        <Navbar />
+        <Navbar theme="light" />
         <main className="flex-grow pt-24 pb-16 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-4xl font-display font-bold text-foreground mb-4">
@@ -278,7 +278,7 @@ export default function BienPage() {
         </div>
       )}
 
-      <Navbar />
+      <Navbar theme="light" />
       <main className="flex-grow pt-24 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div

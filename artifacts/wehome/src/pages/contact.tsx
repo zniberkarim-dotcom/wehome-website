@@ -73,7 +73,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
+      <Navbar theme="dark" />
 
       {/* Hero */}
       <section className="relative pt-32 pb-12 md:pt-40 md:pb-16 bg-gradient-to-br from-primary via-primary to-primary/80 text-white overflow-hidden">

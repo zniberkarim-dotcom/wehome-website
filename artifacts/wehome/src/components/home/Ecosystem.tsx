@@ -116,7 +116,7 @@ export function Ecosystem() {
   return (
     <section className="py-20 md:py-28 bg-gradient-to-b from-background via-foreground/[0.02] to-background relative overflow-hidden">
       <div className="absolute -left-32 top-40 w-80 h-80 bg-primary/[0.06] rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -right-32 bottom-40 w-80 h-80 bg-blue-500/[0.06] rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -right-32 bottom-40 w-80 h-80 bg-brand-weoffice/[0.06] rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
@@ -278,8 +278,8 @@ const STYLES: Record<
   wehome: {
     border: "border-primary/20",
     // Red gradient hero — WeHome's brand signature
-    heroBg: "bg-gradient-to-br from-primary via-primary-hover to-primary",
-    heroBlob: "bg-primary/20",
+    heroBg: "bg-brand-wehome",
+    heroBlob: "bg-white/10",
     icon: <HomeIcon size={28} strokeWidth={2.5} />,
     // No logoSrc → always shows the icon + "WeHome" text in white
     badge: "bg-white/20 backdrop-blur-sm text-white",
@@ -288,28 +288,29 @@ const STYLES: Record<
     ctaSecondary: "border-2 border-primary/30 text-primary hover:border-primary",
   },
   weoffice: {
-    border: "border-slate-900/15",
+    border: "border-brand-weoffice/20",
     // Dark slate hero — matches the logo's original black background
-    heroBg: "bg-gradient-to-br from-slate-900 via-slate-800 to-black",
-    heroBlob: "bg-blue-500/25",
+    heroBg: "bg-brand-weoffice",
+    heroBlob: "bg-white/10",
     icon: <Building2 size={28} strokeWidth={2.5} />,
     logoSrc: `${import.meta.env.BASE_URL}images/weoffice-logo.png`,
     badge: "bg-white/15 backdrop-blur-sm text-white",
-    bulletDot: "bg-slate-900",
-    ctaPrimary: "bg-slate-900 text-white shadow-md hover:shadow-lg",
-    ctaSecondary: "border-2 border-slate-900/30 text-slate-900 hover:border-slate-900",
+    bulletDot: "bg-brand-weoffice",
+    ctaPrimary: "bg-brand-weoffice text-white shadow-md hover:shadow-lg",
+    ctaSecondary:
+      "border-2 border-brand-weoffice/30 text-brand-weoffice hover:border-brand-weoffice",
   },
   wedesign: {
-    border: "border-amber-500/20",
+    border: "border-brand-wedesign/30",
     // Black hero with warm accent — matches the white-on-black wedesign logo
-    heroBg: "bg-gradient-to-br from-black via-zinc-900 to-amber-950",
-    heroBlob: "bg-amber-400/25",
+    heroBg: "bg-gradient-to-br from-black via-zinc-900 to-brand-wedesign",
+    heroBlob: "bg-brand-wedesign/30",
     icon: <Palette size={28} strokeWidth={2.5} />,
     logoSrc: `${import.meta.env.BASE_URL}images/wedesign-logo.png`,
     badge: "bg-white/15 backdrop-blur-sm text-white",
-    bulletDot: "bg-amber-500",
-    ctaPrimary:
-      "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md hover:shadow-lg",
-    ctaSecondary: "border-2 border-amber-500/30 text-amber-700 hover:border-amber-500",
+    bulletDot: "bg-brand-wedesign",
+    ctaPrimary: "bg-brand-wedesign text-foreground shadow-md hover:shadow-lg",
+    ctaSecondary:
+      "border-2 border-brand-wedesign/30 text-brand-wedesign hover:border-brand-wedesign",
   },
 };

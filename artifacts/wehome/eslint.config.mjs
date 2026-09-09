@@ -39,6 +39,21 @@ export default [
       "prefer-const": "error",
       "no-var": "error",
       eqeqeq: ["error", "smart"],
+
+      // Guard-rail: <Navbar> must declare its backdrop explicitly on every route.
+      // The default is theme="dark" (9 of 13 public routes need it), which means a new
+      // page with a light top fails SILENTLY — white nav text on a light background,
+      // measured at 1.0-1.05:1 contrast. No error, no build warning, just an unreadable
+      // header. This rule turns that silent failure into a lint error.
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            'JSXElement[openingElement.name.name="Navbar"]:not(:has(JSXAttribute[name.name="theme"]))',
+          message:
+            'Navbar requires an explicit theme prop: <Navbar theme="dark" /> over a dark hero, <Navbar theme="light" /> on a light page. See DESIGN_SYSTEM.md §11.',
+        },
+      ],
     },
   },
   { ignores: ["node_modules", "dist", "build", "public"] },

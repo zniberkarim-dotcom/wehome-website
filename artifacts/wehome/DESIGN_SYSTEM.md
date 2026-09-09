@@ -337,7 +337,7 @@ The last four 16px controls, split by **what they do** rather than lumped togeth
 
 ---
 
-## 11. Navbar — the `onLight` prop (/biens pass 2)
+## 11. Navbar — the `theme` prop (/biens pass 2, tightened by the director)
 
 **The bug.** The Navbar had exactly one "not scrolled" appearance, tuned for the homepage hero
 gradient: transparent bar, white text, dark drop-shadows. It had no notion of *"not scrolled,
@@ -453,6 +453,79 @@ The **WeHome** card was a different matter and *was* corrected: it used
 `from-primary via-rose-600 to-primary`, a visibly different red from the Crimson Atlas on the same
 page's CTAs. Now `from-primary via-primary-hover to-primary` — one WeHome red, verified at
 `#5C1428`.
+
+---
+
+## 14. Crimson Atlas — hex discrepancy in the director's memo (unresolved)
+
+The design-director memo cites Crimson Atlas twice as **`#800020`** / **`#9B1B30`**.
+**Neither is the value in this codebase.** Verified before touching any colour:
+
+| Source | Value |
+|---|---|
+| `src/index.css` → `--primary` | `343.3 64.3% 22%` = **`#5C1428`** |
+| Production CSS (`index-CXJAy5H_.css`, served) | `--primary:343.3 64.3% 22%` — identical |
+| `#800020` / `#9B1B30` anywhere in `src/` | **absent** |
+
+Distance from the shipped token, in this project's own terms:
+
+| Memo value | ΔE2000 vs `#5C1428` | For scale |
+|---|---|---|
+| `#800020` | **9.6** | ≈ the pre-rebrand `#8B1A2E` (10.7) that passes 8–10 removed as stale brand |
+| `#9B1B30` | **14.0** | further still |
+
+Applying either would re-introduce a drift of the same magnitude as the one twelve verified
+passes just eliminated. **`#5C1428` was used everywhere this prompt said "Crimson Atlas".**
+
+⚠️ **Unresolved — needs the director.** Two readings: the memo quotes from memory (most likely,
+since neither hex exists anywhere in the repo), or the brand's canonical red genuinely changed
+and the whole system must migrate deliberately. That is a brand decision, not a code one. Do not
+recolour site-wide on either hex until it is confirmed.
+
+*The same memo is exact on the other sub-brand: `#1E293B` is precisely `slate-800`, already in
+use on the WeOffice card and its landing — so the memo is reliable there and approximate only on
+Crimson.*
+
+### Sub-brand tokens (signed off — §13 exception now formalised)
+
+Declared in `src/index.css` under `@theme inline`:
+
+```css
+--color-brand-wehome:   hsl(var(--primary));  /* Crimson Atlas #5C1428 — never a second red */
+--color-brand-weoffice: #1e293b;              /* Midnight Navy */
+--color-brand-wedesign: #b89758;              /* Muted Warm Gold */
+```
+
+`brand-wehome` deliberately aliases `--primary` rather than restating a hex, so the residential
+division can never drift into a second red.
+
+**WeDesign keeps a dark hero, by measurement.** The director asked for the gold to replace the
+olive tone. A *flat* gold card was ruled out: the WeDesign logo is white-on-black, and white on
+`#B89758` measures **2.76:1** — well under AA. So the gold replaces the old `amber-950` accent
+(hero `from-black via-zinc-900 to-brand-wedesign`) and drives the bullets, borders and CTA, while
+the dark base keeps the logo legible at 21:1. `via-zinc-900` is the one remaining non-token
+colour in that file and is deliberate for the same reason.
+
+Flat fills verified on screen: WeHome `#5C1428`, WeOffice `#1E293B`.
+
+---
+
+
+### Director arbitration — `onLight` replaced by an explicit `theme`
+
+`onLight?: boolean` became `theme: "dark" | "light"`, default `"dark"`, **passed explicitly on
+all 22 `<Navbar>` call sites across 19 files** so each page states its own backdrop instead of
+inheriting one silently.
+
+**Three more light pages were found while doing it** — they had the same invisible-text bug as
+the four from pass 2 and were never audited: `bien.tsx` (the property detail page, 3 call sites
+for its loading / not-found / loaded states), `agents/slug.tsx` (3 sites) and
+`components/legal/LegalPage.tsx` (all four legal pages). All render on `bg-background`.
+**7 light files / 12 dark**, not 4 / 9.
+
+**Guard-rail, and it bites.** `eslint.config.mjs` carries a `no-restricted-syntax` rule that
+errors on any `<Navbar>` without an explicit `theme`. Proven by mutation: removing the prop from
+`home.tsx` produced `1 error` with the intended message; restoring it returned to 0.
 
 ---
 
